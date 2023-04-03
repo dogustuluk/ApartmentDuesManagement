@@ -15,7 +15,8 @@ namespace WebApi.Controllers
             _apartmentService = apartmentService;
         }
        
-        [HttpGet("getapartmentlist")]
+        //[HttpGet("getapartmentlist")]
+        [HttpGet("[action]")]
         public IActionResult GetApartmentList()
         {
             var result = _apartmentService.GetList();

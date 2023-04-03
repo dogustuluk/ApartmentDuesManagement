@@ -1,9 +1,10 @@
 ﻿@using DataAccess.Concrete.EntityFramework.Context;
-@model List<VwApartment>
+@using Entities.Concrete.EntityFramework.Context;
+@model List<Apartment>
 @{
     ViewData["Title"] = "Index";
 }
-<a class="btn btn-primary" asp-controller="Apartments" asp-action="Index">---</a>
+@*<a class="btn btn-primary" asp-controller="Apartments" asp-action="Index">---</a>
 <table class="table table-striped">
     <thead>
         <tr>
@@ -13,7 +14,7 @@
             <th>ApartmentName</th>
             <th>DoorNumber</th>
             <th>ResponsibleMemberId</th>
-            <th>NameSurname</th>
+            <th>NumberOfFlats</th>
         </tr>
     </thead>
     <tbody>
@@ -26,7 +27,7 @@
                 <td>@item.ApartmentName</td>
                 <td>@item.DoorNumber</td>
                 <td>@item.ResponsibleMemberId</td>
-                <td>@item.NameSurname</td>
+                <td>@item.NumberOfFlats</td>
                 <td>
                     <a class="btn  btn-success" asp-controller="Products" asp-action="Update" asp-route-id="@item.ApartmentId">Update</a>
                     <a class="btn  btn-danger" asp-controller="Products" asp-action="Remove" asp-route-id="@item.ApartmentId">Delete</a>
@@ -34,4 +35,4 @@
             </tr>
         }
     </tbody>
-</table>
+</table>*@

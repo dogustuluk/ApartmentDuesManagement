@@ -14,7 +14,10 @@ namespace Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await _apartmentsApiService.GetApartmentsAsync());
+              var result = View(await _apartmentsApiService.GetApartmentsAsync());
+            return View(result);
+           // ViewBag.apartments = await _apartmentsApiService.GetApartmentsAsync();
+           // return View();
         }
     }
 }

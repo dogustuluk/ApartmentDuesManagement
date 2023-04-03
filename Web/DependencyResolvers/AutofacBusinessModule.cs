@@ -21,18 +21,18 @@ namespace Web.DependencyResolvers
 
             builder.RegisterType<UnitOfWork>().As<IUnitOfWork2>().InstancePerLifetimeScope();
 
-            builder.RegisterType<EfApartmentDal>().As<IApartmentDal>().InstancePerLifetimeScope();
-            builder.RegisterType<ApartmentManager>().As<IApartmentService>().InstancePerLifetimeScope();
+            builder.RegisterType<EfApartmentDal>().As<IApartmentDal>().SingleInstance();
+            builder.RegisterType<ApartmentManager>().As<IApartmentService>().SingleInstance();
 
             builder.RegisterType<EfApartmentFlatDal>().As<IApartmentFlat>().InstancePerLifetimeScope();
             builder.RegisterType<ApartmentFlatManager>().As<IApartmentFlatService>().InstancePerLifetimeScope();
             //-----
-            builder.Register(c => new HttpClient()).As<HttpClient>().InstancePerLifetimeScope();
-            builder.Register(c =>
-            {
-                var httpClientFactory = c.Resolve<IHttpClientFactory>();
-                return httpClientFactory.CreateClient();
-            }).As<HttpClient>();
+            //builder.Register(c => new HttpClient()).As<HttpClient>().InstancePerLifetimeScope();
+            //builder.Register(c =>
+            //{
+            //    var httpClientFactory = c.Resolve<IHttpClientFactory>();
+            //    return httpClientFactory.CreateClient();
+            //}).As<HttpClient>();
         }
     }
 }
