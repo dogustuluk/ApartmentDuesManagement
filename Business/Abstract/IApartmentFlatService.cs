@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.DataAccess
+namespace Business.Abstract
 {
-    public interface IUnitOfWork
+    public interface IApartmentFlatService
     {
-        Task CommitAsync();
-        void Commit();
+
     }
 }

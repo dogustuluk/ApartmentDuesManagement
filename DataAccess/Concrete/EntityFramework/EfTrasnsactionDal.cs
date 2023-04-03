@@ -11,5 +11,8 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class EfTrasnsactionDal : EfEntityRepositoryBase<Trasnsaction, ApartmentDuesManagementContext>, ITrasnsactionDal
     {
+        public EfTrasnsactionDal(ApartmentDuesManagementContext dbContext) : base(dbContext)
+        {
+        }
     }
 }

@@ -38,4 +38,6 @@ public partial class ApartmentFlat : IEntity
     public virtual Member FlatOwner { get; set; } = null!;
 
     public virtual ICollection<Subscription> Subscriptions { get; } = new List<Subscription>();
+    
+
 }

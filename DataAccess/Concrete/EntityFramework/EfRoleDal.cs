@@ -11,5 +11,8 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class EfRoleDal : EfEntityRepositoryBase<Role, ApartmentDuesManagementContext>, IRoleDal
     {
+        public EfRoleDal(ApartmentDuesManagementContext dbContext) : base(dbContext)
+        {
+        }
     }
 }

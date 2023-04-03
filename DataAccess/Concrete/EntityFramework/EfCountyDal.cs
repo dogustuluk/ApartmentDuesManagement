@@ -11,5 +11,8 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class EfCountyDal : EfEntityRepositoryBase<County, ApartmentDuesManagementContext>, ICountyDal
     {
+        public EfCountyDal(ApartmentDuesManagementContext dbContext) : base(dbContext)
+        {
+        }
     }
 }

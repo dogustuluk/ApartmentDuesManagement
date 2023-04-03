@@ -14,6 +14,13 @@ namespace Core.DataAccess.EntityFramework
         where TEntity : class, IEntity, new()
         where TContext : DbContext, new()
     {
+        private readonly DbSet<TEntity> _dbSet;
+
+        public EfEntityRepositoryBase(TContext dbContext)
+        {
+            _dbSet = dbContext.Set<TEntity>();
+        }
+
         public int Add(TEntity entity)
         {
             using (var context = new TContext())
@@ -30,6 +37,14 @@ namespace Core.DataAccess.EntityFramework
             {
                 await context.Set<TEntity>().AddAsync(entity);
                 return entity;
+            }
+        }
+
+        public async Task AddRangeAsync(IEnumerable<TEntity> entities)
+        {
+            using (var context = new TContext())
+            {
+                await context.Set<TEntity>().AddRangeAsync(entities);
             }
         }
 
@@ -78,150 +93,209 @@ namespace Core.DataAccess.EntityFramework
             }
         }
 
-        //cozum sor
-        async Task<TEntity> IEntityRepository<TEntity>.GetAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties)
+        public List<TEntity> GetList(Expression<Func<TEntity, bool>> filter = null)
+        {
+            using (var context = new TContext())
+            {
+                return filter == null
+                    ? context.Set<TEntity>().ToList()
+                    : context.Set<TEntity>().Where(filter).ToList();
+            }
+        }
+
+        public async Task<IList<TEntity>> GetListAsync(IList<Expression<Func<TEntity, bool>>> predicates, IList<Expression<Func<TEntity, object>>> includeProperties)
         {
             using (var context = new TContext())
             {
                 IQueryable<TEntity> query = context.Set<TEntity>();
+                if (predicates != null && predicates.Any())
+                {
+                    foreach (var predicate in predicates)
+                    {
+                        query = query.Where(predicate);
+                    }
+                }
+                if (includeProperties != null && includeProperties.Any())
+                {
+                    foreach (var includeProperty in includeProperties)
+                    {
+                        query = query.Include(includeProperty);
+                    }
+                }
+                return await query.AsNoTracking().ToListAsync();
+            }
+        }
+
+        public void Update(TEntity entity)
+        {
+            using (var context = new TContext())
+            {
+                var updatedEntity = context.Entry(entity);
+                updatedEntity.State = EntityState.Modified;
+                context.SaveChanges();
+            }
+        }
+
+        public async Task<TEntity> UpdateAsync(TEntity entity)
+        {
+            using (var context = new TContext())
+            {
+                await Task.Run(() =>
+                {
+                    context.Set<TEntity>().Update(entity);
+                });
+                return entity;
+            }
+        }
+
+        public async Task<IList<TEntity>> FromSqlRawAsync(string sql, params object[] parameters)
+        {
+            using (var context = new TContext())
+            {
+                return await context.Set<TEntity>().FromSqlRaw(sql, parameters).ToListAsync();
+            }
+        }
+
+        /// <summary>
+        /// dbSet<typeparamref name="TEntity"/> nesnesini kullanarak sayfalama islemi yapar.
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="skipCount">atlama yapilacak kayit sayisi</param>
+        /// <param name="maxResultCount">sayfada gozukecek maksimum kayit sayisi</param>
+        /// <param name="predicate">filtreleme yapmak icin</param>
+        /// <param name="orderBy">siralama yapmak icin</param>
+        /// <param name="isAscending">siralamanin yonunun belirtmek icin</param>
+        /// <param name="includeProperties">ilgili tablolarin eklenmesini saglar</param>
+        /// <returns>List<typeparamref name="TEntity"/></returns>
+        public async Task<List<TEntity>> GetPagedList<TKey>(int skipCount, int maxResultCount, Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, TKey>> orderBy = null, bool isAscending = true, params Expression<Func<TEntity, object>>[] includeProperties)
+        {
+            var query = GetQueryable(includeProperties);
+            if (predicate != null)
+            {
                 query = query.Where(predicate);
-                if (includeProperties.Any())
-                {
-                    foreach (var includeProperty in includeProperties)
-                    {
-                        query = query.Include(includeProperty);
-                    }
-                }
-                return await query.AsNoTracking().SingleOrDefaultAsync(); //firstAsync kullanirsam yavaslama olacaktir.
             }
+            if (orderBy != null)
+            {
+                query = isAscending ? query.OrderBy(orderBy)
+                                    : query.OrderByDescending(orderBy);
+            }
+            query = query.Skip(skipCount).Take(maxResultCount);
+
+            return await query.ToListAsync();
         }
-        public async Task<TEntity> GetAsyncV2(IList<Expression<Func<TEntity, bool>>> predicates, IList<Expression<Func<TEntity, object>>> includeProperties)
+
+        /// <summary>
+        /// AddDetails metodu ile hazirlanmis olan sorguyu geri dondurmemizi saglar. veri yukleme performansini arttirmak icin yapildi. onceden hazirlanmis sorgunun uzerine ilgili tablolarin eklenmesini(include) saglar.
+        /// </summary>
+        /// <param name="propertySelectors"></param>
+        /// <returns></returns>
+        public async Task<IQueryable<TEntity>> DetailsAsync(params Expression<Func<TEntity, object>>[] propertySelectors)
+        {
+            return await Task.FromResult(AddDetails(GetQueryable(), propertySelectors));
+            //var query = AddDetails(GetQueryable(), propertySelectors);
+            //return (IQueryable<TEntity>)await query.ToListAsync();
+        }
+
+        /// <summary>
+        /// Yapilan IQueryable<typeparamref name="TEntity"/> sorgusuna istenen tablolarin(include) eklenmesini saglar. Onceden hazirlanmis bir IQueryable sorgusuna tablolarin include edilmesini saglar.
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="propertySelectors"></param>
+        /// <returns></returns>
+        public IQueryable<TEntity> AddDetails(IQueryable<TEntity> query, Expression<Func<TEntity, object>>[] propertySelectors)
+        {
+            if (propertySelectors == null || !propertySelectors.Any())
+            {
+                return query;
+            }
+
+            foreach (var propertySelector in propertySelectors)
+            {
+                query = query.Include(propertySelector);
+            }
+            return query;
+        }
+
+        public async Task<IQueryable<TEntity>> GetQueryableAsync()
+        {
+            return await Task.FromResult(GetQueryable());
+        }
+
+        public async Task<DbSet<TEntity>> GetDbAsync()
+        {
+            return await Task.FromResult(_dbSet);
+
+        }
+
+        /// <summary>
+        /// Tabloya ait sorgulari yapabilmemize olanak saglar. include parametresini verirsek, yapilan sorguya verilen tablolari(inlude) eklenmesini saglar.
+        /// </summary>
+        /// <param name="includeProperties"></param>
+        public IQueryable<TEntity> GetQueryable(params Expression<Func<TEntity, object>>[] includeProperties)
+        {
+            #region eski
+            //using (var context = new TContext())
+            //{
+            //    IQueryable<TEntity> query = context.Set<TEntity>();
+            //    if (includeProperties != null && includeProperties.Any())
+            //    {
+            //        query = AddDetails(query, includeProperties);
+            //    }
+            //    return query;
+            //}
+            #endregion
+
+            IQueryable<TEntity> query = _dbSet;
+
+            if (includeProperties != null && includeProperties.Any())
+            {
+                query = AddDetails(query, includeProperties);
+            }
+
+            return query;
+        }
+
+        public async Task<TEntity> GetByIdAsync(int id)
         {
             using (var context = new TContext())
             {
-                IQueryable<TEntity> query = context.Set<TEntity>();
-                if (predicates != null && predicates.Any())
-                {
-                    foreach (var predicate in predicates) //isactive=true, isdeleted=false,...
-                    {
-                        query = query.Where(predicate);
-                    }
-                }
-                if (includeProperties != null && includeProperties.Any())
-                {
-                    foreach (var includeProperty in includeProperties)
-                    {
-                        query = query.Include(includeProperty);
-                    }
-                }
-                return await query.AsNoTracking().SingleOrDefaultAsync();
+                return await context.Set<TEntity>().FindAsync(id);
             }
         }
-        public async Task<TEntity> GetAsyncV3(IList<Expression<Func<TEntity, bool>>> predicates, IList<Expression<Func<TEntity, object>>> includeProperties, Expression<Func<TEntity, int>> selectProperty)
+
+        public async Task<TEntity> GetByGuid(Guid guid)
         {
             using (var context = new TContext())
             {
-                IQueryable<TEntity> query = context.Set<TEntity>();
-                if (predicates != null && predicates.Any())
-                {
-                    foreach (var predicate in predicates)
-                    {
-                        query = query.Where(predicate);
-                    }
-                }
-                if (includeProperties != null && includeProperties.Any())
-                {
-                    foreach (var includeProperty in includeProperties)
-                    {
-                        query = query.Include(includeProperty);
-                    }
-                }
-                if (selectProperty != null)
-                {
-                    query = query.Select(selectProperty).Cast<TEntity>(); //metot TEntity donuyor, select kisminda ise IQueryable donuyor. return etmeden once Cast islemi ekleyerek int tipini TEntity'e donustur.
-                }
-                return await query.AsNoTracking().SingleOrDefaultAsync();
+                return await context.Set<TEntity>().FindAsync(guid);
             }
         }
-        public async Task<TEntity> GetAsyncV4<TResult>(IList<Expression<Func<TEntity, bool>>> predicates, IList<Expression<Func<TEntity, object>>> includeProperties, Expression<Func<TEntity, TResult>> selectProperty)
+
+        public async Task<float> SumAsync(Expression<Func<TEntity, bool>> predicate = null)
         {
-            using (var context = new TContext())
-            {
-                IQueryable<TEntity> query = context.Set<TEntity>();
-                if (predicates != null && predicates.Any())
-                {
-                    foreach (var predicate in predicates)
-                    {
-                        query = query.Where(predicate);
-                    }
-                }
-                if (includeProperties != null && includeProperties.Any())
-                {
-                    foreach (var includeProperty in includeProperties)
-                    {
-                        query = query.Include(includeProperty);
-                    }
-                }
-                if (selectProperty != null)
-                {
-                    query = query.Select(selectProperty).Cast<TEntity>(); //metot TEntity donuyor, select kisminda ise IQueryable donuyor. return etmeden once Cast islemi ekleyerek int tipini TEntity'e donustur.
-                }
-                return await query.AsNoTracking().SingleOrDefaultAsync();
-            }
+            throw new NotImplementedException();
+
         }
-            public List<TEntity> GetList(Expression<Func<TEntity, bool>> filter = null)
-            {
-                using (var context = new TContext())
-                {
-                    return filter == null
-                        ? context.Set<TEntity>().ToList()
-                        : context.Set<TEntity>().Where(filter).ToList();
-                }
-            }
-
-            public async Task<IList<TEntity>> GetListAsync(IList<Expression<Func<TEntity, bool>>> predicates, IList<Expression<Func<TEntity, object>>> includeProperties)
-            {
-                using (var context = new TContext())
-                {
-                    IQueryable<TEntity> query = context.Set<TEntity>();
-                    if (predicates != null && predicates.Any())
-                    {
-                        foreach (var predicate in predicates)
-                        {
-                            query = query.Where(predicate);
-                        }
-                    }
-                    if (includeProperties != null && includeProperties.Any())
-                    {
-                        foreach (var includeProperty in includeProperties)
-                        {
-                            query = query.Include(includeProperty);
-                        }
-                    }
-                    return await query.AsNoTracking().ToListAsync();
-                }
-            }
-
-            public void Update(TEntity entity)
-            {
-                using (var context = new TContext())
-                {
-                    var updatedEntity = context.Entry(entity);
-                    updatedEntity.State = EntityState.Modified;
-                    context.SaveChanges();
-                }
-            }
-
-            public async Task<TEntity> UpdateAsync(TEntity entity)
-            {
-                using (var context = new TContext())
-                {
-                    await Task.Run(() =>
-                    {
-                        context.Set<TEntity>().Update(entity);
-                    });
-                    return entity;
-                }
-            }
+        public async Task<float> AvgAsync(Expression<Func<TEntity, bool>> predicate = null)
+        {
+            throw new NotImplementedException();
         }
+
+        public float GetValue(TEntity entity)
+        {
+            throw new NotImplementedException();
+
+        }
+
+        public async Task<TEntity> GetValueAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<List<TEntity>> GetListAsync2(IQueryable<TEntity> query)
+        {
+            return await query.ToListAsync();
+        }
+        //gelen datalari filtreleyen ayri bir metot yaz
     }
+}

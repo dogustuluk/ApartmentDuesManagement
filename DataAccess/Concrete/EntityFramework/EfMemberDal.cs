@@ -11,5 +11,8 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class EfMemberDal : EfEntityRepositoryBase<Member, ApartmentDuesManagementContext>, IMemberDal
     {
+        public EfMemberDal(ApartmentDuesManagementContext dbContext) : base(dbContext)
+        {
+        }
     }
 }

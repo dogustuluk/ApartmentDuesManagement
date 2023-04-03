@@ -11,5 +11,8 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class EfExpenseDal : EfEntityRepositoryBase<Expense, ApartmentDuesManagementContext>, IExpenseDal
     {
+        public EfExpenseDal(ApartmentDuesManagementContext dbContext) : base(dbContext)
+        {
+        }
     }
 }
