@@ -1,15 +1,13 @@
 ﻿using Autofac;
-using Business.Abstract;
-using Business.Concrete;
-using DataAccess.Abstract;
-using DataAccess.Concrete.EntityFramework.Context;
-using DataAccess.Concrete.EntityFramework;
-using DataAccess.Concrete.UnitOfWork;
 using System.Reflection;
 using System;
 using Web.Services;
-using Core.DataAccess;
-using Core.DataAccess.EntityFramework;
+using DataAccess.Concrete.EntityFramework;
+using DataAccess.Abstract;
+using Business.Concrete;
+using Business.Abstract;
+using DataAccess.Concrete.UnitOfWork;
+using DataAccess.Concrete.EntityFramework.Context;
 
 namespace Web.DependencyResolvers
 {
@@ -17,7 +15,7 @@ namespace Web.DependencyResolvers
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<ApartmentDuesManagementContext>().AsSelf().InstancePerLifetimeScope();
+            //builder.RegisterType<ApartmentDuesManagementContext>().AsSelf().InstancePerLifetimeScope();
 
             builder.RegisterType<UnitOfWork>().As<IUnitOfWork2>().InstancePerLifetimeScope();
 
@@ -26,6 +24,16 @@ namespace Web.DependencyResolvers
 
             builder.RegisterType<EfApartmentFlatDal>().As<IApartmentFlat>().InstancePerLifetimeScope();
             builder.RegisterType<ApartmentFlatManager>().As<IApartmentFlatService>().InstancePerLifetimeScope();
+
+            //--
+          //  var apiAssembly = Assembly.GetExecutingAssembly();
+          //  var repoAssembly = Assembly.GetAssembly(typeof(ApartmentDuesManagementContext));
+
+           // builder.RegisterAssemblyTypes(apiAssembly, repoAssembly).Where(x => x.Name.EndsWith("Repository")).AsImplementedInterfaces().InstancePerLifetimeScope();
+           // builder.RegisterAssemblyTypes(apiAssembly, repoAssembly).Where(x => x.Name.EndsWith("Service")).AsImplementedInterfaces().InstancePerLifetimeScope();
+
+
+
             //-----
             //builder.Register(c => new HttpClient()).As<HttpClient>().InstancePerLifetimeScope();
             //builder.Register(c =>

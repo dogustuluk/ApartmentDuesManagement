@@ -1,7 +1,9 @@
 ﻿using Core.DataAccess;
 using Core.Entities;
 using Core.Utilities.Results.Abstract;
+using DataAccess.Concrete.EntityFramework.Context;
 using Entities.Concrete.EntityFramework.Context;
+using Entities.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,12 +14,10 @@ namespace Business.Abstract
 {
     public interface IApartmentService
     {
-        IDataResult<List<Apartment>> GetList();
+        //Idata result donme
+        Task<List<VwApartment>> GetList();
         Task<IDataResult<Apartment>> GetApartmentById(int id);
         Task<IDataResult<List<Apartment>>> GetApartmentsWithFlat();
         Task<IDataResult<List<Apartment>>> GetApartmentsWithFlatAndMember();
-        
-        
-
     }
 }

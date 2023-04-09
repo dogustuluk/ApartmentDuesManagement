@@ -1,4 +1,5 @@
-﻿using Business.Abstract;
+﻿using AutoMapper;
+using Business.Abstract;
 using Core.DataAccess;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
@@ -6,7 +7,10 @@ using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework.Context;
 using DataAccess.Concrete.UnitOfWork;
 using Entities.Concrete.EntityFramework.Context;
+using Entities.Dtos;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,19 +23,34 @@ namespace Business.Concrete
 {
     public class ApartmentManager : IApartmentService
     {
-        private readonly IApartmentDal _apartmentDal;
+        //private readonly IApartmentDal _apartmentDal;
         private readonly IUnitOfWork2 _unitOfWork2;
+        private readonly IMapper _mapper;
         //IApartmentDal'ı unıt of work'e aktar, burda unıt of work ıle tek seferde erıs.
         //_unitOfWork._apartmentDal.GetList() şeklınde
-        public ApartmentManager(IApartmentDal apartmentDal, IUnitOfWork2 unitOfWork2)
+        public ApartmentManager(IUnitOfWork2 unitOfWork2, IMapper mapper)
         {
-            _apartmentDal = apartmentDal;
             _unitOfWork2 = unitOfWork2;
+            _mapper = mapper;
         }
 
-        public IDataResult<List<Apartment>> GetList()
+        //public List<VwApartment> GetList()
+        //{
+        //    //var apartments = _unitOfWork2.apartmentDal.GetList();
+        //    //var result = _mapper.Map<List<ApartmentDto>>(apartments);
+        //    //return new SuccessDataResult<List<ApartmentDto>>(result, "Apartmanlar basarili bir sekilde listelendi.");
+        //    var apartments = _unitOfWork2.apartmentDal.GetList();
+        //    return new List<VwApartment>(apartments);
+        //}
+
+        async Task<List<VwApartment>> IApartmentService.GetList()
         {
-            return new SuccessDataResult<List<Apartment>>(_unitOfWork2.apartmentDal.GetList(), "Apartmanlar basarili bir sekilde listelendi.");
+            var apartments = _unitOfWork2.apartmentDal.GetList();
+                return new List<VwApartment>(apartments.Count);
+            //var apartments = _unitOfWork2.apartmentDal.GetList();
+            //return apartments;
+            //map etmeye gerek yok.
+            //view icin ayri service yaz
         }
 
         public async Task<IDataResult<Apartment>> GetApartmentById(int id)
@@ -62,31 +81,6 @@ namespace Business.Concrete
 
         public async Task<IDataResult<List<Apartment>>> GetApartmentsWithFlatAndMember()
         {
-            #region eski
-            //var query = _unitOfWork2.apartmentDal.DetailsAsync(x => x.ApartmentFlats, x => x.ApartmentFlats.Select(f => f.FlatOwner).ToList());
-
-
-            //if (query == null)
-            //{
-            //    return new ErrorDataResult<List<Apartment>>("Bir hata ile karsilasildi");
-
-            //}
-
-            //return new SuccessDataResult<List<Apartment>>(await query, "Apartmanlar ve apartmanlara ait daireler basariyla getirildi.");
-            #endregion
-
-
-            //var query = _unitOfWork2.apartmentDal.DetailsAsync(x => x.ApartmentFlats,x => x.ApartmentFlats.Select(f => f.FlatOwner));
-
-            //var result = await _unitOfWork2.apartmentDal.GetListAsync2(await query);
-            //return new SuccessDataResult<List<Apartment>>(result, "Apartmanlar ve apartmanlara ait daireler başarıyla getirildi.");
-
-            // var query2 = _unitOfWork2.apartmentFlat.GetQueryable().Include(x => x.FlatOwner);
-
-            //var combinedQuery = query1.Concat(query2.Cast<Apartment>());
-            // var result = await combinedQuery.ToListAsync();
-
-            //IQueryable<Apartment> combineDetails = query1.Concat(query2);
             var query1 = _unitOfWork2.apartmentDal.GetQueryable(x => x.ApartmentFlats).Include(x => x.ApartmentFlats).ThenInclude(x => x.FlatOwner);
             var result = await query1.ToListAsync();
            

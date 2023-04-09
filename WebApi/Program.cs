@@ -4,6 +4,7 @@ using Autofac.Extensions.DependencyInjection;
 using Business.Abstract;
 using Business.Concrete;
 using Business.DependencyResolvers.Autofac;
+using Business.Mappings;
 using Core.DataAccess;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
@@ -15,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacBusinessModule()));
 
-
+builder.Services.AddAutoMapper(typeof(MapProfile));
 
 builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler =
         System.Text.Json.Serialization.ReferenceHandler.Preserve);

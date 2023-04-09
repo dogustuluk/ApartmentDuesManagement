@@ -11,9 +11,9 @@ public partial class ApartmentFlat : IEntity
 
     public Guid Guid { get; set; }
 
-    public string Code { get; set; } = null!;
+    public string? Code { get; set; }
 
-    public string FlatNumber { get; set; } = null!;
+    public string? FlatNumber { get; set; }
 
     public int ApartmentId { get; set; }
 
@@ -21,7 +21,7 @@ public partial class ApartmentFlat : IEntity
 
     public int FlatOwnerId { get; set; }
 
-    public string Floor { get; set; } = null!;
+    public string? Floor { get; set; }
 
     public string? CarPlate { get; set; }
 
@@ -33,9 +33,9 @@ public partial class ApartmentFlat : IEntity
 
     public DateTime UpdatedDate { get; set; }
 
-    public virtual Apartment Apartment { get; set; } = null!;
+    public virtual Apartment? Apartment { get; set; }
 
-    public virtual Member FlatOwner { get; set; } = null!;
+    public virtual Member? FlatOwner { get; set; }
 
     public virtual ICollection<Subscription> Subscriptions { get; } = new List<Subscription>();
     

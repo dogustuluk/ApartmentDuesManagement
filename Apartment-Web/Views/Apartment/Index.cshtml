@@ -1,0 +1,101 @@
+﻿@using DataAccess.Concrete.EntityFramework.Context;
+@model List<VwApartment>
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Apartmanlar";
+}
+
+<div id="modalPlaceHolder" aria-hidden="true"></div>
+<div class="card mb-4 mt-2">
+    <div class="card-header">
+        <i class="fas fa-table mr-1"></i>
+        Apartmanlar
+    </div>
+    <div class="col-md-2">
+         @using (Html.BeginForm("Index", "Apartment", FormMethod.Get))
+    {
+        <label>Kac kayit gosterilsin: </label>
+        @Html.DropDownList("maxResultCount", new SelectList(new List<int> {2, 10, 20, 50 }, Model.Count), new { @class = "form-control form-control-md" })
+
+            <label>Ilce: </label>
+            @Html.DropDownList("County", ViewBag.CountySelect as SelectList, "Ilce Sec", new { @class = "form-control form-control-md" })
+
+
+        <button type="submit" class="btn btn-primary mt-2">Listele</button>
+    }
+    </div>
+
+    
+   
+
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="apartmentsTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Guid</th>
+                        <th>Code</th>
+                        <th>Apartment Id</th>
+                        <th>Apartment Name</th>
+                        <th>City Name</th>
+                        <th>County Name</th>
+                        <th>Name Surname</th>
+                        <th>Phone Number</th>
+                        <th>Door Number</th>
+                        <th>Number Of Flats</th>
+                        <th>Responsible Member Id</th>
+                        <th>Open Adress</th>
+                        <th>Updated By</th>
+                        <th>Updated Date</th>
+                        <th>Is Active</th>
+                        @*//il, search text getir
+                        //listeleme icin ayri dto yapma
+                        *@
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Guid</th>
+                        <th>Code</th>
+                        <th>Apartment Id</th>
+                        <th>Apartment Name</th>
+                        <th>City Name</th>
+                        <th>County Name</th>
+                        <th>Name Surname</th>
+                        <th>Phone Number</th>
+                        <th>Door Number</th>
+                        <th>Number Of Flats</th>
+                        <th>Responsible Member Id</th>
+                        <th>Open Adress</th>
+                        <th>Updated By</th>
+                        <th>Updated Date</th>
+                        <th>Is Active</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Guid</td>
+                            <td>@item.Code</td>
+                            <td>@item.ApartmentId</td>
+                            <td>@item.ApartmentName</td>
+                            <td>@item.CityName</td>
+                            <td>@item.CountyName</td>
+                            <td>@item.NameSurname</td>
+                            <td>@item.PhoneNumber</td>
+                            <td>@item.DoorNumber</td>
+                            <td>@item.NumberOfFlats</td>
+                            <td>@item.ResponsibleMemberId</td>
+                            <td>@item.OpenAdress</td>
+                            <td>@item.UpdatedBy</td>
+                            <td>@item.UpdatedDate</td>
+                            <td>@item.IsActive</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,145 @@
+﻿@model GCA_Web.Controllers.CompanyController.Index_VM
+
+<form asp-action="Index" method="get" style="display:contents;">
+	<div class="page-heading">
+
+		<div class="page-title">
+			<div class="row">
+				<div class="col col-md-9 col-sm-12">
+					<label class="PageTitle">@Model.PageTitle</label>
+					<label class="SubPageTitle ms-3">@Model.SubPageTitle</label>
+				</div>
+				<div class="col col-md-3 col-sm-12 text-end">
+					@if (Model.MyAuth.isCanInsert)
+					{
+						<a class="btn btn-success btnPadder1" asp-action="AddNew"><i class="fas fa-plus-square me-2"></i>Yeni Firma Ekle</a>
+					}
+				</div>
+			</div>
+		</div>
+
+		<div class="card mb-2">
+			<div class="card-body">
+				<section id="SC_FILTER" class="FilterSection">
+					<div class="row">
+						<div class="col col-xl-3 col-md-6 col-sm-12">
+							<span class="FormLabel-b">Arama</span>
+							<input name="SearchText" class="form-control" type="text">
+						</div>
+						<div class="col col-xl-3 col-md-4 col-sm-6">
+							<span class="FormLabel-b">Firma Tipi</span>
+							<select name="CompanyTypeID" class="form-select" asp-items="@(new SelectList(Model.CompanyTypeID_DDL,"Value","Text"))" asp-for="@Model.Parameters["CompanyTypeID"]">
+							</select>
+						</div>
+						<div class="col col-xl-2 col-md-4 col-sm-6">
+							<span class="FormLabel-b">Aktiflik</span>
+							<select name="ActiveStatus" class="form-select" asp-for="@Model.Parameters["ActiveStatus"]">
+								<option value="0">Hepsi</option>
+								<option value="1">Sadece Aktif</option>
+								<option value="-1">Sadece Pasif</option>
+							</select>
+						</div>
+						<div class="col col-sm-4 divTopMargin">
+							<button type="submit" class="btn btn btn-secondary" style="width: 160px;">Listele</button>
+							<a asp-controller="Company" asp-action="Index" class="F12 text-decoration-underline ms-3">
+								Filtreleri Kaldır
+							</a>
+						</div>
+					</div>
+				</section>
+				<section id="SC_DATA">
+					<div class="row">
+						<div class="col col-sm-2">
+							<select class="form-select form-select-sm" name="OrderBy" asp-for="@Model.Parameters["OrderBy"]" onchange="this.form.submit()">
+								<option value="CompanyID_DESC">Eklenme Sırası Azalan</option>
+								<option value="CompanyID_ASC">Eklenme Sırası Artan</option>
+								<option value="CompanyName_DESC">Firma Adı Azalan</option>
+								<option value="CompanyName_ASC">Firma Adı Artan</option>
+								<option value="TotalReservations_DESC">Toplam Rezarvasyon Azalan</option>
+								<option value="TotalReservations_DESC">Toplam Rezarvasyon Artan</option>
+							</select>
+						</div>
+						<div class="col text-end Rb">
+							Toplam
+							<span class="text-danger">@Model.MyPagination.TotalRecords</span>
+							Kayıt
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col-sm-12">
+							<div class="table-responsive">
+								<table class="table">
+									<thead>
+										<tr>
+											<th scope="col" class="text-center" style="width:50px"></th>
+											<th scope="col">Firma Adı</th>
+											<th scope="col">Tipi</th>
+											<th scope="col">İl / İlçe</th>
+											<th scope="col">Asıl Yetkili</th>
+											<th scope="col">Toplamlar</th>
+											<th scope="col">Güncelleme</th>
+											<th scope="col"></th>
+										</tr>
+									</thead>
+									<tbody>
+										@foreach (var item in Model.MyGridData)
+										{
+											<tr>
+												<td scope="row" align="center" class="F10">
+													<img alt='@((bool)item.isActive==true ? "Aktif" : "Pasif" )' src="@("../../Images/Icons/i_"+item.isActive+".png")" />
+													<span class="TopBreak2px"></span>
+													<label ID="Lbl_CompanyID" title="@item.CompanyID" class="F9 text-secondary">@item.CompanyID</label>
+												</td>
+												<td>
+													@if (Model.MyAuth.isCanUpdate)
+													{
+														<a class="Rb F16 text-decoration-underline" asp-action="Update" asp-route-GUID="@item.GUID">@item.CompanyName</a>
+													}
+													else
+													{
+														<label class="Rb F16">@item.CompanyName</label>
+													}													
+													<br>
+													<label class="F12">@item.InvoiceName</label>
+												</td>
+												<td>
+													<label class="Rb text-primary">@item.CompanyTypeName</label>
+												</td>
+												<td>
+													<label>@item.CityName</label><br>
+													<label>@item.CountyName</label>
+												</td>
+												<td>
+													<label>@item.MainContactName</label>
+												</td>
+												<td>
+													<span class="badge bg-primary">@item.TotalMembers Kullanıcı</span>
+													<span class="badge bg-info">@item.TotalWorkReservations Rezervasyon</span>
+												</td>
+												<td class="F11">
+													@item.UpdatedByName
+													<br />
+													@(item.UpdatedDate.ToString("dd.MM.yyyy HH:mm"))
+												</td>
+												<td class="text-end">
+													@if (Model.MyAuth.isCanUpdate)
+													{
+														<a class="GridDetailPop" asp-action="Update" asp-route-GUID="@item.GUID"><i class="fas fa-eye"></i></a>
+													}
+												</td>
+											</tr>
+										}
+									</tbody>
+								</table>
+							</div>
+						</div>
+						@if (Model.MyPagination != null)
+						{
+							<partial name="~/Views/Shared/Pagination.cshtml" model=@Model.MyPagination />
+						}
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+</form>

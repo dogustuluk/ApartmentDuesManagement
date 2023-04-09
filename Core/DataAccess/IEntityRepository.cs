@@ -1,4 +1,5 @@
 ﻿using Core.Entities;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -20,15 +21,12 @@ namespace Core.DataAccess
         Task<T> UpdateAsync(T entity);
         void Delete(T entity);
         Task DeleteAsync(T entity);
-        //asenkronlarini ekle, add int'e cevir
         List<T> GetList(Expression<Func<T, bool>> filter = null);
-        Task<IList<T>> GetListAsync(IList<Expression<Func<T, bool>>> predicates, IList<Expression<Func<T, object>>> includePropertries);//filtre ekleyerek getlist islemlerinde birbirinin aynisi metotlar tanimlamayiz. //take al
+        Task<IList<T>> GetListAsync(IList<Expression<Func<T, bool>>> predicates, IList<Expression<Func<T, object>>> includePropertries);
         Task<List<T>> GetListAsync2(IQueryable<T> query);
         //getdata, datayi sort etmenin yolunu bul.
         T Get(Expression<Func<T, bool>> filter);
-        //get by id, get by guid ekle, //imzalari var, bussiness katmanina ekle.
         //dropdown list ekle (async ve normal ekle)
-        //datalari page ile de al
         //gelen datalari da sort eden func yaz
         //kullanicidan istenen bilgiyi alabilecegim generic yapi olusturmaya calis
         //
@@ -38,12 +36,10 @@ namespace Core.DataAccess
         Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
         Task<int> CountAsync(Expression<Func<T, bool>> predicate = null);//gerek kalmaz
         //search eklenebilir
-        //getasqueryable icin arastirma yap, nerelerde nasil kullanabilirim
-        //sum ekle, avg ekle
-        //direkt sql kodu yazarak sorgu olusturmak icin.
         Task<IList<T>> FromSqlRawAsync(string sql, params object[] parameters);
         //sayfalama icin
         Task<List<T>> GetPagedList<TKey> (int skipCount, int maxResultCount, Expression<Func<T, bool>> predicate= null, Expression<Func<T, TKey>> orderBy=null, bool isAscending=true, params Expression<Func<T, object>>[] includeProperties);
+        Task<List<T>> GetPagedViewList<TKey>(int skipCount, int maxResultCount, Expression<Func<T, bool>> predicate = null, Expression<Func<T, TKey>> orderBy = null, bool isAscending = true);
         Task<IQueryable<T>> DetailsAsync(params Expression<Func<T, object>>[] propertySelectors);
         IQueryable<T> AddDetails(IQueryable<T> query, Expression<Func<T, object>>[] propertySelectors);
         Task<IQueryable<T>> GetQueryableAsync();
@@ -56,6 +52,9 @@ namespace Core.DataAccess
         Task<float> SumAsync(Expression<Func<T, bool>> predicate = null);
         Task<float> AvgAsync(Expression<Func<T, bool>> predicate = null);
         Task<T> GetValueAsync(Expression<Func<T, bool>> predicate);
+        IQueryable<T> Filter(IQueryable<T> query, Expression<Func<T, bool>> predicate);
+        Task<List<SelectListItem>> DDl(Expression<Func<T, bool>> filter, Expression<Func<T, string>> orderBy, Expression<Func<T, SelectListItem>> selector);
+
 
     }
 }

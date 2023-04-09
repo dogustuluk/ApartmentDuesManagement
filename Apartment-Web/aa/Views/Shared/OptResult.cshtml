@@ -1,0 +1,21 @@
+﻿@model OptResult
+
+
+<div class="row" style="height: 580px;">
+	<div class="col-sm-12 my-auto text-center">
+		<p class="Rb F20 @(Model.isOk ? "" : "text-danger")">@(Html.Raw(Model.ResultText))</p>
+		<p style="margin-top:100px"></p>
+		@if (Model.ListText != "")
+		{
+			<p><a class="btn btn-sm Rb btn-primary" style="width:350px;" Target="_parent" href="@Model.ListURL"><i class="fas fa-reply-all right me-2"></i>@Model.ListText</a></p>
+		}
+		@if (Model.DetailsText != "")
+		{
+			<p><a class="btn btn-sm Rb btn-secondary" style="width:350px;" href="@Model.DetailsURL"><i class="fas fa-clipboard-list me-2"></i>@Model.DetailsText</a></p>
+		}
+		@if (Model.AddText != "")
+		{
+				<p><a class="btn btn-sm Rb btn-success" style="width:350px;" href="@Model.AddURL"><i class="fas fa-plus-square me-2"></i>@Model.AddText</a></p>
+		}
+	</div>
+</div>

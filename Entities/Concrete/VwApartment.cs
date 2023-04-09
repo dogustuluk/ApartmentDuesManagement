@@ -1,4 +1,5 @@
 ﻿using Core.Entities;
+using DataAccess.Concrete.EntityFramework.Context;
 using System;
 using System.Collections.Generic;
 
@@ -10,9 +11,9 @@ public partial class VwApartment : IEntity
 
     public Guid Guid { get; set; }
 
-    public string Code { get; set; } = null!;
+    public string? Code { get; set; }
 
-    public string ApartmentName { get; set; } = null!;
+    public string? ApartmentName { get; set; }
 
     public string? DoorNumber { get; set; }
 
@@ -24,7 +25,7 @@ public partial class VwApartment : IEntity
 
     public int NumberOfFlats { get; set; }
 
-    public string CityName { get; set; } = null!;
+    public string? CityName { get; set; }
 
     public int CityId { get; set; }
 
@@ -39,4 +40,5 @@ public partial class VwApartment : IEntity
     public DateTime UpdatedDate { get; set; }
 
     public int IsActive { get; set; }
+
 }

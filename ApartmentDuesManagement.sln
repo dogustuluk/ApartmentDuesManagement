@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\Da
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entities", "Entities\Entities.csproj", "{0BF063AE-B2B8-4F9E-B4DE-DB3857C9BFD1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "Web\Web.csproj", "{D68A09F7-FA54-445E-AFE4-9569C31E77CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web", "Web\Web.csproj", "{D68A09F7-FA54-445E-AFE4-9569C31E77CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apartment-Web", "Apartment-Web\Apartment-Web.csproj", "{107CA2F5-CFA5-427A-84CC-99B8C469C205}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{D68A09F7-FA54-445E-AFE4-9569C31E77CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D68A09F7-FA54-445E-AFE4-9569C31E77CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D68A09F7-FA54-445E-AFE4-9569C31E77CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{107CA2F5-CFA5-427A-84CC-99B8C469C205}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{107CA2F5-CFA5-427A-84CC-99B8C469C205}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{107CA2F5-CFA5-427A-84CC-99B8C469C205}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{107CA2F5-CFA5-427A-84CC-99B8C469C205}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

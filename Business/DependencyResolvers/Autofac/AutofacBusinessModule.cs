@@ -6,6 +6,7 @@ using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
 using DataAccess.Concrete.EntityFramework.Context;
 using DataAccess.Concrete.UnitOfWork;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace Business.DependencyResolvers.Autofac
             //builder.RegisterType<ApartmentDuesManagementContext>().AsSelf().InstancePerLifetimeScope();//Bu kod Autofac container'ına, ApartmentDuesManagementContext sınıfının kendisini kaydeder ve yaşam döngüsünü de belirtir. manager sınıfının içerisine unit of work enjekte edilememe hatasını önler.
 
 
-            builder.RegisterType<ApartmentDuesManagementContext>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<ApartmentDuesManagementContext>().As<DbContext>().InstancePerLifetimeScope();
             
             builder.RegisterType<UnitOfWork>().As<IUnitOfWork2>().InstancePerLifetimeScope();
             

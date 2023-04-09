@@ -1,0 +1,117 @@
+﻿@model Company_AddNew_DM
+
+<form asp-action="AddNew" method="post" style="display:contents;">
+	<div class="page-heading">
+
+		<div class="page-title">
+			<div class="row">
+				<div class="col col-md-9 col-sm-12">
+					<label class="PageTitle">Firmalar</label>
+					<label class="SubPageTitle ms-3">Yeni Firma Ekle</label>
+				</div>
+				<div class="col col-md-3 col-sm-12 text-end mt-2">
+					<a class="btn btn-xsm btn-primary" href="javascript:history.back();"><i class="fas fa-reply-all right me-2"></i>Listeye Geri Dön</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="card mb-2">
+			<div class="card-body">
+				@if (Model.MyResult == null)
+				{
+					<div class="row">
+						<div class="col col-sm-8">
+							<label class="FormLabel-b">Firma Adı <span class="RFVTitle">*</span></label>
+							<input type="text" class="Rb form-control" asp-for="@Model.CompanyName" onkeyup="upperCaseF(this)" maxlength="100" />
+							<span asp-validation-for="@Model.CompanyName"></span>
+						</div>
+						<div class="col col-sm-4">
+							<label class="FormLabel-b">Firma Tipi<span class="RFVTitle">*</span></label>
+							<select name="CompanyTypeID" class="form-select" asp-items="@(new SelectList(Model.CompanyTypeID_DDL,"Value","Text"))" asp-for="@Model.CompanyTypeID">
+							</select>
+							<span asp-validation-for="@Model.CompanyTypeID"></span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col-sm-4">
+							<label class="FormLabel-b">İl<span class="RFVTitle">*</span></label>
+
+							<select name="CityID" class="ajaxCity Select2 form-select" asp-items="@(new SelectList(Model.CityID_DDL,"Value","Text"))" asp-for="@Model.CityID">
+							</select>
+						</div>
+						<div class="col col-sm-4">
+							<label class="FormLabel-b">İlçe<span class="RFVTitle">*</span></label>
+
+							<select name="CountyID" class="ajaxCounty form-select" Params="" asp-items="@(new SelectList(Model.CountyID_DDL,"Value","Text"))" asp-for="@Model.CountyID">
+							</select>
+							<span asp-validation-for="@Model.CountyID"></span>
+						</div>
+						<div class="col col-sm-12">
+							<label class="FormLabel-b">Adres</label>
+							<textarea name="@Html.NameFor(m => Model.Adress)" asp-for="@Model.Adress" class="form-control" maxlength="1000" rows="4">@Model.Adress</textarea>
+							<span asp-validation-for="@Model.Adress"></span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col-sm-6">
+							<label class="FormLabel-b">Fatura Adı <span class="RFVTitle">*</span></label>
+							<input type="text" asp-for="@Model.InvoiceName" class="form-control" maxlength="250" />
+						</div>
+						<div class="col col-sm-3">
+							<label class="FormLabel-b">Vergi Dairesi <span class="RFVTitle">*</span></label>
+							<input type="text" class="form-control" asp-for="@Model.TaxPlace" maxlength="50" />
+						</div>
+						<div class="col col-sm-3">
+							<label class="FormLabel-b">Vergi No <span class="RFVTitle">*</span></label>
+							<input type="text" class="form-control" asp-for="@Model.TaxNo" maxlength="50" />
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col-xl-2 col-lg-4 col-md-6 col-sm-12">
+							<label class="FormLabel-b">Bilgilendirme GSM No</label>
+							<input type="text" class="phoneNumber form-control" asp-for="@Model.NotificationGSMNo" maxlength="50" />
+						</div>
+					</div>
+					<div class="xTitle1">
+						Firma Yetkilisi
+					</div>
+					<div class="row">
+						<div class="col col-xl-4 col-lg-4 col-md-6 col-sm-12">
+							<label class="FormLabel-b">Adı, Soyadı / Firma Kurum Adı</label>
+							<input type="text" asp-for="@Model.MainContact.ContactName" class="form-control" onkeyup="upperCaseF(this)" maxlength="100" />
+						</div>
+						<div class="col col-xl-3 col-lg-4 col-md-6 col-sm-12">
+							<label class="FormLabel-b">Ünvan / Firma</label>
+							<input type="text" asp-for="@Model.MainContact.ContactTitle" class="form-control" maxlength="100" />
+						</div>
+						<div class="col col-xl-3 col-lg-4 col-md-6 col-sm-12">
+							<label class="FormLabel-b">E-Posta</label>
+							<input type="text" asp-for="@Model.MainContact.ContactEMail1" class="form-control" maxlength="100" />
+						</div>
+						<div class="col col-xl-2 col-lg-4 col-md-6 col-sm-12">
+							<label class="FormLabel-b">Telefon / GSM</label>
+							<input type="text" class="phoneNumber form-control" asp-for="@Model.MainContact.ContactGSM" maxlength="50" />
+						</div>
+						<div class="col col-sm-12">
+							<div class="form-check form-switch">
+								 <input class="form-check-input" type="checkbox" asp-for="@Model.isNewMember"/>
+								<label class="form-check-label" asp-for="@Model.isNewMember">Yönetici Tipinde Firma Kullanıcısı Olarak Tanımla</label>
+							</div>
+						</div>
+					</div>
+					<div class="row pt-5 pb-4">
+						<div class="col col-sm-12 p-2">@Html.ValidationSummary(false, "Lütfen gerekli alanları doldurunuz.")</div>
+						<div class="col col-sm-12 text-center">
+							<input type="submit" value="Yeni Bilgileri Ekle" class="btn btnPadder1 btn-secondary" />
+						</div>
+					</div>
+				}
+				else
+				{
+					@await Html.PartialAsync("~/Views/Shared/OptResult.cshtml", Model.MyResult)
+					;
+				}
+			</div>
+		</div>
+	</div>
+</form>

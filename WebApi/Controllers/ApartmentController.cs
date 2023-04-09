@@ -1,4 +1,7 @@
 ﻿using Business.Abstract;
+using Core.Utilities.Results.Abstract;
+using Core.Utilities.Results.Concrete;
+using Entities.Dtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,16 +18,15 @@ namespace WebApi.Controllers
             _apartmentService = apartmentService;
         }
        
-        //[HttpGet("getapartmentlist")]
-        [HttpGet("[action]")]
+        [HttpGet("getapartmentlist")]
         public IActionResult GetApartmentList()
         {
             var result = _apartmentService.GetList();
-            if (result.Success)
+            if (result != null)
             {
                 return Ok(result);
             }
-            return BadRequest(result.Message);
+            return BadRequest("hata");
         }
         [HttpGet("getbyid")]
         public async Task<IActionResult> GetApartmentById(int id)
@@ -55,7 +57,6 @@ namespace WebApi.Controllers
                 return Ok(result);
             }
             return BadRequest("hata");
-
         }
     }
 }

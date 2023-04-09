@@ -1,38 +1,47 @@
 ﻿@using DataAccess.Concrete.EntityFramework.Context;
 @using Entities.Concrete.EntityFramework.Context;
-@model List<Apartment>
+@using Entities.Dtos;
+@model List<ApartmentDto>
 @{
     ViewData["Title"] = "Index";
+
 }
-@*<a class="btn btn-primary" asp-controller="Apartments" asp-action="Index">---</a>
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>ApartmentId</th>
-            <th>Guid</th>
-            <th>Code</th>
-            <th>ApartmentName</th>
-            <th>DoorNumber</th>
-            <th>ResponsibleMemberId</th>
-            <th>NumberOfFlats</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach(var item in Model)
-        {
+<div class="container">
+    <table class="table table-striped table-hover">
+        <thead>
             <tr>
-                <td>@item.ApartmentId</td>
-                <td>@item.Guid</td>
-                <td>@item.Code</td>
-                <td>@item.ApartmentName</td>
-                <td>@item.DoorNumber</td>
-                <td>@item.ResponsibleMemberId</td>
-                <td>@item.NumberOfFlats</td>
-                <td>
-                    <a class="btn  btn-success" asp-controller="Products" asp-action="Update" asp-route-id="@item.ApartmentId">Update</a>
-                    <a class="btn  btn-danger" asp-controller="Products" asp-action="Remove" asp-route-id="@item.ApartmentId">Delete</a>
-                    </td>
+                <th>Apartment Id</th>
+                <th>Guid</th>
+                <th>Code</th>
+                <th>Apartment Name</th>
+                <th>Door Number</th>
+                <th>Block No</th>
+                <th>Open Adress</th>
+                <th>Number Of Flats</th>
+                <th>Is Active</th>
+                <th>Operations</th>
             </tr>
-        }
-    </tbody>
-</table>*@
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.ApartmentId</td>
+                    <td>@item.Guid</td>
+                    <td>@item.Code</td>
+                    <td>@item.ApartmentName</td>
+                    <td>@item.DoorNumber</td>
+                    <td>@item.BlockNo</td>
+                    <td>@item.OpenAdress</td>
+                    <td>@item.NumberOfFlats</td>
+                    <td>@item.IsActive</td>
+                    <td class="btn btn-group">
+                        <a class="btn btn-success mx-1" asp-controller="" asp-action="" asp-route-id="@item.ApartmentId">Update</a>
+                        <a class="btn  btn-danger mx-1" asp-controller="" asp-action="" asp-route-id="@item.ApartmentId">Delete</a>
+                        <a class="btn  btn-warning mx-1" asp-controller="" asp-action="" asp-route-id="@item.ApartmentId">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    

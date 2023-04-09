@@ -11,7 +11,9 @@ namespace DataAccess.Concrete.UnitOfWork
     public interface IUnitOfWork2
     {
         IApartmentDal apartmentDal { get; }
+        IVwApartmentDal vwApartmentDal { get; }
         IApartmentFlat apartmentFlat { get; }
+        IVwApartmentFlat vwApartmentFlat { get; }
         Task CommitAsync();
         void Commit();
         //Task<int> SaveChangesAsync();

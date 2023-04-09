@@ -1,0 +1,72 @@
+﻿@model GCA_DataAccess.Data.Pagination
+@inject AAAService _AAAService;
+@{
+	int LastPage = ((Model.TotalRecords - 1) / Model.pageSize);
+}
+@{
+	string URL = _AAAService.Get_RecentURL();
+	URL = _AAAService.RemoveQueryStringByKey(URL, "PageIndex");
+	if (URL.Contains("?"))
+	{
+		URL = URL + "&PageIndex=1";
+	}
+	else
+	{
+		URL = URL + "?PageIndex=1";
+	}
+}
+
+
+<style>
+	.dataTables_paginate {
+		cursor: pointer;
+	}
+</style>
+<div class="row">
+
+	@if (LastPage > 0)
+	{
+		<div class="col-sm-12 text-center mt-5">
+			<div class="dataTables_info F11" id="bootstrap-data-table-export_info" role="status" aria-live="polite">
+				<b>@Model.TotalRecords</b> kayıttan <b>@(Model.pageSize * (Model.PageIndex - 1)) - @(Model.pageSize * Model.PageIndex)</b> arası görüntüleniyor
+			</div>
+			<input type="hidden" name="pageIndex" id="pageIndex" value="1" />
+		</div>
+		<div class="col-sm-12 mt-3 text-center d-flex justify-content-center">
+			<div class="dataTables_paginate paging_simple_numbers" id="bootstrap-data-table-export_paginate">
+				<ul class="pagination">
+					@if (Model.PageIndex > 0)
+					{
+						<li class="paginate_button page-item previous" id="bootstrap-data-table-export_previous">
+							<a href="@URL.Replace("PageIndex=1","PageIndex="+(Model.PageIndex))" aria-controls="bootstrap-data-table-export" data-dt-idx="0" tabindex="0" class="page-link">Önceki</a>
+						</li>
+					}
+					@{
+						int first = Model.PageIndex < 5 ? 0 : (Model.PageIndex - 5);
+						int last = Model.TotalPages > 10 ? (first + 10) : LastPage;
+						if (last > LastPage)
+						{
+							last = LastPage;
+							first = first >= 10 ? LastPage - 10 : 0;
+						}
+
+						for (int i = first; i <= last; i++)
+						{
+							var clss = Model.PageIndex == i + 1 ? "active" : "";
+
+							<li class="paginate_button page-item @clss">
+								<a href="@URL.Replace("PageIndex=1","PageIndex="+(i + 1))" aria-controls="bootstrap-data-table-export" data-dt-idx="1" tabindex="0" class="page-link">@(i + 1)</a>
+							</li>
+						}
+					}
+					<li class="paginate_button page-item next" id="bootstrap-data-table-export_next">
+						@if ((Model.PageIndex) < LastPage)
+						{
+							<a href="@URL.Replace("PageIndex=1","PageIndex="+(Model.PageIndex + 2))" aria-controls="bootstrap-data-table-export" data-dt-idx="7" tabindex="0" class="page-link">Sonraki</a>
+						}
+					</li>
+				</ul>
+			</div>
+		</div>
+	}
+</div>

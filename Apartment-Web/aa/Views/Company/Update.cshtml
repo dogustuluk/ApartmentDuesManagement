@@ -1,0 +1,292 @@
+﻿@model Company_Update_DM
+@{
+	int AAItemType = User.GetItemType();
+}
+
+<form asp-action="Update" method="post" style="display:contents;">
+	<div class="page-heading">
+
+		<div class="page-title">
+			<div class="row">
+				<div class="col col-md-9 col-sm-12">
+					<label class="PageTitle">Firmalar</label>
+					<label class="SubPageTitle ms-3" title="@Model.CompanyID">Firma Detayı (@Model.CompanyName)</label>
+					<input type="hidden" asp-for="@Model.GUID" />
+				</div>
+				<div class="col col-md-3 col-sm-12 text-end mt-2">
+					<a class="btn btn-xsm btn-primary" href="javascript:history.back();"><i class="fas fa-reply-all right me-2"></i>Listeye Geri Dön</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="card mb-2">
+			<div class="card-body">
+				@if (Model.MyResult == null)
+				{
+					<div class="row">
+						<div class="col col-sm-8">
+							<label class="FormLabel-b">Firma Adı <span class="RFVTitle">*</span></label>
+							<input type="text" class="Rb form-control" asp-for="@Model.CompanyName" onkeyup="upperCaseF(this)" maxlength="100" />
+							<span asp-validation-for="@Model.CompanyName"></span>
+						</div>
+						<div class="col col-sm-4">
+							@if (AAItemType == 1101)
+							{
+								<label class="FormLabel-b">Firma Tipi<span class="RFVTitle">*</span></label>
+								<select name="CompanyTypeID" class="form-select" asp-items="@(new SelectList(Model.CompanyTypeID_DDL,"Value","Text"))" asp-for="@Model.CompanyTypeID">
+								</select>
+								<span asp-validation-for="@Model.CompanyTypeID"></span>
+							}
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col-sm-4">
+							<label class="FormLabel-b">İl<span class="RFVTitle">*</span></label>
+
+							<select name="CityID" class="ajaxCity Select2 form-select" asp-items="@(new SelectList(Model.CityID_DDL,"Value","Text"))" asp-for="@Model.CityID">
+							</select>
+						</div>
+						<div class="col col-sm-4">
+							<label class="FormLabel-b">İlçe<span class="RFVTitle">*</span></label>
+
+							<select name="CountyID" class="ajaxCounty form-select" Params="" asp-items="@(new SelectList(Model.CountyID_DDL,"Value","Text"))" asp-for="@Model.CountyID">
+							</select>
+							<span asp-validation-for="@Model.CountyID"></span>
+						</div>
+						<div class="col col-sm-12">
+							<label class="FormLabel-b">Adres</label>
+							<textarea name="@Html.NameFor(m => Model.Adress)" asp-for="@Model.Adress" class="form-control" maxlength="1000" rows="4">@Model.Adress</textarea>
+							<span asp-validation-for="@Model.Adress"></span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col-sm-6">
+							<label class="FormLabel-b">Fatura Adı <span class="RFVTitle">*</span></label>
+							<input type="text" asp-for="@Model.InvoiceName" class="form-control" maxlength="250" />
+						</div>
+						<div class="col col-sm-3">
+							<label class="FormLabel-b">Vergi Dairesi <span class="RFVTitle">*</span></label>
+							<input type="text" class="form-control" asp-for="@Model.TaxPlace" maxlength="50" />
+						</div>
+						<div class="col col-sm-3">
+							<label class="FormLabel-b">Vergi No <span class="RFVTitle">*</span></label>
+							<input type="text" class="form-control" asp-for="@Model.TaxNo" maxlength="50" />
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col-xl-2 col-lg-4 col-md-6 col-sm-12">
+							<label class="FormLabel-b">Bilgilendirme GSM No</label>
+							<input type="text" class="phoneNumber form-control" asp-for="@Model.NotificationGSMNo" maxlength="50" />
+						</div>
+					</div>
+					<section id="SC_Contacts">
+						<div class="xTitle1">
+							Genel Yetkili
+						</div>
+						<div class="row">
+							<div class="col col-xl-4 col-lg-4 col-md-6 col-sm-12">
+								<label class="FormLabel-b">Genel Yetkili</label>
+								<select name="MainContactID" class="form-select" Params="Main" asp-items="@(new SelectList(Model.ContactID_DDL,"Value","Text"))" asp-for="@Model.MainContactID" onchange="SetContactDetails(this);">
+								</select>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col col-xl-4 col-lg-4 col-md-6 col-sm-12">
+								<label class="FormLabel-b">Adı, Soyadı / Firma Kurum Adı</label>
+								<input type="text" asp-for="@Model.MainContact.ContactName" disabled="@(Model.MainContactID>0)" class="form-control" onkeyup="upperCaseF(this)" maxlength="100" />
+							</div>
+							<div class="col col-xl-3 col-lg-4 col-md-6 col-sm-12">
+								<label class="FormLabel-b">Ünvan / Firma</label>
+								<input type="text" asp-for="@Model.MainContact.ContactTitle" disabled="@(Model.MainContactID>0)" class="form-control" maxlength="100" />
+							</div>
+							<div class="col col-xl-3 col-lg-4 col-md-6 col-sm-12">
+								<label class="FormLabel-b">E-Posta</label>
+								<input type="text" asp-for="@Model.MainContact.ContactEMail1" disabled="@(Model.MainContactID>0)" class="form-control" maxlength="100" />
+							</div>
+							<div class="col col-xl-2 col-lg-4 col-md-6 col-sm-12">
+								<label class="FormLabel-b">Telefon / GSM</label>
+								<input type="text" class="phoneNumber form-control" disabled="@(Model.MainContactID>0)" asp-for="@Model.MainContact.ContactGSM" maxlength="50" />
+							</div>
+						</div>
+						<div class="xTitle1">
+							Satış, Satın Alma Yetkilisi
+						</div>
+						<div class="row">
+							<div class="col col-xl-4 col-lg-4 col-md-6 col-sm-12">
+								<select name="SalesContactID" class="form-select" Params="Sales" asp-items="@(new SelectList(Model.ContactID_DDL,"Value","Text"))" asp-for="@Model.SalesContactID" onchange="SetContactDetails(this);">
+								</select>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col col-xl-4 col-lg-4 col-md-6 col-sm-12">
+								<label class="FormLabel-b">Adı, Soyadı / Firma Kurum Adı</label>
+								<input type="text" asp-for="@Model.SalesContact.ContactName" disabled="@(Model.SalesContactID>0)" class="form-control" onkeyup="upperCaseF(this)" maxlength="100" />
+							</div>
+							<div class="col col-xl-3 col-lg-4 col-md-6 col-sm-12">
+								<label class="FormLabel-b">Ünvan / Firma</label>
+								<input type="text" asp-for="@Model.SalesContact.ContactTitle" disabled="@(Model.SalesContactID>0)" class="form-control" maxlength="100" />
+							</div>
+							<div class="col col-xl-3 col-lg-4 col-md-6 col-sm-12">
+								<label class="FormLabel-b">E-Posta</label>
+								<input type="text" asp-for="@Model.SalesContact.ContactEMail1" disabled="@(Model.SalesContactID>0)" class="form-control" maxlength="100" />
+							</div>
+							<div class="col col-xl-2 col-lg-4 col-md-6 col-sm-12">
+								<label class="FormLabel-b">Telefon / GSM</label>
+								<input type="text" class="phoneNumber form-control" disabled="@(Model.SalesContactID>0)" asp-for="@Model.SalesContact.ContactGSM" maxlength="50" />
+							</div>
+						</div>
+						<div class="xTitle1">
+							Finans Yetkilisi
+						</div>
+						<div class="row">
+							<div class="col col-xl-4 col-lg-4 col-md-6 col-sm-12">
+								<select name="FinanceContactID" class="form-select" Params="Finance" asp-items="@(new SelectList(Model.ContactID_DDL,"Value","Text"))" asp-for="@Model.FinanceContactID" onchange="SetContactDetails(this);">
+								</select>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col col-xl-4 col-lg-4 col-md-6 col-sm-12">
+								<label class="FormLabel-b">Adı, Soyadı / Firma Kurum Adı</label>
+								<input type="text" asp-for="@Model.FinanceContact.ContactName" disabled="@(Model.FinanceContactID>0)" class="form-control" onkeyup="upperCaseF(this)" maxlength="100" />
+							</div>
+							<div class="col col-xl-3 col-lg-4 col-md-6 col-sm-12">
+								<label class="FormLabel-b">Ünvan / Firma</label>
+								<input type="text" asp-for="@Model.FinanceContact.ContactTitle" disabled="@(Model.FinanceContactID>0)" class="form-control" maxlength="100" />
+							</div>
+							<div class="col col-xl-3 col-lg-4 col-md-6 col-sm-12">
+								<label class="FormLabel-b">E-Posta</label>
+								<input type="text" asp-for="@Model.FinanceContact.ContactEMail1" disabled="@(Model.FinanceContactID>0)" class="form-control" maxlength="100" />
+							</div>
+							<div class="col col-xl-2 col-lg-4 col-md-6 col-sm-12">
+								<label class="FormLabel-b">Telefon / GSM</label>
+								<input type="text" class="phoneNumber form-control" disabled="@(Model.FinanceContactID>0)" asp-for="@Model.FinanceContact.ContactGSM" maxlength="50" />
+							</div>
+						</div>						
+					</section>
+					@if (AAItemType == 1101)
+					{
+						<div class="row pt-2">
+							<div class="col col-sm-12">
+								<div class="form-check form-switch form-switch-md">
+									<input class="form-check-input" asp-for="@Model.isActive" type="checkbox">
+									<label class="form-check-label Rb" for="isVarsayilan">Aktif mi?</label>
+								</div>
+							</div>
+						</div>
+					}
+					else
+					{
+						<input type="hidden" asp-for="@Model.CompanyTypeID">
+						<input type="hidden" asp-for="@Model.isActive">
+					}
+					<div class="row">
+						<div class="col col-sm-3 F11">
+							<label class="FormLabel-b">Eklenme</label>
+							@Model.CreatedByName<br>
+							@Model.CreatedDate.ToString("dd.MM.yyyy HH:mm")
+						</div>
+						<div class="col col-sm-3 F11">
+							<label class="FormLabel-b">Son Güncelleme</label>
+							@Model.UpdatedByName<br>
+							@Model.UpdatedDate.ToString("dd.MM.yyyy HH:mm")
+						</div>
+					</div>
+					<div class="row pt-5 pb-4">
+						<div class="col col-sm-12 p-2">@Html.ValidationSummary(false, "Lütfen gerekli alanları doldurunuz.")</div>
+						<div class="col col-sm-12 text-center">
+							<input type="submit" value="Bilgileri Güncelle" class="btn btnPadder1 btn-secondary" />
+						</div>
+					</div>
+				}
+				else
+				{
+					@await Html.PartialAsync("~/Views/Shared/OptResult.cshtml", Model.MyResult)
+					;
+				}
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		function SetContactDetails(ddl) {
+			var ID = parseInt($(ddl).val());
+			var Params = $(ddl).attr("Params");
+
+			//alert(ID+' - '+Params);
+			//return;
+
+			if (Params != '') {
+				if (ID == 0) {
+					if (Params == 'Main') {
+						$("#MainContact_ContactName").prop('disabled', false);
+						$("#MainContact_ContactTitle").prop('disabled', false);
+						$("#MainContact_ContactEMail1").prop('disabled', false);
+						$("#MainContact_ContactGSM").prop('disabled', false);
+						$("#MainContact_ContactName").val('');
+						$("#MainContact_ContactTitle").val('');
+						$("#MainContact_ContactEMail1").val('');
+						$("#MainContact_ContactGSM").val('');
+					}
+					else if (Params == 'Sales') {
+						$("#SalesContact_ContactName").prop('disabled', false);
+						$("#SalesContact_ContactTitle").prop('disabled', false);
+						$("#SalesContact_ContactEMail1").prop('disabled', false);
+						$("#SalesContact_ContactGSM").prop('disabled', false);
+						$("#SalesContact_ContactName").val('');
+						$("#SalesContact_ContactTitle").val('');
+						$("#SalesContact_ContactEMail1").val('');
+						$("#SalesContact_ContactGSM").val('');
+					}
+					else if (Params == 'Finance') {
+						$("#FinanceContact_ContactName").prop('disabled', false);
+						$("#FinanceContact_ContactTitle").prop('disabled', false);
+						$("#FinanceContact_ContactEMail1").prop('disabled', false);
+						$("#FinanceContact_ContactGSM").prop('disabled', false);
+						$("#FinanceContact_ContactName").val('');
+						$("#FinanceContact_ContactTitle").val('');
+						$("#FinanceContact_ContactEMail1").val('');
+						$("#FinanceContact_ContactGSM").val('');
+					}
+				}
+				else {
+					var url = "/Contact/Get_ContactDetails";
+					$.getJSON(url, { ID: ID, Params: Params }, function (data) {
+
+						if (Params == 'Main') {
+							$("#MainContact_ContactName").prop('disabled', true);
+							$("#MainContact_ContactTitle").prop('disabled', true);
+							$("#MainContact_ContactEMail1").prop('disabled', true);
+							$("#MainContact_ContactGSM").prop('disabled', true);
+
+							$("#MainContact_ContactName").val(data.ContactName);
+							$("#MainContact_ContactTitle").val(data.ContactTitle);
+							$("#MainContact_ContactEMail1").val(data.ContactEMail1);
+							$("#MainContact_ContactGSM").val(data.ContactGSM);
+						}
+						else if (Params == 'Sales') {
+							$("#SalesContact_ContactName").prop('disabled', true);
+							$("#SalesContact_ContactTitle").prop('disabled', true);
+							$("#SalesContact_ContactEMail1").prop('disabled', true);
+							$("#SalesContact_ContactGSM").prop('disabled', true);
+
+							$("#SalesContact_ContactName").val(data.ContactName);
+							$("#SalesContact_ContactTitle").val(data.ContactTitle);
+							$("#SalesContact_ContactEMail1").val(data.ContactEMail1);
+							$("#SalesContact_ContactGSM").val(data.ContactGSM);
+						}
+						else if (Params == 'Finance') {
+							$("#FinanceContact_ContactName").prop('disabled', true);
+							$("#FinanceContact_ContactTitle").prop('disabled', true);
+							$("#FinanceContact_ContactEMail1").prop('disabled', true);
+							$("#FinanceContact_ContactGSM").prop('disabled', true);
+
+							$("#FinanceContact_ContactName").val(data.ContactName);
+							$("#FinanceContact_ContactTitle").val(data.ContactTitle);
+							$("#FinanceContact_ContactEMail1").val(data.ContactEMail1);
+							$("#FinanceContact_ContactGSM").val(data.ContactGSM);
+						}
+					});
+				}
+			}
+		}
+	</script>
+</form>

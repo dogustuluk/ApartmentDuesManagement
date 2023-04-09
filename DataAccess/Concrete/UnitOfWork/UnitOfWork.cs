@@ -18,16 +18,22 @@ namespace DataAccess.Concrete.UnitOfWork
         private readonly ApartmentDuesManagementContext _context;
         //private IDbContextTransaction _transaction;
         private readonly IApartmentDal _apartmentDal;
+        private readonly IVwApartmentDal _apartmentVwDal;
         private readonly IApartmentFlat _apartmentFlat;
-        public UnitOfWork(ApartmentDuesManagementContext context, IApartmentDal apartmentDal, IApartmentFlat apartmentFlat)
+        private readonly IVwApartmentFlat _apartmentVwFlat;
+        public UnitOfWork(ApartmentDuesManagementContext context, IApartmentDal apartmentDal, IApartmentFlat apartmentFlat, IVwApartmentDal apartmentVwDal, IVwApartmentFlat apartmentVwFlat)
         {
             _context = context;
             _apartmentDal = apartmentDal;
             _apartmentFlat = apartmentFlat;
+            _apartmentVwDal = apartmentVwDal;
+            _apartmentVwFlat = apartmentVwFlat;
         }
 
         public IApartmentDal apartmentDal => _apartmentDal;
+        public IVwApartmentDal vwApartmentDal => _apartmentVwDal;
         public IApartmentFlat apartmentFlat => _apartmentFlat;
+        public IVwApartmentFlat vwApartmentFlat => _apartmentVwFlat;
 
         public void Commit()
         {

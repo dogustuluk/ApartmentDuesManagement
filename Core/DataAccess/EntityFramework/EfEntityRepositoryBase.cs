@@ -1,4 +1,6 @@
 ﻿using Core.Entities;
+using LinqKit;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -179,8 +181,25 @@ namespace Core.DataAccess.EntityFramework
                 query = isAscending ? query.OrderBy(orderBy)
                                     : query.OrderByDescending(orderBy);
             }
-            query = query.Skip(skipCount).Take(maxResultCount);
+            query = query.Skip(skipCount).Take(maxResultCount);//sayfa basina dusen item sayisi.
+            //toplam sayfa sayisini bulma eksik, onu yap
+            return await query.ToListAsync();
+        }
 
+        public async Task<List<TEntity>> GetPagedViewList<TKey>(int skipCount, int maxResultCount, Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, TKey>> orderBy = null, bool isAscending = true)
+        {
+            var query = GetQueryable();
+            if (predicate != null)
+            {
+                query = query.Where(predicate); //filtreleme icin
+            }
+            if (orderBy != null)
+            {
+                query = isAscending ? query.OrderBy(orderBy)
+                                    : query.OrderByDescending(orderBy);
+            }
+            query = query.Skip(skipCount).Take(maxResultCount);//sayfa basina dusen item sayisi.
+            //toplam sayfa sayisini bulma eksik, onu yap
             return await query.ToListAsync();
         }
 
@@ -295,6 +314,20 @@ namespace Core.DataAccess.EntityFramework
         public async Task<List<TEntity>> GetListAsync2(IQueryable<TEntity> query)
         {
             return await query.ToListAsync();
+        }
+
+        public IQueryable<TEntity> Filter(IQueryable<TEntity> query, Expression<Func<TEntity, bool>> predicate)
+        {
+            if (predicate != null)
+            {
+                query = query.Where(predicate);
+            }
+            return query;
+        }
+        public async Task<List<SelectListItem>> DDl(Expression<Func<TEntity, bool>> filter, Expression<Func<TEntity, string>> orderBy, Expression<Func<TEntity, SelectListItem>> selector)
+        {
+            var ddl = GetQueryable().Where(filter).OrderBy(orderBy).Select(selector);
+            return await ddl.ToListAsync();
         }
         //gelen datalari filtreleyen ayri bir metot yaz
     }
