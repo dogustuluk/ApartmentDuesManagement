@@ -11,32 +11,28 @@
         <i class="fas fa-table mr-1"></i>
         Apartmanlar
     </div>
-    @using (Html.BeginForm("Index", "Apartment", FormMethod.Get))
+    @using (Html.BeginForm("Index", "Apartment", FormMethod.Get,new { enctype = "multipart/form-data" }))
     {
         <div class="row">
+            
             <div class="col-md-3">
-                <label>Kac kayit gosterilsin: </label>
-                @Html.DropDownList("maxResultCount", new SelectList(new List<int> {2, 10, 20, 50 }, Model.Count), new { @class = "form-control form-control-md" })
-            </div>
+                <label>Siralama Yap: </label>
+                @*@Html.DropDownList("apartmentFilter", new SelectList(Model.Select(x => x.ApartmentName).Distinct().Prepend("")), new { @class = "form-control form-control-md" })
+*@
+                @*@Html.DropDownList("apartmentFilter", ViewBag.ApartmentList as SelectList, new { @class = "form-control form-control-md" })*@
+                @Html.DropDownList("orderBy", ViewBag.SortOrder as SelectList, new { @class = "form-control" })
 
-            <div class="col-md-3">
-                <label>Apartman Sec: </label>
-                @Html.DropDownList("apartmentFilter", new SelectList(Model.Select(x => x.ApartmentName).Distinct().Prepend("")), new { @class = "form-control form-control-md" })
+
+
             </div>
+            
+
 
             <div class="col-md-3">
                 <label>Ilce Sec: </label>
                 @Html.DropDownList("countyFilter", new SelectList(Model.Select(x => x.CountyName).Distinct().Prepend("")), new { @class = "form-control form-control-md"})
             </div>
-            <div class="col-md-3">
-                <label>Siralama Yap: </label>
-                @Html.DropDownList("filter", new SelectList(new List<SelectListItem>
-                {
-                    new SelectListItem { Text = "", Value = "" },
-                    new SelectListItem { Text = "Guid alanina gore azalan", Value = "asc" },
-                    new SelectListItem { Text = "Guid alanina gore artan", Value = "desc" }
-                }, "Value", "Text"), new { @class = "form-control form-control-md" })
-            </div>
+           
         </div>
 
                 //@Html.DropDownList("filter3", ViewBag.FilterList as SelectList, new { @class = "form-control form-control-md" })

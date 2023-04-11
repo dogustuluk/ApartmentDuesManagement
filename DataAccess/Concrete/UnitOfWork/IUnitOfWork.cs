@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Concrete.UnitOfWork
 {
-    public interface IUnitOfWork2
+    public interface IUnitOfWork
     {
         IApartmentDal apartmentDal { get; }
         IVwApartmentDal vwApartmentDal { get; }

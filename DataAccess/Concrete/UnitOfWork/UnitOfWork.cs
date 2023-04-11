@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Concrete.UnitOfWork
 {
-    public class UnitOfWork : IUnitOfWork2
+    public class UnitOfWork : IUnitOfWork
     {
         private readonly ApartmentDuesManagementContext _context;
         //private IDbContextTransaction _transaction;

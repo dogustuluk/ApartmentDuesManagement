@@ -10,9 +10,9 @@ namespace Apartment_Web.Controllers
     {
         private readonly IApartmentViewService _apartmentViewService;
         private readonly IApartmentService _apartmentService;
-        private readonly IUnitOfWork2 _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public _BaseController(IApartmentViewService apartmentViewService, IUnitOfWork2 unitOfWork)
+        public _BaseController(IApartmentViewService apartmentViewService, IUnitOfWork unitOfWork)
         {
             _apartmentViewService = apartmentViewService;
             _unitOfWork = unitOfWork;

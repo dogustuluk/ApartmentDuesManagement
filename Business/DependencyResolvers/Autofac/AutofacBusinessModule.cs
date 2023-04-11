@@ -28,7 +28,7 @@ namespace Business.DependencyResolvers.Autofac
 
             builder.RegisterType<ApartmentDuesManagementContext>().As<DbContext>().InstancePerLifetimeScope();
             
-            builder.RegisterType<UnitOfWork>().As<IUnitOfWork2>().InstancePerLifetimeScope();
+            builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
             
             builder.RegisterType<EfApartmentDal>().As<IApartmentDal>().InstancePerLifetimeScope();
             builder.RegisterType<ApartmentManager>().As<IApartmentService>().InstancePerLifetimeScope();

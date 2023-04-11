@@ -15,7 +15,7 @@ namespace Apartment_Web.DependencyResolvers
         {
             builder.RegisterType<ApartmentDuesManagementContext>().AsSelf().InstancePerLifetimeScope();
             
-            builder.RegisterType<UnitOfWork>().As<IUnitOfWork2>().InstancePerLifetimeScope();
+            builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
 
             
             

@@ -8,13 +8,9 @@ namespace Core.Entities
 {
     public class DDL:IEntity
     {
-        public string Text { get; set; }
-        public string Value { get; set; }
-
-        //public DDL(string text, string value)
-        //{
-        //    Text = text;
-        //    Value = value;
-        //}
+        public string DefaultText { get; set; }
+        public string DefaultValue { get; set; }
+        public string SelectedValue { get; set; }
+        public string SelectedText { get; set; }
     }
 }

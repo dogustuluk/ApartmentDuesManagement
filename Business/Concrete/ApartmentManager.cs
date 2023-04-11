@@ -25,35 +25,22 @@ namespace Business.Concrete
 {
     public class ApartmentManager : IApartmentService
     {
-        //private readonly IApartmentDal _apartmentDal;
-        private readonly IUnitOfWork2 _unitOfWork2;
-        private readonly IMapper _mapper;
-        //IApartmentDal'ı unıt of work'e aktar, burda unıt of work ıle tek seferde erıs.
-        //_unitOfWork._apartmentDal.GetList() şeklınde
-        public ApartmentManager(IUnitOfWork2 unitOfWork2, IMapper mapper)
-        {
-            _unitOfWork2 = unitOfWork2;
-            _mapper = mapper;
-        }
+        private readonly IUnitOfWork _unitOfWork;
 
-        //public List<VwApartment> GetList()
-        //{
-        //    //var apartments = _unitOfWork2.apartmentDal.GetList();
-        //    //var result = _mapper.Map<List<ApartmentDto>>(apartments);
-        //    //return new SuccessDataResult<List<ApartmentDto>>(result, "Apartmanlar basarili bir sekilde listelendi.");
-        //    var apartments = _unitOfWork2.apartmentDal.GetList();
-        //    return new List<VwApartment>(apartments);
-        //}
+        public ApartmentManager(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
 
         async Task<IEnumerable<Apartment>> IApartmentService.GetList()
         {
-            var apartments = _unitOfWork2.apartmentDal.GetList();
+            var apartments = _unitOfWork.apartmentDal.GetAll();
                 return new List<Apartment>(apartments);
         }
 
         public async Task<IDataResult<Apartment>> GetApartmentById(int id)
         {
-            var apartment = await _unitOfWork2.apartmentDal.GetByIdAsync(id);
+            var apartment = await _unitOfWork.apartmentDal.GetByIdAsync(id);
             if (apartment == null)
             {
                 return new ErrorDataResult<Apartment>("İstenen apartman id'si ile ilişkili bir veri bulunamadı");
@@ -63,7 +50,7 @@ namespace Business.Concrete
 
         public async Task<IDataResult<List<Apartment>>> GetApartmentsWithFlat()
         {
-            var query = _unitOfWork2.apartmentDal.GetQueryable(x => x.ApartmentFlats);
+            var query = _unitOfWork.apartmentDal.GetQueryable(x => x.ApartmentFlats);
             if (query == null)
             {
                 return new ErrorDataResult<List<Apartment>>("Bir hata ile karsilasildi");
@@ -79,7 +66,7 @@ namespace Business.Concrete
 
         public async Task<IDataResult<List<Apartment>>> GetApartmentsWithFlatAndMember()
         {
-            var query1 = _unitOfWork2.apartmentDal.GetQueryable(x => x.ApartmentFlats).Include(x => x.ApartmentFlats).ThenInclude(x => x.FlatOwner);
+            var query1 = _unitOfWork.apartmentDal.GetQueryable(x => x.ApartmentFlats).Include(x => x.ApartmentFlats).ThenInclude(x => x.FlatOwner);
             var result = await query1.ToListAsync();
            
             return new SuccessDataResult<List<Apartment>>(result, "Apartmanlar ve apartmanlara ait daireler ile beraber daire sahipleri başarıyla getirildi.");
@@ -88,7 +75,7 @@ namespace Business.Concrete
 
         public async Task<IEnumerable<Apartment>> GetList(Expression<Func<Apartment, bool>> filter = null)
         {
-            var apartments = _unitOfWork2.apartmentDal.GetList(filter);
+            var apartments = _unitOfWork.apartmentDal.GetAll(filter);
             return apartments;
         }
     }

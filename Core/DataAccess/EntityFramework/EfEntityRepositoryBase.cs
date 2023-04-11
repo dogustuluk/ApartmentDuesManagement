@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -41,6 +42,7 @@ namespace Core.DataAccess.EntityFramework
                 return entity;
             }
         }
+
         public void Delete(TEntity entity)
         {
             using (var context = new TContext())
@@ -62,6 +64,7 @@ namespace Core.DataAccess.EntityFramework
             }
         }
 
+
         public TEntity Get(Expression<Func<TEntity, bool>> filter)
         {
             using (var context = new TContext())
@@ -70,7 +73,8 @@ namespace Core.DataAccess.EntityFramework
             }
         }
 
-        public IEnumerable<TEntity> GetList(Expression<Func<TEntity, bool>> filter = null)
+
+        public IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> filter = null)
         {
             using (var context = new TContext())
             {
@@ -80,7 +84,7 @@ namespace Core.DataAccess.EntityFramework
             }
         }
 
-        public async Task<List<TEntity>> GetListAsync(List<Expression<Func<TEntity, bool>>> predicates, List<Expression<Func<TEntity, object>>> includeProperties)
+        public async Task<List<TEntity>> GetAllAsync(List<Expression<Func<TEntity, bool>>> predicates, List<Expression<Func<TEntity, object>>> includeProperties)
         {
             using (var context = new TContext())
             {
@@ -102,6 +106,7 @@ namespace Core.DataAccess.EntityFramework
                 return await query.AsNoTracking().ToListAsync();
             }
         }
+
 
         public void Update(TEntity entity)
         {
@@ -125,13 +130,6 @@ namespace Core.DataAccess.EntityFramework
             }
         }
 
-        public async Task<IList<TEntity>> FromSqlRawAsync(string sql, params object[] parameters)
-        {
-            using (var context = new TContext())
-            {
-                return await context.Set<TEntity>().FromSqlRaw(sql, parameters).ToListAsync();
-            }
-        }
 
         /// <summary>
         /// dbSet<typeparamref name="TEntity"/> nesnesini kullanarak sayfalama islemi yapar.
@@ -161,18 +159,34 @@ namespace Core.DataAccess.EntityFramework
             return await query.ToListAsync();
         }
 
-        public async Task<List<TEntity>> GetPagedViewList<TKey>(int skipCount, int maxResultCount, Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, TKey>> orderBy = null, bool isAscending = true)
+        //public async Task<List<TEntity>> GetPagedViewList<TKey>(int skipCount, int maxResultCount, Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, TKey>> orderBy = null, bool isAscending = true)
+        //{
+        //    var query = GetQueryable();
+        //    if (predicate != null)
+        //    {
+        //        query = query.Where(predicate); //filtreleme icin
+        //    }
+        //    if (orderBy != null)
+        //    {
+        //        query = isAscending ? query.OrderBy(orderBy)
+        //                            : query.OrderByDescending(orderBy);
+        //    }
+        //    query = query.Skip(skipCount).Take(maxResultCount);//sayfa basina dusen item sayisi.
+        //    //toplam sayfa sayisini bulma eksik, onu yap
+        //    return await query.ToListAsync();
+        //}
+        public async Task<List<TEntity>> GetPagedViewList(int skipCount, int maxResultCount, Expression<Func<TEntity, bool>> predicate = null, string? orderBy = null, bool isAscending = true)
         {
             var query = GetQueryable();
             if (predicate != null)
             {
                 query = query.Where(predicate); //filtreleme icin
             }
-            if (orderBy != null)
-            {
-                query = isAscending ? query.OrderBy(orderBy)
-                                    : query.OrderByDescending(orderBy);
-            }
+            //if (orderBy != null)
+            //{
+            //    query = query.OrderBy(orderBy);
+            //}
+
             query = query.Skip(skipCount).Take(maxResultCount);//sayfa basina dusen item sayisi.
             //toplam sayfa sayisini bulma eksik, onu yap
             return await query.ToListAsync();
@@ -210,17 +224,13 @@ namespace Core.DataAccess.EntityFramework
             return query;
         }
 
-        public async Task<IQueryable<TEntity>> GetQueryableAsync()
-        {
-            return await Task.FromResult(GetQueryable());
-        }
-
         public async Task<DbSet<TEntity>> GetDbAsync()
         {
             return await Task.FromResult(_dbSet);
 
         }
 
+        //kaldir
         /// <summary>
         /// Tabloya ait sorgulari yapabilmemize olanak saglar. include parametresini verirsek, yapilan sorguya verilen tablolari(inlude) eklenmesini saglar.
         /// </summary>
@@ -249,6 +259,7 @@ namespace Core.DataAccess.EntityFramework
             return query;
         }
 
+
         public async Task<TEntity> GetByIdAsync(int id)
         {
             using (var context = new TContext())
@@ -256,105 +267,93 @@ namespace Core.DataAccess.EntityFramework
                 return await context.Set<TEntity>().FindAsync(id);
             }
         }
+        public TEntity? GetById(int id)
+        {
+            using (var context = new TContext())
+            {
+                return context.Set<TEntity>().Find(id);
+            }
 
-        public async Task<TEntity> GetByGuid(Guid guid)
+        }
+
+        public async Task<TEntity> GetByGuidAsync(Guid guid)
         {
             using (var context = new TContext())
             {
                 return await context.Set<TEntity>().FindAsync(guid);
             }
         }
-
-
-
-
-
-        public async Task<List<TEntity>> GetListAsync2(IQueryable<TEntity> query)
-        {
-            return await query.ToListAsync();
-        }
-
-        public IQueryable<TEntity> Filter(IQueryable<TEntity> query, Expression<Func<TEntity, bool>> predicate)
-        {
-            if (predicate != null)
-            {
-                query = query.Where(predicate);
-            }
-            return query;
-        }
-        public async Task<List<SelectListItem>> DDl(Expression<Func<TEntity, bool>> filter, Expression<Func<TEntity, string>> orderBy, Expression<Func<TEntity, SelectListItem>> selector)
-        {
-            var ddl = GetQueryable().Where(filter).OrderBy(orderBy).Select(selector);
-            return await ddl.ToListAsync();
-        }
-
-        //public List<DDL> GetDDL(string textProperty, string valueProperty, bool includeEmptyItem = false, string emptyItemText = "", int maxCount = 0)
-        //{
-        //    using (var context = new TContext())
-        //    {
-        //        var query = context.Set<TEntity>();
-
-        //        if (maxCount > 0)
-        //        {
-        //            query = (DbSet<TEntity>)query.Take(maxCount);
-        //        }
-
-        //        var items = query.ToList();
-
-        //        var result = new List<DDL>();
-
-        //        if (includeEmptyItem)
-        //        {
-        //            result.Add(new DDL { Value = "0", Text = emptyItemText });
-        //        }
-
-        //        foreach (var item in items)
-        //        {
-        //            var text = item.GetType().GetProperty(textProperty)?.GetValue(item, null)?.ToString();
-        //            var value = item.GetType().GetProperty(valueProperty)?.GetValue(item, null)?.ToString();
-
-        //            result.Add(new DDL {Text = text,Value=value});
-        //        }
-
-        //        return result;
-        //    }
-        //}
-
-
-        public List<DDL> GetDDL(Expression<Func<TEntity, bool>> predicate, bool includeEmptyItem, string emptyItemText, string selectedItemValue, string selectedItemText, int maxCount, string orderBy)
+        public TEntity? GetByGuid(Guid guid)
         {
             using (var context = new TContext())
             {
-                var query = context.Set<TEntity>().Where(predicate);
-
-                //if (!string.IsNullOrEmpty(orderBy))
-                //{
-                //    query = query.OrderBy(orderBy);
-                //}
-                orderBy = orderBy ?? string.Empty;
-
-                if (maxCount > 0)
-                {
-                    query = query.Take(maxCount);
-                }
-
-                var result = new List<DDL>();
-
-                if (includeEmptyItem)
-                {
-                    result.Add(new DDL { Value = selectedItemValue, Text = emptyItemText });
-                }
-
-                foreach (var q in query)
-                {
-                    var text = q.GetType().GetProperty(selectedItemText)?.GetValue(q, null)?.ToString();
-                    var value = q.GetType().GetProperty(selectedItemValue)?.GetValue(q, null)?.ToString();
-
-                    result.Add(new DDL { Value = value, Text = text });
-                }
-
-                return result;
+                return context.Set<TEntity>().Find(guid);
             }
         }
+
+
+        //hepsini repoya ozel yap
+        
+
+        //public Task<List<TEntity>> GetDataAsync(Expression<Func<TEntity, bool>> predicate, int take, string sortOrderBy)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //public IEnumerable<TEntity> GetDataSql(string sql, int pageIndex, int take, string orderBy)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //public async Task<Pagination.PaginatedList<TEntity>> GetDataPagedAsync(Expression<Func<TEntity, bool>> predicate, int pageIndex, int take, string orderBy)
+        //{
+
+        //    using (var context = new TContext())
+        //    {
+        //        var query = context.Set<TEntity>().Where(predicate);
+        //        var orderQuery = query.OrderBy();
+        //        var paginatedList = await Pagination.PaginatedList<TEntity>.CreateAsync(orderQuery, pageIndex, take);
+        //        return paginatedList;
+        //    }
+        //}
+
+        //public IQueryable<TEntity> GetSortedData(IQueryable<TEntity> myData, string orderBy)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //public Task<List<TEntity>> GetSortedDataAsync(IQueryable<TEntity> myData, string orderBy, int take)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //public IQueryable<DDL> GetDDL(Expression<Func<TEntity, bool>> predicate, bool isGuid, string defaultText, string defaultValue, string selectedValue, int take, string? Params)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //public async Task<List<DDL>> GetDDLAsync(Expression<Func<TEntity, bool>> predicate, bool isGuid, string defaultText, string defaultValue, string selectedText ,string selectedValue, int take, string? Params)
+        //{
+        //    using (var context = new TContext())
+        //    {
+        //        var query = context.Set<TEntity>().Where(predicate).Take(take);
+
+        //        var ddlList = new List<DDL>() { new DDL {DefaultText = defaultText, DefaultValue = defaultValue } };
+
+        //        if (!string.IsNullOrEmpty(selectedValue) && selectedValue != defaultValue)
+        //        {
+        //            ddlList.Add(new DDL { DefaultText = selectedText, DefaultValue = selectedValue });
+        //        }
+
+        //        var selectQuery = query.Select(entity => new DDL
+        //        {
+        //            SelectedText = selectedText,
+        //            SelectedValue = selectedValue
+        //        });
+        //        ddlList.AddRange(await selectQuery.ToListAsync());
+
+        //        return ddlList;
+        //    }
+        //}
     }
 }

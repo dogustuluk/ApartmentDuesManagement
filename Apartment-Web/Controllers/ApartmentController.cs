@@ -10,6 +10,7 @@ using LinqKit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
+using System.Drawing.Printing;
 using System.Linq.Expressions;
 using System.Text.Json;
 
@@ -26,13 +27,54 @@ namespace Apartment_Web.Controllers
             _apartmentService = apartmentService;
         }
 
-        public async Task<IActionResult> Index(int? maxResultCount, string? apartmentFilter, string? countyFilter)
+
+        //public async Task<IActionResult> Index(string? apartmentFilter, string? countyFilter, string? orderOpt)
+        //{
+        //    var skipCount = 0;
+        //    var maxResultCount = 25;
+
+        //    var predicate = PredicateBuilder.New<VwApartment>(true);
+
+        //    if (!string.IsNullOrEmpty(apartmentFilter))
+        //    {
+        //        predicate = predicate.And(p => p.ApartmentName.Contains(apartmentFilter));
+        //    }
+        //    if (!string.IsNullOrEmpty(countyFilter))
+        //    {
+        //        predicate = predicate.And(p => p.CountyName.Contains(countyFilter));
+        //    }
+
+        //    var orderOptions = new List<SelectListItem>
+        //    {
+        //        new SelectListItem {Value = "DoorNumber-asc", Text="kapi numarasi artan"},
+        //        new SelectListItem {Value = "DoorNumber-desc", Text="kapi numarasi azalan"}
+        //    };
+
+        //    ViewBag.OrderOptions = orderOptions;
+        //    if (orderOpt?.StartsWith("-") == true)
+        //    {
+        //        orderOpt = orderOpt.Substring(1);
+        //    }
+
+        //    var model = await _apartmentViewService.GetPagedList(
+        //        skipCount,
+        //        maxResultCount: maxResultCount,
+        //        predicate: predicate,
+        //        orderBy:orderOpt
+        //        );
+
+
+        //    ViewBag.OrderOptions = new Func<List<SelectListItem>>(() => orderOptions);
+
+        //    return View(model);
+        //}
+        public async Task<IActionResult> Index(string? apartmentFilter, string? countyFilter, string orderBy, int? pageNumber)
         {
             var skipCount = 0;
-
-            maxResultCount ??= 10;
+            var maxResultCount = 25;
 
             var predicate = PredicateBuilder.New<VwApartment>(true);
+
             if (!string.IsNullOrEmpty(apartmentFilter))
             {
                 predicate = predicate.And(p => p.ApartmentName.Contains(apartmentFilter));
@@ -43,16 +85,18 @@ namespace Apartment_Web.Controllers
             }
 
 
-            var model = await _apartmentViewService.GetPagedList(
-                skipCount,
-                maxResultCount.Value,
-                predicate:predicate
-                );
+            string defaultSortOrder = "ApartmentId";
+            var sortOptions = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "CountyName ASC", Text = "Ilceye gore artan" },
+                new SelectListItem { Value = "CountyName DESC", Text = "Ilceye gore azalan" },
+                new SelectListItem { Value = "DoorNumber ASC", Text = "Kapi numarasina gore artan" },
+                new SelectListItem { Value = "DoorNumber DESC", Text = "Kapi numarasina gore azalan" },
+            };
+            ViewBag.SortOrder = new SelectList(sortOptions, "Value", "Text", orderBy);
+            var pagedList = await _apartmentViewService.GetDataPagedAsync(predicate, pageNumber ?? 1, maxResultCount, orderBy ?? defaultSortOrder);
 
-            
-
-
-            return View(model);
+            return View(pagedList);
         }
     }
 }

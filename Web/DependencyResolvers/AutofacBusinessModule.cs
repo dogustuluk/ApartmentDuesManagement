@@ -17,7 +17,7 @@ namespace Web.DependencyResolvers
         {
             //builder.RegisterType<ApartmentDuesManagementContext>().AsSelf().InstancePerLifetimeScope();
 
-            builder.RegisterType<UnitOfWork>().As<IUnitOfWork2>().InstancePerLifetimeScope();
+            builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
 
             builder.RegisterType<EfApartmentDal>().As<IApartmentDal>().SingleInstance();
             builder.RegisterType<ApartmentManager>().As<IApartmentService>().SingleInstance();
