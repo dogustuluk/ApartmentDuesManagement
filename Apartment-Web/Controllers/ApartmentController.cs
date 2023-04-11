@@ -6,8 +6,10 @@ using Core.Utilities.Results.Concrete;
 using DataAccess.Concrete.EntityFramework.Context;
 using Entities.Concrete.EntityFramework.Context;
 using Entities.Dtos;
+using LinqKit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Linq.Expressions;
 using System.Text.Json;
 
@@ -16,28 +18,39 @@ namespace Apartment_Web.Controllers
     public class ApartmentController : Controller
     {
         private readonly IApartmentViewService _apartmentViewService;
+        private readonly IApartmentService _apartmentService;
 
-        public ApartmentController(IApartmentViewService apartmentViewService)
+        public ApartmentController(IApartmentViewService apartmentViewService, IApartmentService apartmentService)
         {
             _apartmentViewService = apartmentViewService;
+            _apartmentService = apartmentService;
         }
 
-        public async Task<IActionResult> Index(int? maxResultCount)
+        public async Task<IActionResult> Index(int? maxResultCount, string? apartmentFilter, string? countyFilter)
         {
             var skipCount = 0;
+
             maxResultCount ??= 10;
-            var model = await _apartmentViewService.GetPagedList(skipCount, maxResultCount.Value);
 
-            var counties = await _apartmentViewService.GetCounties(
-                 filter: x => true,
-                 orderBy: x => x.CountyName,
-                 selector: x => new SelectListItem
-                 {
-                     Text = x.CountyName,
-                     Value = x.CountyName
-                 });
+            var predicate = PredicateBuilder.New<VwApartment>(true);
+            if (!string.IsNullOrEmpty(apartmentFilter))
+            {
+                predicate = predicate.And(p => p.ApartmentName.Contains(apartmentFilter));
+            }
+            if (!string.IsNullOrEmpty(countyFilter))
+            {
+                predicate = predicate.And(p => p.CountyName.Contains(countyFilter));
+            }
 
-            ViewBag.CountySelect = new SelectList(counties, "Value", "Text");
+
+            var model = await _apartmentViewService.GetPagedList(
+                skipCount,
+                maxResultCount.Value,
+                predicate:predicate
+                );
+
+            
+
 
             return View(model);
         }

@@ -41,31 +41,6 @@ namespace Core.DataAccess.EntityFramework
                 return entity;
             }
         }
-
-        public async Task AddRangeAsync(IEnumerable<TEntity> entities)
-        {
-            using (var context = new TContext())
-            {
-                await context.Set<TEntity>().AddRangeAsync(entities);
-            }
-        }
-
-        public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate)
-        {
-            using (var context = new TContext())
-            {
-                return await context.Set<TEntity>().AnyAsync(predicate);
-            }
-        }
-
-        public async Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate = null)
-        {
-            using (var context = new TContext())
-            {
-                return await (predicate == null ? context.Set<TEntity>().CountAsync() : context.Set<TEntity>().CountAsync(predicate));
-            }
-        }
-
         public void Delete(TEntity entity)
         {
             using (var context = new TContext())
@@ -95,17 +70,17 @@ namespace Core.DataAccess.EntityFramework
             }
         }
 
-        public List<TEntity> GetList(Expression<Func<TEntity, bool>> filter = null)
+        public IEnumerable<TEntity> GetList(Expression<Func<TEntity, bool>> filter = null)
         {
             using (var context = new TContext())
-           {
+            {
                 return filter == null
                     ? context.Set<TEntity>().ToList()
                     : context.Set<TEntity>().Where(filter).ToList();
             }
         }
 
-        public async Task<IList<TEntity>> GetListAsync(IList<Expression<Func<TEntity, bool>>> predicates, IList<Expression<Func<TEntity, object>>> includeProperties)
+        public async Task<List<TEntity>> GetListAsync(List<Expression<Func<TEntity, bool>>> predicates, List<Expression<Func<TEntity, object>>> includeProperties)
         {
             using (var context = new TContext())
             {
@@ -290,26 +265,9 @@ namespace Core.DataAccess.EntityFramework
             }
         }
 
-        public async Task<float> SumAsync(Expression<Func<TEntity, bool>> predicate = null)
-        {
-            throw new NotImplementedException();
 
-        }
-        public async Task<float> AvgAsync(Expression<Func<TEntity, bool>> predicate = null)
-        {
-            throw new NotImplementedException();
-        }
 
-        public float GetValue(TEntity entity)
-        {
-            throw new NotImplementedException();
 
-        }
-
-        public async Task<TEntity> GetValueAsync(Expression<Func<TEntity, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<List<TEntity>> GetListAsync2(IQueryable<TEntity> query)
         {
@@ -329,6 +287,74 @@ namespace Core.DataAccess.EntityFramework
             var ddl = GetQueryable().Where(filter).OrderBy(orderBy).Select(selector);
             return await ddl.ToListAsync();
         }
-        //gelen datalari filtreleyen ayri bir metot yaz
+
+        //public List<DDL> GetDDL(string textProperty, string valueProperty, bool includeEmptyItem = false, string emptyItemText = "", int maxCount = 0)
+        //{
+        //    using (var context = new TContext())
+        //    {
+        //        var query = context.Set<TEntity>();
+
+        //        if (maxCount > 0)
+        //        {
+        //            query = (DbSet<TEntity>)query.Take(maxCount);
+        //        }
+
+        //        var items = query.ToList();
+
+        //        var result = new List<DDL>();
+
+        //        if (includeEmptyItem)
+        //        {
+        //            result.Add(new DDL { Value = "0", Text = emptyItemText });
+        //        }
+
+        //        foreach (var item in items)
+        //        {
+        //            var text = item.GetType().GetProperty(textProperty)?.GetValue(item, null)?.ToString();
+        //            var value = item.GetType().GetProperty(valueProperty)?.GetValue(item, null)?.ToString();
+
+        //            result.Add(new DDL {Text = text,Value=value});
+        //        }
+
+        //        return result;
+        //    }
+        //}
+
+
+        public List<DDL> GetDDL(Expression<Func<TEntity, bool>> predicate, bool includeEmptyItem, string emptyItemText, string selectedItemValue, string selectedItemText, int maxCount, string orderBy)
+        {
+            using (var context = new TContext())
+            {
+                var query = context.Set<TEntity>().Where(predicate);
+
+                //if (!string.IsNullOrEmpty(orderBy))
+                //{
+                //    query = query.OrderBy(orderBy);
+                //}
+                orderBy = orderBy ?? string.Empty;
+
+                if (maxCount > 0)
+                {
+                    query = query.Take(maxCount);
+                }
+
+                var result = new List<DDL>();
+
+                if (includeEmptyItem)
+                {
+                    result.Add(new DDL { Value = selectedItemValue, Text = emptyItemText });
+                }
+
+                foreach (var q in query)
+                {
+                    var text = q.GetType().GetProperty(selectedItemText)?.GetValue(q, null)?.ToString();
+                    var value = q.GetType().GetProperty(selectedItemValue)?.GetValue(q, null)?.ToString();
+
+                    result.Add(new DDL { Value = value, Text = text });
+                }
+
+                return result;
+            }
+        }
     }
 }

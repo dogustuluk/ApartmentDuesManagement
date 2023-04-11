@@ -20,14 +20,7 @@ namespace Business.Concrete
         {
             _unitOfWork = unitOfWork;
         }
-
-        public async Task<List<SelectListItem>> GetCounties(Expression<Func<VwApartment, bool>> filter, Expression<Func<VwApartment, string>> orderBy, Expression<Func<VwApartment, SelectListItem>> selector)
-        {
-            var ddl = await _unitOfWork.vwApartmentDal.DDl(filter, orderBy, selector);
-            return ddl;
-        }
-
-        public async Task<List<VwApartment>> GetPagedList(int skipCount, int maxResultCount, Expression<Func<VwApartment, bool>> predicate = null, Expression<Func<VwApartment, int>> orderBy = null, bool isAscending = true)
+        public async Task<List<VwApartment>> GetPagedList(int skipCount, int maxResultCount, Expression<Func<VwApartment, bool>> predicate = null, Expression<Func<VwApartment, string>> orderBy = null, bool isAscending = true)
         {
             return await _unitOfWork.vwApartmentDal.GetPagedViewList(skipCount, maxResultCount, predicate, orderBy, isAscending);
         }

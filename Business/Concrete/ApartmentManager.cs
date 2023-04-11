@@ -9,11 +9,13 @@ using DataAccess.Concrete.UnitOfWork;
 using Entities.Concrete.EntityFramework.Context;
 using Entities.Dtos;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -43,14 +45,10 @@ namespace Business.Concrete
         //    return new List<VwApartment>(apartments);
         //}
 
-        async Task<List<VwApartment>> IApartmentService.GetList()
+        async Task<IEnumerable<Apartment>> IApartmentService.GetList()
         {
             var apartments = _unitOfWork2.apartmentDal.GetList();
-                return new List<VwApartment>(apartments.Count);
-            //var apartments = _unitOfWork2.apartmentDal.GetList();
-            //return apartments;
-            //map etmeye gerek yok.
-            //view icin ayri service yaz
+                return new List<Apartment>(apartments);
         }
 
         public async Task<IDataResult<Apartment>> GetApartmentById(int id)
@@ -86,6 +84,12 @@ namespace Business.Concrete
            
             return new SuccessDataResult<List<Apartment>>(result, "Apartmanlar ve apartmanlara ait daireler ile beraber daire sahipleri başarıyla getirildi.");
 
+        }
+
+        public async Task<IEnumerable<Apartment>> GetList(Expression<Func<Apartment, bool>> filter = null)
+        {
+            var apartments = _unitOfWork2.apartmentDal.GetList(filter);
+            return apartments;
         }
     }
 }

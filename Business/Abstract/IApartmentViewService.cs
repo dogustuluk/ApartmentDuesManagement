@@ -12,7 +12,8 @@ namespace Business.Abstract
 {
     public interface IApartmentViewService
     {
-        Task<List<VwApartment>> GetPagedList(int skipCount, int maxResultCount, Expression<Func<VwApartment, bool>> predicate = null, Expression<Func<VwApartment, int>> orderBy= null, bool isAscending = true);
-        Task<List<SelectListItem>> GetCounties(Expression<Func<VwApartment, bool>> filter, Expression<Func<VwApartment, string>> orderBy, Expression<Func<VwApartment, SelectListItem>> selector);
+
+        Task<List<VwApartment>> GetPagedList(int skipCount, int maxResultCount, Expression<Func<VwApartment, bool>> predicate = null, Expression<Func<VwApartment, string>> orderBy= null, bool isAscending = true);
+        
     }
 }
