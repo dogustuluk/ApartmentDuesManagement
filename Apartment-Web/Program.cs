@@ -38,15 +38,15 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 //var apartments = FakeDataGenerator.GenerateApartments(50);
-var seed = FakeDataGenerator.GenerateSubscriptionItems(50);
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var unitOfWork = services.GetRequiredService<IUnitOfWork>();
-    foreach (var items in seed)
-    {
-        unitOfWork.subscriptionItemDal.Add(items);
-    }
-    unitOfWork.Commit();
-}
+//var seed = FakeDataGenerator.GenerateSubscriptionItems(50);
+//using (var scope = app.Services.CreateScope())
+//{
+//    var services = scope.ServiceProvider;
+//    var unitOfWork = services.GetRequiredService<IUnitOfWork>();
+//    foreach (var items in apartments)
+//    {
+//        unitOfWork.apartmentDal.Add(items);
+//    }
+//    unitOfWork.Commit();
+//}
 app.Run();

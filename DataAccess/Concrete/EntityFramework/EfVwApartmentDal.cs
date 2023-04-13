@@ -34,7 +34,7 @@ namespace DataAccess.Concrete.EntityFramework
             }
 
             var count = await query.CountAsync();
-
+            
             if (!string.IsNullOrEmpty(orderBy)) //null kontrolune gerek yok
             {
                 query = query.OrderBy(orderBy); //linq.dynamic kutuphanesi ile string order by alinabilir.

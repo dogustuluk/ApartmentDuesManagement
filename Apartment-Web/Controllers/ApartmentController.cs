@@ -98,8 +98,17 @@ namespace Apartment_Web.Controllers
             };
             ViewBag.SortOrder = new SelectList(sortOptions, "Value", "Text", orderBy);
             var pagedList = await _apartmentViewService.GetDataPagedAsync(predicate, pageNumber ?? 1, maxResultCount, orderBy ?? defaultSortOrder);
-            //closed xml arastir
+            TempData["orderBy"] = orderBy;
 
+
+            ViewBag.Filter = predicate;
+
+
+            var TotalRecords = pagedList.TotalRecords;
+            //closed xml arastir
+            ViewBag.PageNumber = pageNumber;
+            ViewBag.PageSize = maxResultCount;
+            ViewBag.TotalRecords = TotalRecords;
             return View(pagedList);
         }
     }
