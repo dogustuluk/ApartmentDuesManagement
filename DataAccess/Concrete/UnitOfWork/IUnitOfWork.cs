@@ -14,18 +14,10 @@ namespace DataAccess.Concrete.UnitOfWork
         IVwApartmentDal vwApartmentDal { get; }
         IApartmentFlat apartmentFlat { get; }
         IVwApartmentFlat vwApartmentFlat { get; }
+        IMemberDal memberDal { get; }
+        ISubscriptionDal subscriptionDal { get; }
+        ISubscriptionItemDal subscriptionItemDal { get; }
         Task CommitAsync();
         void Commit();
-        //Task<int> SaveChangesAsync();
-        //Task BeginTransactionAsync();
-        //Task CommitTransactionAsync();
-        //Task RollbackTransactionAsync();
-
-        //public interface IEntityRepository<T> where T : class, IEntity, new()
-        //{
-        //    Task AddRangeAsync(IEnumerable<T> entities);
-        //}
-
-        //public interface IApartmentRepository : IEntityRepository<Apartment> { }
     }
 }

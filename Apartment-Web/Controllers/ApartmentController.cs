@@ -85,16 +85,20 @@ namespace Apartment_Web.Controllers
             }
 
 
-            string defaultSortOrder = "ApartmentId";
+            string defaultSortOrder = "ApartmentId"; //desc -asc
             var sortOptions = new List<SelectListItem>
             {
+                new SelectListItem { Value = "ApartmentId ASC", Text = "Apartman id artan" },
                 new SelectListItem { Value = "CountyName ASC", Text = "Ilceye gore artan" },
                 new SelectListItem { Value = "CountyName DESC", Text = "Ilceye gore azalan" },
                 new SelectListItem { Value = "DoorNumber ASC", Text = "Kapi numarasina gore artan" },
                 new SelectListItem { Value = "DoorNumber DESC", Text = "Kapi numarasina gore azalan" },
+                new SelectListItem { Value = "UpdatedDate ASC", Text = "Guncelleme tarihine gore artan" },
+                new SelectListItem { Value = "UpdatedDate DESC", Text = "Guncelleme tarihine gore azalan" },
             };
             ViewBag.SortOrder = new SelectList(sortOptions, "Value", "Text", orderBy);
             var pagedList = await _apartmentViewService.GetDataPagedAsync(predicate, pageNumber ?? 1, maxResultCount, orderBy ?? defaultSortOrder);
+            //closed xml arastir
 
             return View(pagedList);
         }

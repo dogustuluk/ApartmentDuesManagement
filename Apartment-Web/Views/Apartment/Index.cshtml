@@ -17,17 +17,9 @@
             
             <div class="col-md-3">
                 <label>Siralama Yap: </label>
-                @*@Html.DropDownList("apartmentFilter", new SelectList(Model.Select(x => x.ApartmentName).Distinct().Prepend("")), new { @class = "form-control form-control-md" })
-*@
-                @*@Html.DropDownList("apartmentFilter", ViewBag.ApartmentList as SelectList, new { @class = "form-control form-control-md" })*@
                 @Html.DropDownList("orderBy", ViewBag.SortOrder as SelectList, new { @class = "form-control" })
 
-
-
             </div>
-            
-
-
             <div class="col-md-3">
                 <label>Ilce Sec: </label>
                 @Html.DropDownList("countyFilter", new SelectList(Model.Select(x => x.CountyName).Distinct().Prepend("")), new { @class = "form-control form-control-md"})
@@ -35,60 +27,49 @@
            
         </div>
 
-                //@Html.DropDownList("filter3", ViewBag.FilterList as SelectList, new { @class = "form-control form-control-md" })
-
         <button type="submit" class="btn btn-primary mt-2">Listele</button>
         <input type="button" class="btn btn-primary mt-2" value="Sıfırla" onclick="location.href='@Url.Action("Index")'" />
 
     }
-
-
-
-
-
-
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-bordered" id="apartmentsTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th>Guid</th>
-                        <th>Code</th>
-                        <th>Apartment Id</th>
-                        <th>Apartment Name</th>
-                        <th>City Name</th>
-                        <th>County Name</th>
-                        <th>Name Surname</th>
-                        <th>Phone Number</th>
-                        <th>Door Number</th>
-                        <th>Number Of Flats</th>
-                        <th>Responsible Member Id</th>
-                        <th>Open Adress</th>
-                        <th>Updated By</th>
-                        <th>Updated Date</th>
-                        <th>Is Active</th>
-                        @*//il, search text getir
-                        //listeleme icin ayri dto yapma
-                        *@
+                        <th>Kod</th>
+                        <th>Apartman Id</th>
+                        <th>Apartman Adı</th>
+                        <th>Şehir</th>
+                        <th>İlçe</th>
+                        <th>Ad Soyad</th>
+                        <th>Telefon Numarası</th>
+                        <th>Kapı Numarası</th>
+                        <th>Daire Sayısı</th>
+                        <th>Yönetici Id</th>
+                        <th>Açık Adres</th>
+                        <th>Güncelleyen</th>
+                        <th>Güncelleme Tarihi</th>
+                        <th>Aktiflik Durumu</th>
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
                         <th>Guid</th>
-                        <th>Code</th>
-                        <th>Apartment Id</th>
-                        <th>Apartment Name</th>
-                        <th>City Name</th>
-                        <th>County Name</th>
-                        <th>Name Surname</th>
-                        <th>Phone Number</th>
-                        <th>Door Number</th>
-                        <th>Number Of Flats</th>
-                        <th>Responsible Member Id</th>
-                        <th>Open Adress</th>
-                        <th>Updated By</th>
-                        <th>Updated Date</th>
-                        <th>Is Active</th>
+                        <th>Kod</th>
+                        <th>Apartman Id</th>
+                        <th>Apartman Adı</th>
+                        <th>Şehir</th>
+                        <th>İlçe</th>
+                        <th>Ad Soyad</th>
+                        <th>Telefon Numarası</th>
+                        <th>Kapı Numarası</th>
+                        <th>Daire Sayısı</th>
+                        <th>Yönetici Id</th>
+                        <th>Açık Adres</th>
+                        <th>Güncelleyen</th>
+                        <th>Güncelleme Tarihi</th>
+                        <th>Aktiflik Durumu</th>
                     </tr>
                 </tfoot>
                 <tbody>

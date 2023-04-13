@@ -3,6 +3,8 @@ using Autofac;
 using Apartment_Web.DependencyResolvers;
 using Business.Mappings;
 using System.Text.Json.Serialization;
+using Business.SeedDatas;
+using DataAccess.Concrete.UnitOfWork;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,5 +37,16 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
+//var apartments = FakeDataGenerator.GenerateApartments(50);
+var seed = FakeDataGenerator.GenerateSubscriptionItems(50);
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var unitOfWork = services.GetRequiredService<IUnitOfWork>();
+    foreach (var items in seed)
+    {
+        unitOfWork.subscriptionItemDal.Add(items);
+    }
+    unitOfWork.Commit();
+}
 app.Run();

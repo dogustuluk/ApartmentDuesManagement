@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Business.Abstract;
 using Business.Concrete;
+using Business.SeedDatas;
 using Core.DataAccess;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
@@ -35,7 +36,14 @@ namespace Business.DependencyResolvers.Autofac
             
             builder.RegisterType<EfApartmentFlatDal>().As<IApartmentFlat>().InstancePerLifetimeScope();
             builder.RegisterType<ApartmentFlatManager>().As<IApartmentFlatService>().InstancePerLifetimeScope();
-            
+
+            builder.RegisterType<EfMemberDal>().As<IMemberDal>().InstancePerLifetimeScope();
+            builder.RegisterType<MemberManager>().As<IMemberService>().InstancePerLifetimeScope();
+
+            builder.RegisterType<EfSubscriptionDal>().As<ISubscriptionDal>().InstancePerLifetimeScope();
+
+
+            builder.RegisterType<EfSubscriptionItemDal>().As<ISubscriptionItemDal>().InstancePerLifetimeScope();
 
         }
     }

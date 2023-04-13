@@ -29,6 +29,11 @@ namespace Business.Concrete
             return await _unitOfWork.vwApartmentDal.GetDataPagedAsync(predicate, pageIndex, take, orderBy);
         }
 
+
+
+
+
+
         //public async Task<List<DDL>> GetApartmentListDDLAsync(string defaultText, string defaultValue, string selectedText, string selectedValue, int take)
         //{
         //    var predicate = PredicateBuilder.New<VwApartment>(true);

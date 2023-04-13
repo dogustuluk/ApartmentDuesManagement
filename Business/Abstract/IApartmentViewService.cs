@@ -15,12 +15,16 @@ namespace Business.Abstract
 {
     public interface IApartmentViewService
     {
+        Task<PaginatedList<VwApartment>> GetDataPagedAsync(Expression<Func<VwApartment, bool>> predicate, int pageIndex, int take, string orderBy);
+
+
+
 
         //Task<List<VwApartment>> GetPagedList(int skipCount, int maxResultCount, Expression<Func<VwApartment, bool>> predicate = null, Expression<Func<VwApartment, string>> orderBy= null, bool isAscending = true);
         Task<List<VwApartment>> GetPagedList(int skipCount, int maxResultCount, Expression<Func<VwApartment, bool>> predicate = null, string orderBy= null, bool isAscending = true);
         //Task<List<DDL>> GetApartmentListDDLAsync(string defaultText, string defaultValue, string selectedText, string selectedValue, int take);
         // Task<PaginatedList<VwApartment>> GetDataPagedAsync(Expression<Func<VwApartment, bool>> predicate, int pageIndex, int take, string orderBy);
-        Task<PaginatedList<VwApartment>> GetDataPagedAsync(Expression<Func<VwApartment, bool>> predicate, int pageIndex, int take, string orderBy);
+        
 
 
     }

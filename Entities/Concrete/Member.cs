@@ -12,15 +12,15 @@ public partial class Member : IEntity
 
     public Guid Guid { get; set; }
 
-    public string NameSurname { get; set; } = null!;
+    public string? NameSurname { get; set; }
 
-    public string Email { get; set; } = null!;
+    public string? Email { get; set; }
 
     public bool EmailConfirmed { get; set; }
 
-    public byte[] PasswordSalt { get; set; } = null!;
+    public byte[]? PasswordSalt { get; set; }
 
-    public byte[] PasswordHash { get; set; } = null!;
+    public byte[]? PasswordHash { get; set; }
 
     public string? PhoneNumber { get; set; }
 
@@ -40,5 +40,5 @@ public partial class Member : IEntity
 
     public virtual ICollection<ApartmentFlat> ApartmentFlats { get; } = new List<ApartmentFlat>();
 
-    public virtual Role Role { get; set; } = null!;
+    public virtual Role? Role { get; set; }
 }
