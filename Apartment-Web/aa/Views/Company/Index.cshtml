@@ -84,50 +84,50 @@
 									<tbody>
 										@foreach (var item in Model.MyGridData)
 										{
-											<tr>
-												<td scope="row" align="center" class="F10">
-													<img alt='@((bool)item.isActive==true ? "Aktif" : "Pasif" )' src="@("../../Images/Icons/i_"+item.isActive+".png")" />
-													<span class="TopBreak2px"></span>
-													<label ID="Lbl_CompanyID" title="@item.CompanyID" class="F9 text-secondary">@item.CompanyID</label>
-												</td>
-												<td>
-													@if (Model.MyAuth.isCanUpdate)
-													{
-														<a class="Rb F16 text-decoration-underline" asp-action="Update" asp-route-GUID="@item.GUID">@item.CompanyName</a>
-													}
-													else
-													{
-														<label class="Rb F16">@item.CompanyName</label>
-													}													
-													<br>
-													<label class="F12">@item.InvoiceName</label>
-												</td>
-												<td>
-													<label class="Rb text-primary">@item.CompanyTypeName</label>
-												</td>
-												<td>
-													<label>@item.CityName</label><br>
-													<label>@item.CountyName</label>
-												</td>
-												<td>
-													<label>@item.MainContactName</label>
-												</td>
-												<td>
-													<span class="badge bg-primary">@item.TotalMembers Kullanıcı</span>
-													<span class="badge bg-info">@item.TotalWorkReservations Rezervasyon</span>
-												</td>
-												<td class="F11">
-													@item.UpdatedByName
-													<br />
-													@(item.UpdatedDate.ToString("dd.MM.yyyy HH:mm"))
-												</td>
-												<td class="text-end">
-													@if (Model.MyAuth.isCanUpdate)
-													{
-														<a class="GridDetailPop" asp-action="Update" asp-route-GUID="@item.GUID"><i class="fas fa-eye"></i></a>
-													}
-												</td>
-											</tr>
+										<tr>
+											<td scope="row" align="center" class="F10">
+												<img alt='@((bool)item.isActive==true ? "Aktif" : "Pasif" )' src="@(" .. /../Images/Icons/i_"+item.isActive+".png")" />
+												<span class="TopBreak2px"></span>
+												<label ID="Lbl_CompanyID" title="@item.CompanyID" class="F9 text-secondary">@item.CompanyID</label>
+											</td>
+											<td>
+												@if (Model.MyAuth.isCanUpdate)
+												{
+												<a class="Rb F16 text-decoration-underline" asp-action="Update" asp-route-GUID="@item.GUID">@item.CompanyName</a>
+												}
+												else
+												{
+												<label class="Rb F16">@item.CompanyName</label>
+												}
+												<br>
+												<label class="F12">@item.InvoiceName</label>
+											</td>
+											<td>
+												<label class="Rb text-primary">@item.CompanyTypeName</label>
+											</td>
+											<td>
+												<label>@item.CityName</label><br>
+												<label>@item.CountyName</label>
+											</td>
+											<td>
+												<label>@item.MainContactName</label>
+											</td>
+											<td>
+												<span class="badge bg-primary">@item.TotalMembers Kullanıcı</span>
+												<span class="badge bg-info">@item.TotalWorkReservations Rezervasyon</span>
+											</td>
+											<td class="F11">
+												@item.UpdatedByName
+												<br />
+												@(item.UpdatedDate.ToString("dd.MM.yyyy HH:mm"))
+											</td>
+											<td class="text-end">
+												@if (Model.MyAuth.isCanUpdate)
+												{
+												<a class="GridDetailPop" asp-action="Update" asp-route-GUID="@item.GUID"><i class="fas fa-eye"></i></a>
+												}
+											</td>
+										</tr>
 										}
 									</tbody>
 								</table>
@@ -135,7 +135,7 @@
 						</div>
 						@if (Model.MyPagination != null)
 						{
-							<partial name="~/Views/Shared/Pagination.cshtml" model=@Model.MyPagination />
+						<partial name="~/Views/Shared/Pagination.cshtml" model=@Model.MyPagination />
 						}
 					</div>
 				</section>

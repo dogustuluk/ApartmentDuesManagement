@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core.Entities
 {
-    public class DDL:IEntity
+    public class DDL
     {
         public string DefaultText { get; set; }
         public string DefaultValue { get; set; }

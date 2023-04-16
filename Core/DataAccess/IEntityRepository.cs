@@ -56,20 +56,24 @@ namespace Core.DataAccess
 
 
 
-        
+
 
 
         #region MyRegion
         //IEnumerable<T> GetData(Expression<Func<T, bool>> predicate = null, int take = 0, string sortOrderBy = null);//kendi repolarina yaz order olanlari
         //Task<List<T>> GetDataAsync(Expression<Func<T, bool>> predicate, int take, string sortOrderBy);
-        //IEnumerable<T> GetDataSql(string sql, int pageIndex, int take, string orderBy);
         //Task<PaginatedList<T>> GetDataPagedAsync(Expression<Func<T, bool>> predicate, int pageIndex, int take, string orderBy);
+        //IEnumerable<T> GetDataSql(string sql, int pageIndex, int take, string orderBy);
 
         //IQueryable<T> GetSortedData(IQueryable<T> myData, string orderBy);
         //Task<List<T>> GetSortedDataAsync(IQueryable<T> myData, string orderBy, int take);
-
-
         //IQueryable<DDL> GetDDL(Expression<Func<T, bool>> predicate, bool isGuid, string defaultText, string defaultValue, string selectedValue, int take, string? Params);
+        //---------------------
+
+
+
+
+
         //Task<List<DDL>> GetDDLAsync(Expression<Func<T, bool>> predicate, bool isGuid, string defaultText, string defaultValue, string selectedText, string selectedValue, int take, string? Params);
         #endregion
     }

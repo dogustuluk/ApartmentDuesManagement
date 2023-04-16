@@ -1,0 +1,42 @@
+﻿@model Pagination
+
+<div class="row">
+
+
+    <div class="col-sm-12 text-center mt-5">
+        <div>
+            <b>@Model.TotalRecords</b> kayıttan <b>@(Model.pageSize * (Model.PageIndex - 1)) - @(Model.pageSize * Model.PageIndex)</b> arası görüntüleniyor
+        </div>
+        <input type="hidden" name="pageIndex" id="pageIndex" value="1" />
+    </div>
+    <div class="col-sm-12 mt-3 text-center d-flex justify-content-center">
+        <div class="dataTables_paginate paging_simple_numbers" id="bootstrap-data-table-export_paginate">
+            <ul class="pagination">
+                @{
+
+                    if (Model.PageIndex > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("Index", new { PageIndex = Model.PageIndex - 1, Model.pageSize })">Önceki</a>
+                        </li>
+                    }
+
+                    for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                            <a class="page-link" href="@Url.Action("Index", new { PageIndex = i, Model.pageSize })">@i</a>
+                        </li>
+                    }
+                }
+                <li class="paginate_button page-item next" id="bootstrap-data-table-export_next">
+                    @if (Model.PageIndex < Model.TotalPages)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("Index", new { PageIndex = Model.PageIndex + 1, Model.pageSize })">Sonraki</a>
+                    </li>
+                    }
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

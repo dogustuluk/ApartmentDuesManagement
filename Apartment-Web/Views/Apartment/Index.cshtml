@@ -1,39 +1,31 @@
-﻿@using DataAccess.Concrete.EntityFramework.Context;
-@model List<VwApartment>
+﻿
+@model ApartmentController.Index_VM
 @{
-    Layout = "_Layout";
-    ViewBag.Title = "Apartmanlar";
-    var currentPage = ViewBag.PageNumber ?? 1;
-    var pageSize = ViewBag.PageSize;
-    var totalItems = ViewBag.TotalRecords;
-    var pageCount = (int)Math.Ceiling((double)totalItems / pageSize);
+    
 }
 <div id="modalPlaceHolder" aria-hidden="true"></div>
 <div class="card mb-4 mt-2">
     <div class="card-header">
         <i class="fas fa-table mr-1"></i>
-        Apartmanlar
+        @Model.PageTitle
     </div>
-    @using (Html.BeginForm("Index", "Apartment", FormMethod.Get, new { enctype = "multipart/form-data" }))
+    @using (Html.BeginForm("Index", "Apartment", FormMethod.Get)) //bazi durumlarda POST ile de calisabilirsin, daha temiz bir url yapisi gormek icin. Bu konuyu ve kullanim senaryolarini arastir.
     {
         <div class="row">
 
             <div class="col-md-3">
+
                 <label>Siralama Yap: </label>
-                @Html.DropDownList("orderBy", ViewBag.SortOrder as SelectList, new { @class = "form-control" })
+               
+                <select class="form-control" asp-for="OrderBy" asp-items="@Model.SortOptions"></select>
 
             </div>
-            <div class="col-md-3">
-                <label>Ilce Sec: </label>
-                @Html.DropDownList("countyFilter", new SelectList(Model.Select(x => x.CountyName).Distinct().Prepend("")), new { @class = "form-control form-control-md"})
-            </div>
-
         </div>
-
         <button type="submit" class="btn btn-primary mt-2">Listele</button>
         <input type="button" class="btn btn-primary mt-2" value="Sıfırla" onclick="location.href='@Url.Action("Index")'" />
 
     }
+
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-bordered" id="apartmentsTable" width="100%" cellspacing="0">
@@ -76,7 +68,7 @@
                     </tr>
                 </tfoot>
                 <tbody>
-                    @foreach (var item in Model)
+                    @foreach (var item in Model.PagedList)
                     {
                         <tr>
                             <td>@item.Guid</td>
@@ -100,27 +92,11 @@
             </table>
         </div>
 
+        @*partial view ile çalışınca sayfalamada sıralama yaparken url'den haberleşmen gerekir. bunun için helper yazman lazım. Barış Bey'in gönderdiği kodları incele ve sorunu çöz*@
+
+
         <div class="pagination-container">
-            <ul class="pagination">
-                @if (currentPage > 1)
-                {
-                    <li class="page-item">
-                        <a class="page-link" href="@Url.Action("Index", new { pageNumber = currentPage - 1, pageSize = pageSize})">Onceki</a>
-                    </li>
-                }
-                @for (int i = 1; i <= pageCount; i++)
-                {
-                    <li class="page-item @(i == currentPage ? "active" : "")">
-                        <a class="page-link" href="@Url.Action("Index", new { pageNumber = i, pageSize = pageSize, orderBy = TempData["orderBy"]})">@i</a>
-                    </li>
-                }
-                @if (currentPage < pageCount)
-                {
-                    <li class="page-item">
-                        <a class="page-link" href="@Url.Action("Index", new { pageNumber = currentPage + 1, pageSize = pageSize,orderBy = TempData["orderBy"] })">Sonraki</a>
-                    </li>
-                }
-            </ul>
+            @await Html.PartialAsync("Pagination", @Model.MyPagination)
         </div>
 
 

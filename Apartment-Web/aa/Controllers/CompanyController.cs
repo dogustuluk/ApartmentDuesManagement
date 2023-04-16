@@ -71,7 +71,7 @@ namespace GCA_Web.Controllers
                 HasPreviousPage = MyGridData.HasPreviousPage,
                 HasNextPage = MyGridData.HasNextPage
             };
-
+say
             Dictionary<string, object> Parameters = new()
             {
                 { "PageIndex", PageIndex },

@@ -15,16 +15,16 @@ namespace Business.Abstract
 {
     public interface IApartmentViewService
     {
-        Task<PaginatedList<VwApartment>> GetDataPagedAsync(Expression<Func<VwApartment, bool>> predicate, int pageIndex, int take, string orderBy);
+        Task<PaginatedList<VwApartment>> GetDataPagedAsync(Expression<Func<VwApartment, bool>> predicate, int PageIndex, int take, string orderBy);
 
-
-
-
-        //Task<List<VwApartment>> GetPagedList(int skipCount, int maxResultCount, Expression<Func<VwApartment, bool>> predicate = null, Expression<Func<VwApartment, string>> orderBy= null, bool isAscending = true);
+        IEnumerable<VwApartment> GetData(Expression<Func<VwApartment, bool>> predicate, int take, string OrderBy);
+        Task<List<VwApartment>> GetDataAsync(Expression<Func<VwApartment, bool>> predicate, int take, string OrderBy);
+        IEnumerable<VwApartment> GetDataSql(string sql, int pageIndex, int take, string orderBy);
+        Task<List<VwApartment>> GetDataSqlAsync(string sql, int pageIndex, int take, string orderBy);
+        IQueryable<VwApartment> GetSortedData(IQueryable<VwApartment> myData, string orderBy);
+        Task<List<VwApartment>> GetSortedDataAsync(IQueryable<VwApartment> myData, string orderBy);
+        IQueryable<DDL> GetDDL(Expression<Func<VwApartment, bool>> predicate, bool isGuid, string defaultText, string defaultValue, string selectedValue, int take, string? Params);
         Task<List<VwApartment>> GetPagedList(int skipCount, int maxResultCount, Expression<Func<VwApartment, bool>> predicate = null, string orderBy= null, bool isAscending = true);
-        //Task<List<DDL>> GetApartmentListDDLAsync(string defaultText, string defaultValue, string selectedText, string selectedValue, int take);
-        // Task<PaginatedList<VwApartment>> GetDataPagedAsync(Expression<Func<VwApartment, bool>> predicate, int pageIndex, int take, string orderBy);
-        
 
 
     }

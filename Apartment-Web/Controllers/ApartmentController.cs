@@ -1,5 +1,6 @@
 ﻿using Apartment_Web.Models;
 using Business.Abstract;
+using Core.DataAccess;
 using Core.Utilities.Extensions;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
@@ -68,27 +69,24 @@ namespace Apartment_Web.Controllers
 
         //    return View(model);
         //}
-        public async Task<IActionResult> Index(string? apartmentFilter, string? countyFilter, string orderBy, int? pageNumber)
+        public async Task<IActionResult> Index( string? countyFilter, string? orderBy ,int? PageIndex=1)
         {
-            var skipCount = 0;
-            var maxResultCount = 25;
-
+            //var skipCount = 0;
+            string defaultSortOrder = "ApartmentId ASC";
+            //int PageIndex = 1;
             var predicate = PredicateBuilder.New<VwApartment>(true);
 
-            if (!string.IsNullOrEmpty(apartmentFilter))
-            {
-                predicate = predicate.And(p => p.ApartmentName.Contains(apartmentFilter));
-            }
+            
             if (!string.IsNullOrEmpty(countyFilter))
             {
                 predicate = predicate.And(p => p.CountyName.Contains(countyFilter));
             }
 
 
-            string defaultSortOrder = "ApartmentId"; //desc -asc
             var sortOptions = new List<SelectListItem>
             {
                 new SelectListItem { Value = "ApartmentId ASC", Text = "Apartman id artan" },
+                new SelectListItem { Value = "ApartmentId DESC", Text = "Apartman id azalan" },
                 new SelectListItem { Value = "CountyName ASC", Text = "Ilceye gore artan" },
                 new SelectListItem { Value = "CountyName DESC", Text = "Ilceye gore azalan" },
                 new SelectListItem { Value = "DoorNumber ASC", Text = "Kapi numarasina gore artan" },
@@ -96,20 +94,54 @@ namespace Apartment_Web.Controllers
                 new SelectListItem { Value = "UpdatedDate ASC", Text = "Guncelleme tarihine gore artan" },
                 new SelectListItem { Value = "UpdatedDate DESC", Text = "Guncelleme tarihine gore azalan" },
             };
-            ViewBag.SortOrder = new SelectList(sortOptions, "Value", "Text", orderBy);
-            var pagedList = await _apartmentViewService.GetDataPagedAsync(predicate, pageNumber ?? 1, maxResultCount, orderBy ?? defaultSortOrder);
-            TempData["orderBy"] = orderBy;
+            
+            var selectedSortItem = new SelectList(sortOptions, "Value", "Text", orderBy);
+           var x = selectedSortItem.SelectedValue;
+            
+            var PagedList = await _apartmentViewService.GetDataPagedAsync(predicate, (int)PageIndex, 25, orderBy ?? defaultSortOrder);
 
+            Pagination MyPG = new()
+            {
+                PageIndex = (int)PageIndex,
+                pageSize = 25,
+                TotalPages = PagedList.TotalPages,
+                TotalRecords = PagedList.TotalRecords,
+                HasPreviousPage = PagedList.HasPreviousPage,
+                HasNextPage = PagedList.HasNextPage
+            };
 
-            ViewBag.Filter = predicate;
+            Dictionary<string, object> Parameters = new()
+            {
+                { "PageIndex", PageIndex },
 
+                { "OrderBy", orderBy},
+             
 
-            var TotalRecords = pagedList.TotalRecords;
-            //closed xml arastir
-            ViewBag.PageNumber = pageNumber;
-            ViewBag.PageSize = maxResultCount;
-            ViewBag.TotalRecords = TotalRecords;
-            return View(pagedList);
+        };
+           
+            Index_VM MYRESULT = new()
+            {
+                PageTitle = "Apartmanlar",
+                PagedList = PagedList,
+                SortOptions = sortOptions,
+                Parameters = Parameters,
+                MyPagination = MyPG,
+                OrderBy = orderBy
+            };
+            //orderBy = Parameters["orderBy"].ToString();
+
+            return View(MYRESULT);
+        }
+
+        public class Index_VM
+        {
+            public string PageTitle { get; set; }
+            public List<VwApartment>? PagedList { get; set; }
+            public List<City>? ListCity { get; set; }
+            public Pagination? MyPagination { get; set; }
+            public Dictionary<string, object>? Parameters { get; set; }
+            public List<SelectListItem>? SortOptions { get; set; }
+            public string? OrderBy { get; set; }
         }
     }
 }
