@@ -22,8 +22,11 @@ namespace DataAccess.Abstract
         IEnumerable<VwApartment> GetDataSql(string sql, int pageIndex, int take, string orderBy);
         Task<List<VwApartment>> GetDataSqlAsync(string sql, int pageIndex, int take, string orderBy);
 
+
         IQueryable<VwApartment> GetSortedData(IQueryable<VwApartment> myData, string orderBy);
         Task<List<VwApartment>> GetSortedDataAsync(IQueryable<VwApartment> myData, string orderBy);
+
+
         IQueryable<DDL> GetDDL(Expression<Func<VwApartment, bool>> predicate, bool isGuid, string defaultText, string defaultValue, string selectedValue, int take, string? Params);
 
 

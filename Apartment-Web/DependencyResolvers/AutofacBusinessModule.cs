@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using Apartment_Web.Helpers;
+using Autofac;
 using Business.Abstract;
 using Business.Concrete;
 using DataAccess.Abstract;
@@ -14,7 +15,9 @@ namespace Apartment_Web.DependencyResolvers
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<ApartmentDuesManagementContext>().AsSelf().InstancePerLifetimeScope();
-            
+            builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().InstancePerLifetimeScope();
+            builder.RegisterType<UrlHelper>().AsSelf().InstancePerDependency();
+
             builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
 
             

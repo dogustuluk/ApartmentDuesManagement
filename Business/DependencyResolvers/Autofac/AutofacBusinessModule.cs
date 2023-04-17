@@ -7,6 +7,8 @@ using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
 using DataAccess.Concrete.EntityFramework.Context;
 using DataAccess.Concrete.UnitOfWork;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -28,7 +30,9 @@ namespace Business.DependencyResolvers.Autofac
 
 
             builder.RegisterType<ApartmentDuesManagementContext>().As<DbContext>().InstancePerLifetimeScope();
-            
+            builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().InstancePerLifetimeScope();
+            builder.RegisterType<UrlHelper>().AsSelf().InstancePerDependency();
+
             builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
             
             builder.RegisterType<EfApartmentDal>().As<IApartmentDal>().InstancePerLifetimeScope();

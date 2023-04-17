@@ -115,10 +115,8 @@ namespace Apartment_Web.Controllers
                 { "PageIndex", PageIndex },
 
                 { "OrderBy", orderBy},
-             
-
-        };
-           
+             };
+            ViewBag.order = orderBy;
             Index_VM MYRESULT = new()
             {
                 PageTitle = "Apartmanlar",
@@ -128,7 +126,6 @@ namespace Apartment_Web.Controllers
                 MyPagination = MyPG,
                 OrderBy = orderBy
             };
-            //orderBy = Parameters["orderBy"].ToString();
 
             return View(MYRESULT);
         }
