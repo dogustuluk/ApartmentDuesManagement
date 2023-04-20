@@ -376,10 +376,10 @@ public partial class ApartmentDuesManagementContext : DbContext
             entity.Property(e => e.Code)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.Expr2)
+            entity.Property(e => e.FlatOwnerNameSurname)
                 .HasMaxLength(150)
                 .IsUnicode(false);
-            entity.Property(e => e.Expr3)
+            entity.Property(e => e.FlatOwnerPhoneNumber)
                 .HasMaxLength(11)
                 .IsUnicode(false);
             entity.Property(e => e.FlatNumber)

@@ -10,15 +10,15 @@ public partial class VwApartmentFlat : IEntity
 
     public Guid Guid { get; set; }
 
-    public string Code { get; set; } = null!;
+    public string? Code { get; set; }
 
     public int ApartmentId { get; set; }
 
-    public string FlatNumber { get; set; } = null!;
+    public string? FlatNumber { get; set; }
 
-    public string ApartmentName { get; set; } = null!;
+    public string? ApartmentName { get; set; }
 
-    public Guid Expr1 { get; set; }
+    public Guid ApartmentGuid { get; set; }
 
     public int TenantId { get; set; }
 
@@ -28,9 +28,9 @@ public partial class VwApartmentFlat : IEntity
 
     public int FlatOwnerId { get; set; }
 
-    public string Expr2 { get; set; } = null!;
+    public string? FlatOwnerNameSurname { get; set; }
 
-    public string? Expr3 { get; set; }
+    public string? FlatOwnerPhoneNumber { get; set; }
 
     public string? CarPlate { get; set; }
 

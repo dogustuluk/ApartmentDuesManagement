@@ -35,7 +35,6 @@ namespace Core.DataAccess
 
         Task<List<T>> GetPagedList<TKey>(int skipCount, int maxResultCount, Expression<Func<T, bool>> predicate = null, Expression<Func<T, TKey>> orderBy = null, bool isAscending = true, params Expression<Func<T, object>>[] includeProperties);
 
-        //Task<List<T>> GetPagedViewList<TKey>(int skipCount, int maxResultCount, Expression<Func<T, bool>> predicate = null, Expression<Func<T, TKey>> orderBy = null, bool isAscending = true);
         Task<List<T>> GetPagedViewList(int skipCount, int maxResultCount, Expression<Func<T, bool>> predicate = null, string? orderBy = null, bool isAscending = true);
 
         Task<IQueryable<T>> DetailsAsync(params Expression<Func<T, object>>[] propertySelectors);
@@ -52,29 +51,23 @@ namespace Core.DataAccess
         T? GetByGuid(Guid guid);
 
 
+        Task<PaginatedList<T>> GetDataPagedAsync(Expression<Func<T, bool>> predicate, int PageIndex, int take, string orderBy);
 
 
+        IEnumerable<T> GetData(Expression<Func<T, bool>> predicate, int take, string OrderBy);
+        Task<List<T>> GetDataAsync(Expression<Func<T, bool>> predicate, int take, string OrderBy);
+        IEnumerable<T> GetDataSql(string sql, int pageIndex, int take, string orderBy);
+        Task<List<T>> GetDataSqlAsync(string sql, int pageIndex, int take, string orderBy);
 
 
+        IQueryable<T> GetSortedData(IQueryable<T> myData, string orderBy);
+        Task<List<T>> GetSortedDataAsync(IQueryable<T> myData, string orderBy);
 
 
+        IQueryable<DDL> GetDDL(Expression<Func<T, bool>> predicate, bool isGuid, string defaultText, string defaultValue, string selectedValue, int take, string? Params);
 
-        #region MyRegion
-        //IEnumerable<T> GetData(Expression<Func<T, bool>> predicate = null, int take = 0, string sortOrderBy = null);//kendi repolarina yaz order olanlari
-        //Task<List<T>> GetDataAsync(Expression<Func<T, bool>> predicate, int take, string sortOrderBy);
-        //Task<PaginatedList<T>> GetDataPagedAsync(Expression<Func<T, bool>> predicate, int pageIndex, int take, string orderBy);
-        //IEnumerable<T> GetDataSql(string sql, int pageIndex, int take, string orderBy);
-
-        //IQueryable<T> GetSortedData(IQueryable<T> myData, string orderBy);
-        //Task<List<T>> GetSortedDataAsync(IQueryable<T> myData, string orderBy, int take);
-        //IQueryable<DDL> GetDDL(Expression<Func<T, bool>> predicate, bool isGuid, string defaultText, string defaultValue, string selectedValue, int take, string? Params);
-        //---------------------
-
-
-
-
-
+        
         //Task<List<DDL>> GetDDLAsync(Expression<Func<T, bool>> predicate, bool isGuid, string defaultText, string defaultValue, string selectedText, string selectedValue, int take, string? Params);
-        #endregion
+       
     }
 }

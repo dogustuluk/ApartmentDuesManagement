@@ -23,7 +23,8 @@ namespace DataAccess.Concrete.UnitOfWork
         private readonly IMemberDal _memberDal;
         private readonly ISubscriptionDal _subscriptionDal;
         private readonly ISubscriptionItemDal _subscriptionItemDal;
-        public UnitOfWork(ApartmentDuesManagementContext context, IApartmentDal apartmentDal, IApartmentFlat apartmentFlat, IVwApartmentDal apartmentVwDal, IVwApartmentFlat apartmentVwFlat, IMemberDal memberDal, ISubscriptionDal subscriptionDal, ISubscriptionItemDal subscriptionItemDal)
+        private readonly ICityDal _cityDal;
+        public UnitOfWork(ApartmentDuesManagementContext context, IApartmentDal apartmentDal, IApartmentFlat apartmentFlat, IVwApartmentDal apartmentVwDal, IVwApartmentFlat apartmentVwFlat, IMemberDal memberDal, ISubscriptionDal subscriptionDal, ISubscriptionItemDal subscriptionItemDal, ICityDal cityDal)
         {
             _context = context;
             _apartmentDal = apartmentDal;
@@ -33,6 +34,7 @@ namespace DataAccess.Concrete.UnitOfWork
             _memberDal = memberDal;
             _subscriptionDal = subscriptionDal;
             _subscriptionItemDal = subscriptionItemDal;
+            _cityDal = cityDal;
         }
 
         public IApartmentDal apartmentDal => _apartmentDal;
@@ -45,6 +47,8 @@ namespace DataAccess.Concrete.UnitOfWork
         public ISubscriptionDal subscriptionDal => _subscriptionDal;
 
         public ISubscriptionItemDal subscriptionItemDal => _subscriptionItemDal;
+
+        public ICityDal cityDal => _cityDal;
 
         public void Commit()
         {

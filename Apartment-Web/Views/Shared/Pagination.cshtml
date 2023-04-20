@@ -3,6 +3,9 @@
 @model Pagination
 
 @{
+    int LastPage = ((Model.TotalRecords - 1) / Model.pageSize);
+}
+@{
     string URL = UrlHelper.Get_RecentURL();
     URL = UrlHelper.RemoveQueryStringByKey(URL, "PageIndex");
 	if (URL.Contains("?"))
@@ -14,44 +17,50 @@
 		URL = URL + "?PageIndex=1";
 	}
 }
-
+<style>
+	.dataTables_paginate {
+		cursor: pointer;
+	}
+</style>
 <div class="row">
 
+	@if (LastPage > 0)
+	{
+		<div class="col-sm-12 mt-3 text-center d-flex justify-content-center">
+			<div class="dataTables_paginate paging_simple_numbers" id="bootstrap-data-table-export_paginate">
+				<ul class="pagination">
+					@if (Model.PageIndex > 1)
+					{
+						<li class="paginate_button page-item previous" id="bootstrap-data-table-export_previous">
+							<a href="@URL.Replace("PageIndex=1","PageIndex="+(Model.PageIndex -1))" aria-controls="bootstrap-data-table-export" data-dt-idx="0" tabindex="0" class="page-link">Önceki</a>
+						</li>
+					}
+					@{
+						int first = Model.PageIndex < 5 ? 0 : (Model.PageIndex - 5);
+						int last = Model.TotalPages > 10 ? (first + 10) : LastPage;
+						if (last > LastPage)
+						{
+							last = LastPage;
+							first = first >= 10 ? LastPage - 10 : 0;
+						}
 
-    <div class="col-sm-12 text-center mt-5">
-        <div>
-            <b>@Model.TotalRecords</b> kayıttan <b>@(Model.pageSize * (Model.PageIndex - 1)) - @(Model.pageSize * Model.PageIndex)</b> arası görüntüleniyor
-        </div>
-        <input type="hidden" name="pageIndex" id="pageIndex" value="1" />
-    </div>
-    <div class="col-sm-12 mt-3 text-center d-flex justify-content-center">
-        <div class="dataTables_paginate paging_simple_numbers" id="bootstrap-data-table-export_paginate">
-            <ul class="pagination">
-                @{
+						for (int i = first; i <= last; i++)
+						{
+							var clss = Model.PageIndex == i + 1 ? "active" : "";
 
-                    if (Model.PageIndex > 1)
-                    {
-                        <li class="page-item">
-                            <a class="page-link" href="@URL.Replace("PageIndex=1","PageIndex="+(Model.PageIndex -1))">Önceki</a>
-                        </li>
-                    }
-
-                    for (int i = 1; i <= Model.TotalPages; i++)
-                    {
-                        <li class="page-item @(i == Model.PageIndex ? "active" : "")">
-                            <a class="page-link" href="@URL.Replace("PageIndex=1","PageIndex="+(i))">@i</a>
-                        </li>
-                    }
-                }
-                <li class="paginate_button page-item next" id="bootstrap-data-table-export_next">
-                    @if (Model.PageIndex < Model.TotalPages)
-                    {
-                        <li class="page-item">
-                        <a class="page-link" href="@URL.Replace("PageIndex=1","PageIndex="+(Model.PageIndex + 1))">Sonraki</a>
-                         </li>
-                    }
-                </li>
-            </ul>
-        </div>
-    </div>
+							<li class="paginate_button page-item @clss">
+								<a href="@URL.Replace("PageIndex=1","PageIndex="+(i + 1))" aria-controls="bootstrap-data-table-export" data-dt-idx="1" tabindex="0" class="page-link">@(i + 1)</a>
+							</li>
+						}
+					}
+					<li class="paginate_button page-item next" id="bootstrap-data-table-export_next">
+						@if ((Model.PageIndex) < LastPage)
+						{
+							<a href="@URL.Replace("PageIndex=1","PageIndex="+(Model.PageIndex + 1))" aria-controls="bootstrap-data-table-export" data-dt-idx="7" tabindex="0" class="page-link">Sonraki</a>
+						}
+					</li>
+				</ul>
+			</div>
+		</div>
+	}
 </div>

@@ -7,9 +7,11 @@ using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using static Core.DataAccess.Pagination;
 
 namespace Core.DataAccess.EntityFramework
 {
@@ -159,22 +161,6 @@ namespace Core.DataAccess.EntityFramework
             return await query.ToListAsync();
         }
 
-        //public async Task<List<TEntity>> GetPagedViewList<TKey>(int skipCount, int maxResultCount, Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, TKey>> orderBy = null, bool isAscending = true)
-        //{
-        //    var query = GetQueryable();
-        //    if (predicate != null)
-        //    {
-        //        query = query.Where(predicate); //filtreleme icin
-        //    }
-        //    if (orderBy != null)
-        //    {
-        //        query = isAscending ? query.OrderBy(orderBy)
-        //                            : query.OrderByDescending(orderBy);
-        //    }
-        //    query = query.Skip(skipCount).Take(maxResultCount);//sayfa basina dusen item sayisi.
-        //    //toplam sayfa sayisini bulma eksik, onu yap
-        //    return await query.ToListAsync();
-        //}
         public async Task<List<TEntity>> GetPagedViewList(int skipCount, int maxResultCount, Expression<Func<TEntity, bool>> predicate = null, string? orderBy = null, bool isAscending = true)
         {
             var query = GetQueryable();
@@ -291,9 +277,182 @@ namespace Core.DataAccess.EntityFramework
             }
         }
 
+        public async Task<PaginatedList<TEntity>> GetDataPagedAsync(Expression<Func<TEntity, bool>> predicate, int PageIndex, int take, string orderBy)
+        {
+            using (var context = new TContext())
+            {
+                var query = context.Set<TEntity>().AsQueryable();
+
+                if (predicate != null)
+                {
+                    query = query.Where(predicate);
+                }
+
+                var count = await query.CountAsync();
+
+                if (!string.IsNullOrEmpty(orderBy)) //null kontrolune gerek yok
+                {
+                    // query = query.OrderBy(orderBy); //linq.dynamic kutuphanesi ile string order by alinabilir.
+                    if (int.TryParse(orderBy, out int orderByInt))
+                    {
+                        query = query.OrderBy(x=> orderByInt);
+                    }
+                    else
+                    {
+                        query = query.OrderBy(orderBy);
+                    }
+                }
+
+                var items = await query.Skip((PageIndex - 1) * take).Take(take).ToListAsync();
+
+                return new PaginatedList<TEntity>(items, count, PageIndex, take);
+            }
+        }
+
+        public IEnumerable<TEntity> GetData(Expression<Func<TEntity, bool>> predicate, int take, string OrderBy)
+        {
+            using (var context = new TContext())
+            {
+                var query = context.Set<TEntity>().AsQueryable();
+
+                if (predicate != null)
+                {
+                    query = query.Where(predicate);
+                }
+                if (!string.IsNullOrEmpty(OrderBy))
+                {
+                    query = query.OrderBy(OrderBy);
+                }
+                if (take > 0)
+                {
+                    query = query.Take(take);
+                }
+                return query.ToList();
+            }
+        }
+
+        public async Task<List<TEntity>> GetDataAsync(Expression<Func<TEntity, bool>> predicate, int take, string OrderBy)
+        {
+            using (var context = new TContext())
+            {
+                var query = context.Set<TEntity>().AsQueryable();
+
+                if (predicate != null)
+                {
+                    query = query.Where(predicate);
+                }
+                if (!string.IsNullOrEmpty(OrderBy))
+                {
+                    query = query.OrderBy(OrderBy);
+                }
+                if (take > 0)
+                {
+                    query = query.Take(take);
+                }
+                return await query.ToListAsync();
+            }
+        }
+
+        public IEnumerable<TEntity> GetDataSql(string sql, int pageIndex, int take, string orderBy)
+        {
+            using (var context = new TContext())
+            {
+                if (string.IsNullOrEmpty(sql))
+                {
+                    throw new ArgumentNullException(nameof(sql));
+                }
+                var query = context.Set<TEntity>().FromSqlRaw(sql);
+                if (!string.IsNullOrEmpty(orderBy))
+                {
+                    query = query.OrderBy(orderBy);
+                }
+                query = query.Skip((pageIndex - 1) * take).Take(take);
+                return query.ToList();
+            }
+        }
+
+        public async Task<List<TEntity>> GetDataSqlAsync(string sql, int pageIndex, int take, string orderBy)
+        {
+            using (var context = new TContext())
+            {
+                if (string.IsNullOrEmpty(sql))
+                {
+                    throw new ArgumentNullException(nameof(sql));
+                }
+                var query = context.Set<TEntity>().FromSqlRaw(sql);
+                if (!string.IsNullOrEmpty(orderBy))
+                {
+                    query = query.OrderBy(orderBy);
+                }
+                query = query.Skip((pageIndex - 1) * take).Take(take);
+                return await query.ToListAsync();
+            }
+        }
+
+        public IQueryable<TEntity> GetSortedData(IQueryable<TEntity> myData, string orderBy)
+        {
+            using (var context = new TContext())
+            {
+                if (!string.IsNullOrEmpty(orderBy))
+                {
+                    myData = myData.OrderBy(orderBy);
+                }
+                return myData;
+            }
+        }
+
+        public async Task<List<TEntity>> GetSortedDataAsync(IQueryable<TEntity> myData, string orderBy)
+        {
+            using (var context = new TContext())
+            {
+                if (!string.IsNullOrEmpty(orderBy))
+                {
+                    myData = myData.OrderBy(orderBy);
+                }
+                return await myData.ToListAsync();
+            }
+        }
+
+        public IQueryable<DDL> GetDDL(Expression<Func<TEntity, bool>> predicate, bool isGuid, string defaultText, string defaultValue, string selectedValue, int take, string? Params)
+        {
+            using (var context = new TContext())
+            {
+                var query = context.Set<TEntity>().Where(predicate).Take(take);
+
+                var ddlList = query.Select(e => new DDL
+                {
+                    DefaultText = defaultText,
+                    DefaultValue = defaultValue,
+                    SelectedValue = selectedValue,
+                    SelectedText = "Sec"    //incele
+                });
+
+                var defaultItem = new DDL
+                {
+                    DefaultText = defaultText,
+                    DefaultValue = defaultValue,
+                    SelectedValue = selectedValue,
+                    SelectedText = "Sec" // Varsayılan öğe için metin gösterilmez
+                };
+                ddlList = ddlList.DefaultIfEmpty(defaultItem);
+
+                return ddlList;
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
 
         //hepsini repoya ozel yap
-        
+
 
         //public Task<List<TEntity>> GetDataAsync(Expression<Func<TEntity, bool>> predicate, int take, string sortOrderBy)
         //{

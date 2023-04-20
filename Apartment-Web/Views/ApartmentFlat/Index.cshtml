@@ -1,0 +1,85 @@
+﻿@model ApartmentFlatController.Index_VM
+<div id="modalPlaceHolder" aria-hidden="true"></div>
+<div class="card mb-4 mt-2">
+    <div class="card-header">
+        <i class="fas fa-table mr-1"></i>
+        @Model.PageTitle
+    </div>
+    @using (Html.BeginForm("Index", "ApartmentFlat", FormMethod.Get)) //bazi durumlarda POST ile de calisabilirsin, daha temiz bir url yapisi gormek icin. Bu konuyu ve kullanim senaryolarini arastir.
+    {
+        <div class="row ml-2">
+            <div class="col-md-3">
+                <label>Siralama Yap</label>
+                <select class="form-control" asp-for="OrderBy" asp-items="@Model.SortOptions"></select>
+            </div>
+        </div>
+
+
+        <div class="row ml-2 col-md-3">
+
+            <button type="submit" class="btn btn-primary mt-2 mr-1">Listele</button>
+            <input type="button" class="btn btn-primary mt-2" value="Sıfırla" onclick="location.href='@Url.Action("Index")'" />
+        </div>
+    }
+
+    <div class="card-body">
+
+        <div class="col-sm-12 text-center">
+            <div class="dataTables_info F11" id="bootstrap-data-table-export_info" role="status" aria-live="polite">
+                <b>@Model.MyPagination.TotalRecords</b> kayıttan <b>@(Model.MyPagination.pageSize * (Model.MyPagination.PageIndex - 1)) - @(Model.MyPagination.pageSize * Model.MyPagination.PageIndex)</b> arası görüntüleniyor
+            </div>
+            <input type="hidden" name="pageIndex" id="pageIndex" value="1" />
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered text-center" id="apartmentsTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Daire Numarasi</th>
+                        <th>Kod</th>
+                        <th>Apartman Adi</th>
+                        <th>Kiraci</th>
+                        <th>Kiraci Telefon Numarasi</th>
+                        <th>Ev Sahibi</th>
+                        <th>Ev Sahibi Telefon Numarasi</th>
+                        <th>Arac Plakasi</th>
+                        <th>Guncelleme Zamani</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Daire Numarasi</th>
+                        <th>Kod</th>
+                        <th>Apartman Adi</th>
+                        <th>Kiraci</th>
+                        <th>Kiraci Telefon Numarasi</th>
+                        <th>Ev Sahibi</th>
+                        <th>Ev Sahibi Telefon Numarasi</th>
+                        <th>Arac Plakasi</th>
+                        <th>Guncelleme Zamani</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    @foreach (var item in Model.PagedList)
+                    {
+                        <tr>
+                            <td>@item.FlatNumber</td>
+                            <td>@item.Code</td>
+                            <td>@item.ApartmentName</td>
+                            <td>@item.NameSurname</td>
+                            <td>@item.PhoneNumber</td>
+                            <td>@item.FlatOwnerNameSurname</td>
+                            <td>@item.FlatOwnerPhoneNumber</td>
+                            <td>@item.CarPlate</td>
+                            <td>@item.UpdatedDate</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="pagination-container">
+            @await Html.PartialAsync("Pagination", @Model.MyPagination)
+        </div>
+
+
+    </div>

@@ -41,4 +41,6 @@ public partial class VwApartment : IEntity
 
     public int IsActive { get; set; }
 
+
+   
 }

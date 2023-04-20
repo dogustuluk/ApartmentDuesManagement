@@ -32,13 +32,12 @@ namespace Entities.Dtos
 
         public string? DoorNumber { get; set; }
 
-        public int ResponsibleMemberId { get; set; }
+        public MemberShortDto ResponsibleMemberInfo { get; set; }
 
         public int NumberOfFlats { get; set; }
 
         public int CityId { get; set; }
-
-        public int CountyId { get; set; }
+        public List<DDL>? CityIdDDL { get; set; }
 
         public string? OpenAdress { get; set; }
         public bool IsActive { get; set; }

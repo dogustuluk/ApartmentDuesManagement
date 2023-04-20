@@ -17,6 +17,7 @@ namespace DataAccess.Concrete.UnitOfWork
         IMemberDal memberDal { get; }
         ISubscriptionDal subscriptionDal { get; }
         ISubscriptionItemDal subscriptionItemDal { get; }
+        ICityDal cityDal { get; }
         Task CommitAsync();
         void Commit();
     }

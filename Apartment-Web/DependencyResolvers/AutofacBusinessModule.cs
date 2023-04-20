@@ -31,14 +31,17 @@ namespace Apartment_Web.DependencyResolvers
             builder.RegisterType<EfApartmentFlatDal>().As<IApartmentFlat>().InstancePerLifetimeScope();
             builder.RegisterType<EfVwApartmentFlatDal>().As<IVwApartmentFlat>().InstancePerLifetimeScope();
             builder.RegisterType<ApartmentFlatManager>().As<IApartmentFlatService>().InstancePerLifetimeScope();
+            builder.RegisterType<ApartmentFlatViewManager>().As<IApartmentFlatViewService>().InstancePerLifetimeScope();
+
 
             builder.RegisterType<EfMemberDal>().As<IMemberDal>().InstancePerLifetimeScope();
             builder.RegisterType<MemberManager>().As<IMemberService>().InstancePerLifetimeScope();
 
             builder.RegisterType<EfSubscriptionDal>().As<ISubscriptionDal>().InstancePerLifetimeScope();
-
-
             builder.RegisterType<EfSubscriptionItemDal>().As<ISubscriptionItemDal>().InstancePerLifetimeScope();
+
+            builder.RegisterType<EfCityDal>().As<ICityDal>().InstancePerLifetimeScope();
+            builder.RegisterType<CityManager>().As<ICityService>().InstancePerLifetimeScope();
         }
     }
 }

@@ -1,7 +1,9 @@
-﻿
+﻿@using DataAccess.Concrete.EntityFramework.Context;
+
 @model ApartmentController.Index_VM
 @{
-    
+    var cities = ViewBag.cities as List<City>;
+
 }
 <div id="modalPlaceHolder" aria-hidden="true"></div>
 <div class="card mb-4 mt-2">
@@ -11,38 +13,63 @@
     </div>
     @using (Html.BeginForm("Index", "Apartment", FormMethod.Get)) //bazi durumlarda POST ile de calisabilirsin, daha temiz bir url yapisi gormek icin. Bu konuyu ve kullanim senaryolarini arastir.
     {
-        <div class="row">
+        <div class="row ml-2">
 
             <div class="col-md-3">
 
                 <label>Siralama Yap: </label>
-               
+
                 <select class="form-control" asp-for="OrderBy" asp-items="@Model.SortOptions"></select>
 
+            </div>
+
+
+            <div class="col-md-3">
+
+                <label>Sehir Sec </label>
+
+                @if (cities != null)
+                {
+                    <select name="cityId" class="form-control" asp-for="CityId">
+                        <option value="">Tüm Şehirler</option>
+                        @foreach (var city in cities)
+                        {
+                            <option value="@city.CityId">@city.CityName</option>
+                        }
+                    </select>
+                    //@Html.DropDownList("cityId", new SelectList(cities, "SelectedValue", "SelectedText"), "Sehir Sec")
+
+                }
 
             </div>
-        </div>
-        <button type="submit" class="btn btn-primary mt-2">Listele</button>
-        <input type="button" class="btn btn-primary mt-2" value="Sıfırla" onclick="location.href='@Url.Action("Index")'" />
 
+        </div>
+        <div class="row ml-2 col-md-3">
+
+            <button type="submit" class="btn btn-primary mt-2 mr-1">Listele</button>
+            <input type="button" class="btn btn-primary mt-2" value="Sıfırla" onclick="location.href='@Url.Action("Index")'" />
+        </div>
     }
 
     <div class="card-body">
+        <div class="col-sm-12 text-center">
+            <div class="dataTables_info F11" id="bootstrap-data-table-export_info" role="status" aria-live="polite">
+                <b>@Model.MyPagination.TotalRecords</b> kayıttan <b>@(Model.MyPagination.pageSize * (Model.MyPagination.PageIndex - 1)) - @(Model.MyPagination.pageSize * Model.MyPagination.PageIndex)</b> arası görüntüleniyor
+            </div>
+            <input type="hidden" name="pageIndex" id="pageIndex" value="1" />
+        </div>
         <div class="table-responsive">
-            <table class="table table-bordered" id="apartmentsTable" width="100%" cellspacing="0">
+            <table class="table table-bordered text-center" id="apartmentsTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th>Guid</th>
                         <th>Kod</th>
-                        <th>Apartman Id</th>
                         <th>Apartman Adı</th>
                         <th>Şehir</th>
                         <th>İlçe</th>
-                        <th>Ad Soyad</th>
+                        <th>Yonetici Ad Soyad</th>
                         <th>Telefon Numarası</th>
                         <th>Kapı Numarası</th>
                         <th>Daire Sayısı</th>
-                        <th>Yönetici Id</th>
                         <th>Açık Adres</th>
                         <th>Güncelleyen</th>
                         <th>Güncelleme Tarihi</th>
@@ -51,17 +78,14 @@
                 </thead>
                 <tfoot>
                     <tr>
-                        <th>Guid</th>
                         <th>Kod</th>
-                        <th>Apartman Id</th>
                         <th>Apartman Adı</th>
                         <th>Şehir</th>
                         <th>İlçe</th>
-                        <th>Ad Soyad</th>
+                        <th>Yonetici Ad Soyad</th>
                         <th>Telefon Numarası</th>
                         <th>Kapı Numarası</th>
                         <th>Daire Sayısı</th>
-                        <th>Yönetici Id</th>
                         <th>Açık Adres</th>
                         <th>Güncelleyen</th>
                         <th>Güncelleme Tarihi</th>
@@ -72,9 +96,7 @@
                     @foreach (var item in Model.PagedList)
                     {
                         <tr>
-                            <td>@item.Guid</td>
                             <td>@item.Code</td>
-                            <td>@item.ApartmentId</td>
                             <td>@item.ApartmentName</td>
                             <td>@item.CityName</td>
                             <td>@item.CountyName</td>
@@ -82,7 +104,6 @@
                             <td>@item.PhoneNumber</td>
                             <td>@item.DoorNumber</td>
                             <td>@item.NumberOfFlats</td>
-                            <td>@item.ResponsibleMemberId</td>
                             <td>@item.OpenAdress</td>
                             <td>@item.UpdatedBy</td>
                             <td>@item.UpdatedDate</td>
