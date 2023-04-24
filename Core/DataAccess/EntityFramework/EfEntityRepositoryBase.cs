@@ -9,6 +9,7 @@ using System.Globalization;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using static Core.DataAccess.Pagination;
@@ -402,6 +403,7 @@ namespace Core.DataAccess.EntityFramework
             }
 
             IEnumerable<TEntity> result = GetSortedData(context.Set<TEntity>().Where(predicate), OrderBy).Take(Take);
+
             var query = from e in result
                         select new
                         {
@@ -409,13 +411,12 @@ namespace Core.DataAccess.EntityFramework
                             Text = e.GetType().GetProperty(DDLText).GetValue(e, null),
                             Selected = e.GetType().GetProperty(DDLValue).GetValue(e, null).ToString() == SelectedValue
                         };
-
             foreach (var b in query)
             {
                 MyReturnList.Add(new DDL() { DefaultText = b.Text.ToString(), DefaultValue = b.Value.ToString(), Selected = b.Selected });
             }
-
             return MyReturnList.AsQueryable();
+
         }
         public async Task<List<DDL>> GetDDLAsync(Expression<Func<TEntity, bool>> predicate, string DDLText, string DDLValue, bool isGUID,
             string DefaultText, string DefaultValue, string SelectedValue, int Take, string OrderBy, string? Params)

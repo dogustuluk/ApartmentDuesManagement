@@ -29,7 +29,9 @@ namespace Business.DependencyResolvers.Autofac
             //builder.RegisterType<ApartmentDuesManagementContext>().AsSelf().InstancePerLifetimeScope();//Bu kod Autofac container'ına, ApartmentDuesManagementContext sınıfının kendisini kaydeder ve yaşam döngüsünü de belirtir. manager sınıfının içerisine unit of work enjekte edilememe hatasını önler.
 
 
-           // builder.RegisterType<ApartmentDuesManagementContext>().As<DbContext>().InstancePerLifetimeScope();
+            // builder.RegisterType<ApartmentDuesManagementContext>().As<DbContext>().InstancePerLifetimeScope();
+
+
             //builder.RegisterType<ApartmentDuesManagementContext>().AsSelf().InstancePerLifetimeScope();
 
             //builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().InstancePerLifetimeScope();
@@ -39,7 +41,7 @@ namespace Business.DependencyResolvers.Autofac
 
             //builder.RegisterType<EfApartmentDal>().As<IApartmentDal>().InstancePerLifetimeScope();
             //builder.RegisterType<ApartmentManager>().As<IApartmentService>().InstancePerLifetimeScope();
-            
+
             //builder.RegisterType<EfApartmentFlatDal>().As<IApartmentFlatDal>().InstancePerLifetimeScope();
             //builder.RegisterType<ApartmentFlatManager>().As<IApartmentFlatService>().InstancePerLifetimeScope();
 
@@ -56,6 +58,7 @@ namespace Business.DependencyResolvers.Autofac
             //builder.RegisterType<EfCityDal>().As<ICityDal>().InstancePerLifetimeScope();
             //builder.RegisterType<CityManager>().As<ICityService>().InstancePerLifetimeScope();
 
+            //builder.RegisterType<CountyManager>().As<ICountyService>().InstancePerLifetimeScope();
             //builder.RegisterType<EfCountyDal>().As<ICountyDal>().InstancePerLifetimeScope();
 
         }

@@ -18,5 +18,5 @@ public partial class County : IEntity
 
     public double Koory { get; set; }
 
-    public virtual City City { get; set; } = null!;
+    public virtual City? City { get; set; }
 }

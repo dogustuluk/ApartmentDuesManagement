@@ -1,91 +1,94 @@
 ﻿@model ApartmentAddDto
 
-
-<div class="card-body">
-    <div class="table-responsive">
-        <table class="table table-borderless">
-            <tbody>
-                <tr>
-                    <td>
-                        <label>Apartment Name:</label>
-                    </td>
-                    <td>
-                        <input type="text" asp-for="ApartmentName" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label>Block Number:</label>
-                    </td>
-                    <td>
-                        <input type="text" asp-for="BlockNo" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label>Door Number:</label>
-                    </td>
-                    <td>
-                        <input type="text" asp-for="DoorNumber" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label>Responsible Member:</label>
-                    </td>
-                    <td>
-                        <input type="text" asp-for="ResponsibleMemberInfo" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label>Number of Flats:</label>
-                    </td>
-                    <td>
-                        <input type="text" asp-for="NumberOfFlats" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label>Il:</label>
-                    </td>
-                    <td>
-                        <select class="ajaxCityId" asp-for="@Model.CityId">
-                            <option value="">Il</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label>Ilce:</label>
-                    </td>
-                    <td>
-                        <select class="ajaxCountyId" asp-for="@Model.CountyId">
-                            <option value="0">Il seciniz</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label>Open Address:</label>
-                    </td>
-                    <td>
-                        <input type="text" asp-for="OpenAdress" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label>Is Active:</label>
-                    </td>
-                    <td>
-                        <input type="checkbox" asp-for="IsActive" />
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <button type="submit">Kaydet</button>
+<form asp-action="Add" method="post">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-borderless">
+                <tbody>
+                    <tr>
+                        <td>
+                            <label>Apartment Name:</label>
+                        </td>
+                        <td>
+                            <input type="text" asp-for="ApartmentName" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Block Number:</label>
+                        </td>
+                        <td>
+                            <input type="text" asp-for="BlockNo" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Door Number:</label>
+                        </td>
+                        <td>
+                            <input type="text" asp-for="DoorNumber" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Responsible Member:</label>
+                        </td>
+                        <td>
+                            <input type="text" asp-for="ResponsibleMemberInfo" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Number of Flats:</label>
+                        </td>
+                        <td>
+                            <input type="text" asp-for="NumberOfFlats" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Il:</label>
+                        </td>
+                        <td>
+                            <select class="ajaxCityId" asp-for="@Model.CityId">
+                                <option value="">Il seciniz</option>
+                            </select>
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Ilce:</label>
+                        </td>
+                        <td>
+                            <select class="ajaxCountyId" asp-for="@Model.CountyId">
+                                <option value="0">Ilce seciniz</option>
+                            </select>
+                           
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Open Address:</label>
+                        </td>
+                        <td>
+                            <input type="text" asp-for="OpenAdress" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Is Active:</label>
+                        </td>
+                        <td>
+                            <input type="checkbox" asp-for="IsActive" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="submit">Kaydet</button>
+        </div>
     </div>
-</div>
+</form>
 
 <script>
     $().ready(function () {
@@ -108,7 +111,7 @@
             var items = '';
             ddl.empty();
             $.each(data, function (i, data) {
-                items += "<option value='" + data.Value + "'>" + data.Text + "</option>";
+                items += "<option value='" + data.DefaultValue + "'>" + data.DefaultText + "</option>";
             });
             ddl.html(items);
 
@@ -122,11 +125,11 @@
             var items = '';
             ddl.empty();
             $.each(data, function (i, data) {
-                items += "<option value='" + data.Value + "'>" + data.Text + "</option>";
+                items += "<option value='" + data.DefaultValue + "'>" + data.DefaultText + "</option>";
             });
             ddl.html(items);
 
         });
     }
-
+   
 </script>

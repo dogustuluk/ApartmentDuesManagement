@@ -43,6 +43,7 @@ namespace Apartment_Web.DependencyResolvers
             builder.RegisterType<EfCityDal>().As<ICityDal>().InstancePerLifetimeScope();
             builder.RegisterType<CityManager>().As<ICityService>().InstancePerLifetimeScope();
 
+            builder.RegisterType<CountyManager>().As<ICountyService>().InstancePerLifetimeScope();
             builder.RegisterType<EfCountyDal>().As<ICountyDal>().InstancePerLifetimeScope();
             
         }

@@ -108,6 +108,7 @@ say
 
 			var MYRESULT = new Company_AddNew_DM()
 			{
+				
 				CompanyTypeID_DDL = _serviceManager.DBParameters.GetDDL(a => a.DBParameterTypeID == 3 && a.isActive == true, false, "Bütün Tipler", "0", "0", 100, ""),
 				isNewMember = true,
 				CityID = 3401,

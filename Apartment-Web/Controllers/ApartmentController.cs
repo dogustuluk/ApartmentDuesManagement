@@ -121,19 +121,9 @@ namespace Apartment_Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Add()
+        public IActionResult Add()
         {
-              var MYRESULT = new ApartmentAddDto()
-            {
-              
-                CityId = 35,
-                CountyId = 476,
-               
-                //CityIdDDL = await _unitOfWork.cityDal.GetCityNameDDL(x => x.CityId > 0, false, "", "0", "35", 100, "").ToListAsync(),
-               // CountyIdDDL = await _unitOfWork.countyDal.GetDDL(x=>x.CountyId ==476, false,"","0","476",100,"").ToListAsync(),
-            };
-
-            return View(MYRESULT);
+            return View();
 
         }
         public class Index_VM
