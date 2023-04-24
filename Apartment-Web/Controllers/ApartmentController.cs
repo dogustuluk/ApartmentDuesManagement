@@ -29,71 +29,29 @@ namespace Apartment_Web.Controllers
             _apartmentService = apartmentService;
             _cityService = cityService;
         }
-
-
-        //public async Task<IActionResult> Index(string? apartmentFilter, string? countyFilter, string? orderOpt)
-        //{
-        //    var skipCount = 0;
-        //    var maxResultCount = 25;
-
-        //    var predicate = PredicateBuilder.New<VwApartment>(true);
-
-        //    if (!string.IsNullOrEmpty(apartmentFilter))
-        //    {
-        //        predicate = predicate.And(p => p.ApartmentName.Contains(apartmentFilter));
-        //    }
-        //    if (!string.IsNullOrEmpty(countyFilter))
-        //    {
-        //        predicate = predicate.And(p => p.CountyName.Contains(countyFilter));
-        //    }
-
-        //    var orderOptions = new List<SelectListItem>
-        //    {
-        //        new SelectListItem {Value = "DoorNumber-asc", Text="kapi numarasi artan"},
-        //        new SelectListItem {Value = "DoorNumber-desc", Text="kapi numarasi azalan"}
-        //    };
-
-        //    ViewBag.OrderOptions = orderOptions;
-        //    if (orderOpt?.StartsWith("-") == true)
-        //    {
-        //        orderOpt = orderOpt.Substring(1);
-        //    }
-
-        //    var model = await _apartmentViewService.GetPagedList(
-        //        skipCount,
-        //        maxResultCount: maxResultCount,
-        //        predicate: predicate,
-        //        orderBy:orderOpt
-        //        );
-
-
-        //    ViewBag.OrderOptions = new Func<List<SelectListItem>>(() => orderOptions);
-
-        //    return View(model);
-        //}
         public async Task<IActionResult> Index(int? cityId, string? countyFilter, string? orderBy, int? PageIndex = 1)
         {
-            //var skipCount = 0;
+            var skipCount = 0;
             string defaultSortOrder = "ApartmentId ASC";
             //int PageIndex = 1;
             var predicate = PredicateBuilder.New<VwApartment>(true);
 
 
-            //if (!string.IsNullOrEmpty(countyFilter))
-            //{
-            //    predicate = predicate.And(p => p.CountyName.Contains(countyFilter));
-            //}
+            if (!string.IsNullOrEmpty(countyFilter))
+            {
+                predicate = predicate.And(p => p.CountyName.Contains(countyFilter));
+            }
 
             if (cityId != null)
             {
                 predicate = predicate.And(p => p.CityId == cityId);
             }
-            
+
 
             var cityList = await _cityService.GetAll();
 
-            #region MyRegion
-            //var ddl = _apartmentViewService.GetDDL(predicate,false,"seciniz","1","",0,null);
+            //#region MyRegion
+            //var ddl = _apartmentViewService.GetDDL(predicate, false, "seciniz", "1", "", 0, null);
             //var ddlList = _apartmentViewService.GetDDL
             //   (
             //   predicate: c => true,
@@ -110,7 +68,7 @@ namespace Apartment_Web.Controllers
             //       SelectedValue = c.SelectedValue
             //   })
             //   .ToList();
-            #endregion
+            //#endregion
 
 
             ViewBag.cities = cityList;
@@ -147,9 +105,9 @@ namespace Apartment_Web.Controllers
             {
                 { "PageIndex", PageIndex },
 
-                //{ "OrderBy", orderBy},
+                { "OrderBy", orderBy},
              };
-            //ViewBag.order = orderBy;
+            ViewBag.order = orderBy;
             Index_VM MYRESULT = new()
             {
                 PageTitle = "Apartmanlar",
@@ -166,11 +124,13 @@ namespace Apartment_Web.Controllers
 
         public async Task<IActionResult> Add()
         {
-            var result = new ApartmentAddDto()
-            {
-                CityIdDDL = _cityService.GetAll();//city'de getDDl
-            };
-            
+            //var result = new ApartmentAddDto()
+            //{
+            //    CityIdDDL = _cityService.GetAll();//city'de getDDl
+            //};
+
+            return View();
+
         }
         public class Index_VM
         {

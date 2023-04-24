@@ -1,4 +1,5 @@
-﻿using DataAccess.Concrete.EntityFramework.Context;
+﻿using Core.Utilities.Results.Abstract;
+using DataAccess.Concrete.EntityFramework.Context;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace Business.Abstract
 {
     public interface ICityService
     {
+        IResult AddCity(City city);
         Task<List<City>> GetAll();
     }
 }
