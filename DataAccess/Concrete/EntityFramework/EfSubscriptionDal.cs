@@ -11,7 +11,7 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class EfSubscriptionDal : EfEntityRepositoryBase<Subscription, ApartmentDuesManagementContext>, ISubscriptionDal
     {
-        public EfSubscriptionDal(ApartmentDuesManagementContext dbContext) : base(dbContext)
+        public EfSubscriptionDal(ApartmentDuesManagementContext dbContext, ApartmentDuesManagementContext context) : base(dbContext, context)
         {
         }
     }

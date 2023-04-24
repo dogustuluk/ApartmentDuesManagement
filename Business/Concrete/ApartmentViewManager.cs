@@ -49,10 +49,10 @@ namespace Business.Concrete
             return await _unitOfWork.vwApartmentDal.GetDataSqlAsync(sql, pageIndex, take, orderBy);
         }
 
-        public IQueryable<DDL> GetDDL(Expression<Func<VwApartment, bool>> predicate, bool isGuid, string defaultText, string defaultValue, string selectedValue, int take, string? Params)
-        {
-            return _unitOfWork.vwApartmentDal.GetDDL(predicate,isGuid,defaultText,defaultValue,selectedValue,take, Params);
-        }
+        //public IQueryable<DDL> GetDDL(Expression<Func<VwApartment, bool>> predicate, bool isGuid, string defaultText, string defaultValue, string selectedValue, int take, string? Params)
+        //{
+        //    return _unitOfWork.vwApartmentDal.GetDDL(predicate,isGuid,defaultText,defaultValue,selectedValue,take, Params);
+        //}
 
         public async Task<List<VwApartment>> GetPagedList(int skipCount, int maxResultCount, Expression<Func<VwApartment, bool>> predicate = null, string? orderBy = null, bool isAscending = true)
         {

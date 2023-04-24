@@ -12,6 +12,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Business.Concrete
 {
@@ -36,16 +37,21 @@ namespace Business.Concrete
             return new ErrorResult(Messages.GeneralMessages.GeneralError);
         }
 
-        public async Task<List<City>> GetAll()
+        public Task<List<City>> GetAll()
         {
             var cities = _unitOfWork.cityDal.GetAll();
-            return cities.ToList();
+            return (Task<List<City>>)cities;
         }
 
-        public IQueryable<DDL> GetCityDDL(Expression<Func<City, bool>> predicate, bool isGuid, string defaultText, string defaultValue, string selectedValue, int take, string? Params)
+        public IQueryable<DDL> GetCityDDL(Expression<Func<City, bool>> predicate, string DDLText, string DDLValue, bool isGUID,
+            string DefaultText, string DefaultValue, string SelectedValue, int Take, string OrderBy, string? Params)
         {
-            IQueryable<DDL> ddlList = _unitOfWork.cityDal.GetDDL(predicate, isGuid, defaultText, defaultValue, selectedValue, take, Params);
-            return ddlList;
+            return _unitOfWork.cityDal.GetDDL(predicate,DDLText,DDLValue,isGUID,DefaultText,DefaultValue,SelectedValue,Take,OrderBy,Params);
+        }
+
+        public Task<List<DDL>> GetDDLAsync(Expression<Func<City, bool>> predicate, string DDLText, string DDLValue, bool isGUID, string DefaultText, string DefaultValue, string SelectedValue, int Take, string OrderBy, string? Params)
+        {
+            return _unitOfWork.cityDal.GetDDLAsync(predicate, DDLText, DDLValue, isGUID, DefaultText, DefaultValue, SelectedValue, Take, OrderBy, Params);
         }
     }
 }

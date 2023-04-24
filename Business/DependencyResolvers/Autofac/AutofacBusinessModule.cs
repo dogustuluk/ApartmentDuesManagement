@@ -29,34 +29,34 @@ namespace Business.DependencyResolvers.Autofac
             //builder.RegisterType<ApartmentDuesManagementContext>().AsSelf().InstancePerLifetimeScope();//Bu kod Autofac container'ına, ApartmentDuesManagementContext sınıfının kendisini kaydeder ve yaşam döngüsünü de belirtir. manager sınıfının içerisine unit of work enjekte edilememe hatasını önler.
 
 
-            //builder.RegisterType<ApartmentDuesManagementContext>().As<DbContext>().InstancePerLifetimeScope();
-            builder.RegisterType<ApartmentDuesManagementContext>().AsSelf().InstancePerLifetimeScope();
+           // builder.RegisterType<ApartmentDuesManagementContext>().As<DbContext>().InstancePerLifetimeScope();
+            //builder.RegisterType<ApartmentDuesManagementContext>().AsSelf().InstancePerLifetimeScope();
 
-            builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().InstancePerLifetimeScope();
-            builder.RegisterType<UrlHelper>().AsSelf().InstancePerDependency();
-            builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
+            //builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().InstancePerLifetimeScope();
+            //builder.RegisterType<UrlHelper>().AsSelf().InstancePerDependency();
+            //builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
 
 
-            builder.RegisterType<EfApartmentDal>().As<IApartmentDal>().InstancePerLifetimeScope();
-            builder.RegisterType<ApartmentManager>().As<IApartmentService>().InstancePerLifetimeScope();
+            //builder.RegisterType<EfApartmentDal>().As<IApartmentDal>().InstancePerLifetimeScope();
+            //builder.RegisterType<ApartmentManager>().As<IApartmentService>().InstancePerLifetimeScope();
             
-            builder.RegisterType<EfApartmentFlatDal>().As<IApartmentFlatDal>().InstancePerLifetimeScope();
-            builder.RegisterType<ApartmentFlatManager>().As<IApartmentFlatService>().InstancePerLifetimeScope();
+            //builder.RegisterType<EfApartmentFlatDal>().As<IApartmentFlatDal>().InstancePerLifetimeScope();
+            //builder.RegisterType<ApartmentFlatManager>().As<IApartmentFlatService>().InstancePerLifetimeScope();
 
-            builder.RegisterType<EfVwApartmentFlatDal>().As<IVwApartmentFlatDal>().InstancePerLifetimeScope();
-            builder.RegisterType<ApartmentFlatViewManager>().As<IApartmentFlatViewService>().InstancePerLifetimeScope();
+            //builder.RegisterType<EfVwApartmentFlatDal>().As<IVwApartmentFlatDal>().InstancePerLifetimeScope();
+            //builder.RegisterType<ApartmentFlatViewManager>().As<IApartmentFlatViewService>().InstancePerLifetimeScope();
 
 
-            builder.RegisterType<EfMemberDal>().As<IMemberDal>().InstancePerLifetimeScope();
-            builder.RegisterType<MemberManager>().As<IMemberService>().InstancePerLifetimeScope();
+            //builder.RegisterType<EfMemberDal>().As<IMemberDal>().InstancePerLifetimeScope();
+            //builder.RegisterType<MemberManager>().As<IMemberService>().InstancePerLifetimeScope();
 
-            builder.RegisterType<EfSubscriptionDal>().As<ISubscriptionDal>().InstancePerLifetimeScope();
-            builder.RegisterType<EfSubscriptionItemDal>().As<ISubscriptionItemDal>().InstancePerLifetimeScope();
+            //builder.RegisterType<EfSubscriptionDal>().As<ISubscriptionDal>().InstancePerLifetimeScope();
+            //builder.RegisterType<EfSubscriptionItemDal>().As<ISubscriptionItemDal>().InstancePerLifetimeScope();
 
-            builder.RegisterType<EfCityDal>().As<ICityDal>().InstancePerLifetimeScope();
-            builder.RegisterType<CityManager>().As<ICityService>().InstancePerLifetimeScope();
+            //builder.RegisterType<EfCityDal>().As<ICityDal>().InstancePerLifetimeScope();
+            //builder.RegisterType<CityManager>().As<ICityService>().InstancePerLifetimeScope();
 
-            builder.RegisterType<EfCountyDal>().As<ICountyDal>().InstancePerLifetimeScope();
+            //builder.RegisterType<EfCountyDal>().As<ICountyDal>().InstancePerLifetimeScope();
 
         }
     }

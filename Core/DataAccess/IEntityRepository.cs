@@ -64,10 +64,14 @@ namespace Core.DataAccess
         Task<List<T>> GetSortedDataAsync(IQueryable<T> myData, string orderBy);
 
 
-        IQueryable<DDL> GetDDL(Expression<Func<T, bool>> predicate, bool isGuid, string defaultText, string defaultValue, string selectedValue, int take, string? Params);
+        IQueryable<DDL> GetDDL(Expression<Func<T, bool>> predicate, string DDLText, string DDLValue, bool isGUID,
+            string DefaultText, string DefaultValue, string SelectedValue, int Take, string OrderBy, string? Params);
 
-        
-        //Task<List<DDL>> GetDDLAsync(Expression<Func<T, bool>> predicate, bool isGuid, string defaultText, string defaultValue, string selectedText, string selectedValue, int take, string? Params);
-       
+
+
+        Task<List<DDL>> GetDDLAsync(Expression<Func<T, bool>> predicate, string DDLText, string DDLValue, bool isGUID,
+            string DefaultText, string DefaultValue, string SelectedValue, int Take, string OrderBy, string? Params);
+
+
     }
 }

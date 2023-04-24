@@ -20,116 +20,101 @@ namespace Core.DataAccess.EntityFramework
         where TContext : DbContext, new()
     {
         private readonly DbSet<TEntity> _dbSet;
+        private readonly TContext context;
 
-        public EfEntityRepositoryBase(TContext dbContext)
+        public EfEntityRepositoryBase(TContext dbContext, TContext context)
         {
             _dbSet = dbContext.Set<TEntity>();
+            this.context = context;
         }
 
         public int Add(TEntity entity)
         {
-            using (var context = new TContext())
-            {
-                var addedEntity = context.Entry(entity);
-                addedEntity.State = EntityState.Added;
-                return context.SaveChanges();
-            }
+            var addedEntity = context.Entry(entity);
+            addedEntity.State = EntityState.Added;
+            return context.SaveChanges();
         }
 
         public async Task<TEntity> AddAsync(TEntity entity)
         {
-            using (var context = new TContext())
-            {
-                await context.Set<TEntity>().AddAsync(entity);
-                return entity;
-            }
+            await context.Set<TEntity>().AddAsync(entity);
+            return entity;
         }
 
         public void Delete(TEntity entity)
         {
-            using (var context = new TContext())
-            {
-                var deletedEntity = context.Entry(entity);
-                deletedEntity.State = EntityState.Deleted;
-                context.SaveChanges();
-            }
+            var deletedEntity = context.Entry(entity);
+            deletedEntity.State = EntityState.Deleted;
+            context.SaveChanges();
         }
 
         public async Task DeleteAsync(TEntity entity)
         {
-            using (var context = new TContext())
+            await Task.Run(() =>
             {
-                await Task.Run(() =>
-                {
-                    context.Set<TEntity>().Remove(entity);
-                });
-            }
+                context.Set<TEntity>().Remove(entity);
+            });
         }
 
 
         public TEntity Get(Expression<Func<TEntity, bool>> filter)
         {
-            using (var context = new TContext())
-            {
-                return context.Set<TEntity>().SingleOrDefault(filter);
-            }
+
+            return context.Set<TEntity>().SingleOrDefault(filter);
+
         }
 
 
         public IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> filter = null)
         {
-            using (var context = new TContext())
-            {
-                return filter == null
-                    ? context.Set<TEntity>().ToList()
-                    : context.Set<TEntity>().Where(filter).ToList();
-            }
+
+            return filter == null
+                ? context.Set<TEntity>().ToList()
+                : context.Set<TEntity>().Where(filter).ToList();
+
         }
 
         public async Task<List<TEntity>> GetAllAsync(List<Expression<Func<TEntity, bool>>> predicates, List<Expression<Func<TEntity, object>>> includeProperties)
         {
-            using (var context = new TContext())
+
+            IQueryable<TEntity> query = context.Set<TEntity>();
+            if (predicates != null && predicates.Any())
             {
-                IQueryable<TEntity> query = context.Set<TEntity>();
-                if (predicates != null && predicates.Any())
+                foreach (var predicate in predicates)
                 {
-                    foreach (var predicate in predicates)
-                    {
-                        query = query.Where(predicate);
-                    }
+                    query = query.Where(predicate);
                 }
-                if (includeProperties != null && includeProperties.Any())
-                {
-                    foreach (var includeProperty in includeProperties)
-                    {
-                        query = query.Include(includeProperty);
-                    }
-                }
-                return await query.AsNoTracking().ToListAsync();
             }
+            if (includeProperties != null && includeProperties.Any())
+            {
+                foreach (var includeProperty in includeProperties)
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+            return await query.AsNoTracking().ToListAsync();
+
         }
 
 
         public void Update(TEntity entity)
         {
-            using (var context = new TContext())
-            {
-                var updatedEntity = context.Entry(entity);
-                updatedEntity.State = EntityState.Modified;
-                context.SaveChanges();
-            }
+
+            var updatedEntity = context.Entry(entity);
+            updatedEntity.State = EntityState.Modified;
+            context.SaveChanges();
+
         }
 
         public async Task<TEntity> UpdateAsync(TEntity entity)
         {
-            using (var context = new TContext())
+
+            await Task.Run(() =>
             {
-                await Task.Run(() =>
-                {
-                    context.Set<TEntity>().Update(entity);
-                });
-                return entity;
-            }
+                context.Set<TEntity>().Update(entity);
+            });
+            return entity;
+
         }
 
 
@@ -248,17 +233,15 @@ namespace Core.DataAccess.EntityFramework
 
         public async Task<TEntity> GetByIdAsync(int id)
         {
-            using (var context = new TContext())
-            {
-                return await context.Set<TEntity>().FindAsync(id);
-            }
+
+            return await context.Set<TEntity>().FindAsync(id);
+
         }
         public TEntity? GetById(int id)
         {
-            using (var context = new TContext())
-            {
-                return context.Set<TEntity>().Find(id);
-            }
+
+            return context.Set<TEntity>().Find(id);
+
 
         }
 
@@ -271,173 +254,175 @@ namespace Core.DataAccess.EntityFramework
         }
         public TEntity? GetByGuid(Guid guid)
         {
-            using (var context = new TContext())
-            {
-                return context.Set<TEntity>().Find(guid);
-            }
+
+            return context.Set<TEntity>().Find(guid);
+
         }
 
         public async Task<PaginatedList<TEntity>> GetDataPagedAsync(Expression<Func<TEntity, bool>> predicate, int PageIndex, int take, string orderBy)
         {
-            using (var context = new TContext())
+
+            var query = context.Set<TEntity>().AsQueryable();
+
+            if (predicate != null)
             {
-                var query = context.Set<TEntity>().AsQueryable();
-
-                if (predicate != null)
-                {
-                    query = query.Where(predicate);
-                }
-
-                var count = await query.CountAsync();
-
-                if (!string.IsNullOrEmpty(orderBy)) //null kontrolune gerek yok
-                {
-                    // query = query.OrderBy(orderBy); //linq.dynamic kutuphanesi ile string order by alinabilir.
-                    if (int.TryParse(orderBy, out int orderByInt))
-                    {
-                        query = query.OrderBy(x=> orderByInt);
-                    }
-                    else
-                    {
-                        query = query.OrderBy(orderBy);
-                    }
-                }
-
-                var items = await query.Skip((PageIndex - 1) * take).Take(take).ToListAsync();
-
-                return new PaginatedList<TEntity>(items, count, PageIndex, take);
+                query = query.Where(predicate);
             }
+
+            var count = await query.CountAsync();
+
+            if (!string.IsNullOrEmpty(orderBy)) //null kontrolune gerek yok
+            {
+                // query = query.OrderBy(orderBy); //linq.dynamic kutuphanesi ile string order by alinabilir.
+                if (int.TryParse(orderBy, out int orderByInt))
+                {
+                    query = query.OrderBy(x => orderByInt);
+                }
+                else
+                {
+                    query = query.OrderBy(orderBy);
+                }
+            }
+
+            var items = await query.Skip((PageIndex - 1) * take).Take(take).ToListAsync();
+
+            return new PaginatedList<TEntity>(items, count, PageIndex, take);
+
         }
 
         public IEnumerable<TEntity> GetData(Expression<Func<TEntity, bool>> predicate, int take, string OrderBy)
         {
-            using (var context = new TContext())
-            {
-                var query = context.Set<TEntity>().AsQueryable();
 
-                if (predicate != null)
-                {
-                    query = query.Where(predicate);
-                }
-                if (!string.IsNullOrEmpty(OrderBy))
-                {
-                    query = query.OrderBy(OrderBy);
-                }
-                if (take > 0)
-                {
-                    query = query.Take(take);
-                }
-                return query.ToList();
+            var query = context.Set<TEntity>().AsQueryable();
+
+            if (predicate != null)
+            {
+                query = query.Where(predicate);
             }
+            if (!string.IsNullOrEmpty(OrderBy))
+            {
+                query = query.OrderBy(OrderBy);
+            }
+            if (take > 0)
+            {
+                query = query.Take(take);
+            }
+            return query.ToList();
+
         }
 
         public async Task<List<TEntity>> GetDataAsync(Expression<Func<TEntity, bool>> predicate, int take, string OrderBy)
         {
-            using (var context = new TContext())
-            {
-                var query = context.Set<TEntity>().AsQueryable();
 
-                if (predicate != null)
-                {
-                    query = query.Where(predicate);
-                }
-                if (!string.IsNullOrEmpty(OrderBy))
-                {
-                    query = query.OrderBy(OrderBy);
-                }
-                if (take > 0)
-                {
-                    query = query.Take(take);
-                }
-                return await query.ToListAsync();
+            var query = context.Set<TEntity>().AsQueryable();
+
+            if (predicate != null)
+            {
+                query = query.Where(predicate);
             }
+            if (!string.IsNullOrEmpty(OrderBy))
+            {
+                query = query.OrderBy(OrderBy);
+            }
+            if (take > 0)
+            {
+                query = query.Take(take);
+            }
+            return await query.ToListAsync();
+
         }
 
         public IEnumerable<TEntity> GetDataSql(string sql, int pageIndex, int take, string orderBy)
         {
-            using (var context = new TContext())
+
+            if (string.IsNullOrEmpty(sql))
             {
-                if (string.IsNullOrEmpty(sql))
-                {
-                    throw new ArgumentNullException(nameof(sql));
-                }
-                var query = context.Set<TEntity>().FromSqlRaw(sql);
-                if (!string.IsNullOrEmpty(orderBy))
-                {
-                    query = query.OrderBy(orderBy);
-                }
-                query = query.Skip((pageIndex - 1) * take).Take(take);
-                return query.ToList();
+                throw new ArgumentNullException(nameof(sql));
             }
+            var query = context.Set<TEntity>().FromSqlRaw(sql);
+            if (!string.IsNullOrEmpty(orderBy))
+            {
+                query = query.OrderBy(orderBy);
+            }
+            query = query.Skip((pageIndex - 1) * take).Take(take);
+            return query.ToList();
+
         }
 
         public async Task<List<TEntity>> GetDataSqlAsync(string sql, int pageIndex, int take, string orderBy)
         {
-            using (var context = new TContext())
+
+            if (string.IsNullOrEmpty(sql))
             {
-                if (string.IsNullOrEmpty(sql))
-                {
-                    throw new ArgumentNullException(nameof(sql));
-                }
-                var query = context.Set<TEntity>().FromSqlRaw(sql);
-                if (!string.IsNullOrEmpty(orderBy))
-                {
-                    query = query.OrderBy(orderBy);
-                }
-                query = query.Skip((pageIndex - 1) * take).Take(take);
-                return await query.ToListAsync();
+                throw new ArgumentNullException(nameof(sql));
             }
+            var query = context.Set<TEntity>().FromSqlRaw(sql);
+            if (!string.IsNullOrEmpty(orderBy))
+            {
+                query = query.OrderBy(orderBy);
+            }
+            query = query.Skip((pageIndex - 1) * take).Take(take);
+            return await query.ToListAsync();
+
         }
 
         public IQueryable<TEntity> GetSortedData(IQueryable<TEntity> myData, string orderBy)
         {
-            using (var context = new TContext())
+
+            if (!string.IsNullOrEmpty(orderBy))
             {
-                if (!string.IsNullOrEmpty(orderBy))
-                {
-                    myData = myData.OrderBy(orderBy);
-                }
-                return myData;
+                myData = myData.OrderBy(orderBy);
             }
+            return myData;
+
         }
 
         public async Task<List<TEntity>> GetSortedDataAsync(IQueryable<TEntity> myData, string orderBy)
         {
-            using (var context = new TContext())
+
+            if (!string.IsNullOrEmpty(orderBy))
             {
-                if (!string.IsNullOrEmpty(orderBy))
-                {
-                    myData = myData.OrderBy(orderBy);
-                }
-                return await myData.ToListAsync();
+                myData = myData.OrderBy(orderBy);
             }
+            return await myData.ToListAsync();
+
         }
 
-        public IQueryable<DDL> GetDDL(Expression<Func<TEntity, bool>> predicate, bool isGuid, string defaultText, string defaultValue, string selectedValue, int take, string? Params)
+
+
+        public IQueryable<DDL> GetDDL(Expression<Func<TEntity, bool>> predicate, string DDLText, string DDLValue, bool isGUID,
+            string DefaultText, string DefaultValue, string SelectedValue, int Take, string OrderBy, string? Params)
         {
-            using (var context = new TContext())
+            List<DDL> MyReturnList = new();
+
+            if (!string.IsNullOrEmpty(DefaultText))
             {
-                var query = context.Set<TEntity>().Where(predicate).Take(take);
-
-                var ddlList = query.Select(e => new DDL
-                {
-                    DefaultText = defaultText,
-                    DefaultValue = defaultValue,
-                    SelectedValue = selectedValue,
-                    SelectedText = "Sec"    //incele
-                });
-
-                var defaultItem = new DDL
-                {
-                    DefaultText = defaultText,
-                    DefaultValue = defaultValue,
-                    SelectedValue = selectedValue,
-                    SelectedText = "Sec" // Varsayılan öğe için metin gösterilmez
-                };
-                ddlList = ddlList.DefaultIfEmpty(defaultItem);
-
-                return ddlList;
+                DDL myDefaultSelectField = new DDL { DefaultValue = DefaultValue, DefaultText = DefaultText, Selected = false };
+                MyReturnList.Add(myDefaultSelectField);
             }
+
+            IEnumerable<TEntity> result = GetSortedData(context.Set<TEntity>().Where(predicate), OrderBy).Take(Take);
+            var query = from e in result
+                        select new
+                        {
+                            Value = e.GetType().GetProperty(DDLValue).GetValue(e, null),
+                            Text = e.GetType().GetProperty(DDLText).GetValue(e, null),
+                            Selected = e.GetType().GetProperty(DDLValue).GetValue(e, null).ToString() == SelectedValue
+                        };
+
+            foreach (var b in query)
+            {
+                MyReturnList.Add(new DDL() { DefaultText = b.Text.ToString(), DefaultValue = b.Value.ToString(), Selected = b.Selected });
+            }
+
+            return MyReturnList.AsQueryable();
+        }
+        public async Task<List<DDL>> GetDDLAsync(Expression<Func<TEntity, bool>> predicate, string DDLText, string DDLValue, bool isGUID,
+            string DefaultText, string DefaultValue, string SelectedValue, int Take, string OrderBy, string? Params)
+        {
+            var MyReturnList = GetDDL(predicate, DDLText, DDLValue, isGUID, DefaultText, DefaultValue, SelectedValue, Take, OrderBy, Params);
+
+            return await MyReturnList.ToListAsync();
         }
 
     }

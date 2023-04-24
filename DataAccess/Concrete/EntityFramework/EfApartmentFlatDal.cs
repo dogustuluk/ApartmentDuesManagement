@@ -11,7 +11,7 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class EfApartmentFlatDal : EfEntityRepositoryBase<ApartmentFlat, ApartmentDuesManagementContext>, IApartmentFlatDal
     {
-        public EfApartmentFlatDal(ApartmentDuesManagementContext dbContext) : base(dbContext)
+        public EfApartmentFlatDal(ApartmentDuesManagementContext dbContext, ApartmentDuesManagementContext context) : base(dbContext, context)
         {
         }
     }

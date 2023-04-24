@@ -10,7 +10,6 @@ namespace Core.Entities
     {
         public string DefaultText { get; set; }
         public string DefaultValue { get; set; }
-        public string SelectedValue { get; set; }
-        public string SelectedText { get; set; }
+        public bool Selected { get; set; }
     }
 }

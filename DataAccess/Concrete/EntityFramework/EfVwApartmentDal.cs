@@ -21,10 +21,8 @@ namespace DataAccess.Concrete.EntityFramework
     public class EfVwApartmentDal : EfEntityRepositoryBase<VwApartment, ApartmentDuesManagementContext>, IVwApartmentDal
     {//base'de tanimla metotlari
 
-        public EfVwApartmentDal(ApartmentDuesManagementContext dbContext) : base(dbContext)
+        public EfVwApartmentDal(ApartmentDuesManagementContext dbContext, ApartmentDuesManagementContext context) : base(dbContext, context)
         {
         }
-
-        
     }
 }

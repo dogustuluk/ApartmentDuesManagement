@@ -11,7 +11,7 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class EfParameterDal : EfEntityRepositoryBase<Parameter, ApartmentDuesManagementContext>, IParameterDal
     {
-        public EfParameterDal(ApartmentDuesManagementContext dbContext) : base(dbContext)
+        public EfParameterDal(ApartmentDuesManagementContext dbContext, ApartmentDuesManagementContext context) : base(dbContext, context)
         {
         }
     }

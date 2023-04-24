@@ -17,7 +17,9 @@ builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation().AddJsonO
     opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
 }); //frontend icin derleme yapmamiza gerek kalmaz, degisiklikleri goruruz.
 builder.Services.AddAutoMapper(typeof(MapProfile));
+
 var app = builder.Build();
+//app.UseMiddleware<AutofacMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -29,6 +31,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
 
 app.UseRouting();
 

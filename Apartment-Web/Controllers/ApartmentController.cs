@@ -12,6 +12,7 @@ using Entities.Dtos;
 using LinqKit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Drawing.Printing;
 using System.Linq.Expressions;
@@ -22,9 +23,11 @@ namespace Apartment_Web.Controllers
     public class ApartmentController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        public ApartmentController( IUnitOfWork unitOfWork)
+        private readonly ICityService _cityService;
+        public ApartmentController(IUnitOfWork unitOfWork, ICityService cityService)
         {
             _unitOfWork = unitOfWork;
+            _cityService = cityService;
         }
         public async Task<IActionResult> Index(int? cityId, string? countyFilter, string? orderBy, int? PageIndex = 1)
         {
@@ -120,12 +123,14 @@ namespace Apartment_Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Add()
         {
-            var MYRESULT = new ApartmentAddDto()
+              var MYRESULT = new ApartmentAddDto()
             {
+              
                 CityId = 35,
                 CountyId = 476,
-                CityIdDDL = _unitOfWork.cityDal.GetDDL(x => x.CityId > 0, false, "", "0", "35", 100, "").ToList(),
-                CountyIdDDL = _unitOfWork.countyDal.GetDDL(x=>x.CountyId ==476, false,"","0","476",100,"").ToList(),
+               
+                //CityIdDDL = await _unitOfWork.cityDal.GetCityNameDDL(x => x.CityId > 0, false, "", "0", "35", 100, "").ToListAsync(),
+               // CountyIdDDL = await _unitOfWork.countyDal.GetDDL(x=>x.CountyId ==476, false,"","0","476",100,"").ToListAsync(),
             };
 
             return View(MYRESULT);

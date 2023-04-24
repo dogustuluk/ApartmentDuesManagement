@@ -18,16 +18,20 @@ namespace Apartment_Web.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        //public JsonResult GetAjax_DDL(string WHAT, string Params, string ID)
-        //{
-        //    List<DDL> MyReturnList = new();
+        public JsonResult GetAjaxCity_DDL()
+        {
+            List<DDL> MyReturnList =_unitOfWork.cityDal.GetDDL(a => a.CityId > 0, "CityName", "CityID", false, "Seciniz", "0", "0", 100, "CityName Asc", "").ToList();
 
-        //    if (WHAT == "Apartments")
-        //    {
-        //        MyReturnList = _unitOfWork.apartmentDal.GetDDL(x=>true,false,"Seciniz","0","ApartmentName",50,"ApartmentName");
-        //        //MyReturnList = _serviceManager.Cities.GetDDL(a => a.CityID > 0, false, "Seçiniz", "0", "0", 100, "");
-        //    }
-        //    return Json(MyReturnList);
-        //}
+            return Json(MyReturnList);
+        }
+
+        public JsonResult GetAjaxCounty_DDL(int Id)
+        {
+            List<DDL> MyReturnList = _unitOfWork.countyDal.GetDDL(a => a.CityId ==Id, "CountyName", "CountyID", false, "Seciniz", "0", "0", 100, "CountyName Asc", "").ToList();
+
+            return Json(MyReturnList);
+        }
+
+
     }
 }
