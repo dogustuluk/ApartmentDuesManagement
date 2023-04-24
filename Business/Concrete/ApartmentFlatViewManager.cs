@@ -22,7 +22,7 @@ namespace Business.Concrete
 
         public async Task<Pagination.PaginatedList<VwApartmentFlat>> GetDataPagedAsync(Expression<Func<VwApartmentFlat, bool>> predicate, int PageIndex, int take, string orderBy)
         {
-            return await _unitOfWork.vwApartmentFlat.GetDataPagedAsync(predicate, PageIndex, take, orderBy);
+            return await _unitOfWork.vwApartmentFlatDal.GetDataPagedAsync(predicate, PageIndex, take, orderBy);
         }
     }
 }

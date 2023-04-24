@@ -24,22 +24,23 @@ namespace Entities.Dtos
         public string? OpenAdress { get; set; }
         public bool IsActive { get; set; }
     }
-    //public class ApartmentAddDto : IDto
-    //{
-    //    public string? ApartmentName { get; set; }
+    public class ApartmentAddDto : IDto
+    {
+        public string? ApartmentName { get; set; }
 
-    //    public string? BlockNo { get; set; }
+        public string? BlockNo { get; set; }
 
-    //    public string? DoorNumber { get; set; }
+        public string? DoorNumber { get; set; }
 
-    //    public MemberShortDto ResponsibleMemberInfo { get; set; }
+        public MemberShortDto ResponsibleMemberInfo { get; set; }
 
-    //    public int NumberOfFlats { get; set; }
+        public int NumberOfFlats { get; set; }
 
-    //    public int CityId { get; set; }
-    //    public List<DDL>? CityIdDDL { get; set; }
-
-    //    public string? OpenAdress { get; set; }
-    //    public bool IsActive { get; set; }
-    //}
+        public int CityId { get; set; }
+        public List<DDL>? CityIdDDL { get; set; }
+        public int CountyId { get; set; }
+        public List<DDL>? CountyIdDDL { get; set; }
+        public string? OpenAdress { get; set; }
+        public bool IsActive { get; set; }
+    }
 }

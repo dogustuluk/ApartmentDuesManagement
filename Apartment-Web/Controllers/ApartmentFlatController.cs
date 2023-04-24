@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using Core.DataAccess;
 using DataAccess.Concrete.EntityFramework.Context;
+using DataAccess.Concrete.UnitOfWork;
 using Entities.Concrete.EntityFramework.Context;
 using LinqKit;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,11 @@ namespace Apartment_Web.Controllers
     public class ApartmentFlatController : Controller
     {
         private readonly IApartmentFlatViewService _apartmentFlatViewService;
-
-        public ApartmentFlatController(IApartmentFlatViewService apartmentViewService)
+        private readonly IUnitOfWork _unitOfWork;
+        public ApartmentFlatController(IApartmentFlatViewService apartmentViewService, IUnitOfWork unitOfWork)
         {
             _apartmentFlatViewService = apartmentViewService;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<IActionResult> Index(string? orderBy, int? PageIndex = 1)
@@ -36,9 +38,8 @@ namespace Apartment_Web.Controllers
                 new SelectListItem { Value = "UpdatedDate ASC", Text = "Guncelleme tarihine gore artan" },
                 new SelectListItem { Value = "UpdatedDate DESC", Text = "Guncelleme tarihine gore azalan" },
             };
-            var selectedSortItem = new SelectList(sortOptions, "Value", "Text", orderBy);
 
-            var PagedList = await _apartmentFlatViewService.GetDataPagedAsync(null,(int)PageIndex,25, orderBy ?? defaultSortOrder);
+            var PagedList = await _unitOfWork.vwApartmentFlatDal.GetDataPagedAsync(null, (int)PageIndex, 25, orderBy ?? defaultSortOrder);
             
 
             Dictionary<string, object> Parameters = new()

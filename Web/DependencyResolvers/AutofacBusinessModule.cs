@@ -22,7 +22,7 @@ namespace Web.DependencyResolvers
             builder.RegisterType<EfApartmentDal>().As<IApartmentDal>().SingleInstance();
             builder.RegisterType<ApartmentManager>().As<IApartmentService>().SingleInstance();
 
-            builder.RegisterType<EfApartmentFlatDal>().As<IApartmentFlat>().InstancePerLifetimeScope();
+            builder.RegisterType<EfApartmentFlatDal>().As<IApartmentFlatDal>().InstancePerLifetimeScope();
             builder.RegisterType<ApartmentFlatManager>().As<IApartmentFlatService>().InstancePerLifetimeScope();
 
             //--

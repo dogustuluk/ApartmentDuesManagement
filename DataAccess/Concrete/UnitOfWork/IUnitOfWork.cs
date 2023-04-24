@@ -12,12 +12,13 @@ namespace DataAccess.Concrete.UnitOfWork
     {
         IApartmentDal apartmentDal { get; }
         IVwApartmentDal vwApartmentDal { get; }
-        IApartmentFlat apartmentFlat { get; }
-        IVwApartmentFlat vwApartmentFlat { get; }
+        IApartmentFlatDal apartmentFlatDal { get; }
+        IVwApartmentFlatDal vwApartmentFlatDal { get; }
         IMemberDal memberDal { get; }
         ISubscriptionDal subscriptionDal { get; }
         ISubscriptionItemDal subscriptionItemDal { get; }
         ICityDal cityDal { get; }
+        ICountyDal countyDal { get; }
         Task CommitAsync();
         void Commit();
     }

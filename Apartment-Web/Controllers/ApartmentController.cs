@@ -6,6 +6,7 @@ using Core.Utilities.Extensions;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
 using DataAccess.Concrete.EntityFramework.Context;
+using DataAccess.Concrete.UnitOfWork;
 using Entities.Concrete.EntityFramework.Context;
 using Entities.Dtos;
 using LinqKit;
@@ -20,20 +21,15 @@ namespace Apartment_Web.Controllers
 {
     public class ApartmentController : Controller
     {
-        private readonly IApartmentViewService _apartmentViewService;
-        private readonly IApartmentService _apartmentService;
-        private readonly ICityService _cityService;
-        public ApartmentController(IApartmentViewService apartmentViewService, IApartmentService apartmentService, ICityService cityService)
+        private readonly IUnitOfWork _unitOfWork;
+        public ApartmentController( IUnitOfWork unitOfWork)
         {
-            _apartmentViewService = apartmentViewService;
-            _apartmentService = apartmentService;
-            _cityService = cityService;
+            _unitOfWork = unitOfWork;
         }
         public async Task<IActionResult> Index(int? cityId, string? countyFilter, string? orderBy, int? PageIndex = 1)
         {
             var skipCount = 0;
             string defaultSortOrder = "ApartmentId ASC";
-            //int PageIndex = 1;
             var predicate = PredicateBuilder.New<VwApartment>(true);
 
 
@@ -47,10 +43,9 @@ namespace Apartment_Web.Controllers
                 predicate = predicate.And(p => p.CityId == cityId);
             }
 
+            var cityList = _unitOfWork.cityDal.GetAll();
 
-            var cityList = await _cityService.GetAll();
-
-            //#region MyRegion
+            #region MyRegion
             //var ddl = _apartmentViewService.GetDDL(predicate, false, "seciniz", "1", "", 0, null);
             //var ddlList = _apartmentViewService.GetDDL
             //   (
@@ -68,7 +63,7 @@ namespace Apartment_Web.Controllers
             //       SelectedValue = c.SelectedValue
             //   })
             //   .ToList();
-            //#endregion
+            #endregion
 
 
             ViewBag.cities = cityList;
@@ -89,7 +84,7 @@ namespace Apartment_Web.Controllers
 
             var selectedSortItem = new SelectList(sortOptions, "Value", "Text", orderBy);
 
-            var PagedList = await _apartmentViewService.GetDataPagedAsync(predicate, (int)PageIndex, 25, orderBy ?? defaultSortOrder);
+            var PagedList = await _unitOfWork.vwApartmentDal.GetDataPagedAsync(predicate, (int)PageIndex, 25, orderBy ?? defaultSortOrder);
 
             Pagination MyPG = new()
             {
@@ -122,14 +117,18 @@ namespace Apartment_Web.Controllers
             return View(MYRESULT);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Add()
         {
-            //var result = new ApartmentAddDto()
-            //{
-            //    CityIdDDL = _cityService.GetAll();//city'de getDDl
-            //};
+            var MYRESULT = new ApartmentAddDto()
+            {
+                CityId = 35,
+                CountyId = 476,
+                CityIdDDL = _unitOfWork.cityDal.GetDDL(x => x.CityId > 0, false, "", "0", "35", 100, "").ToList(),
+                CountyIdDDL = _unitOfWork.countyDal.GetDDL(x=>x.CountyId ==476, false,"","0","476",100,"").ToList(),
+            };
 
-            return View();
+            return View(MYRESULT);
 
         }
         public class Index_VM

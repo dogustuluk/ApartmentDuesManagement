@@ -16,7 +16,7 @@ namespace Business.Mappings
         {
             CreateMap<Apartment, ApartmentDto>().ReverseMap();
            // CreateMap<Apartment, ApartmentAddDto>().ReverseMap();
-            CreateMap<Apartment, VwApartment>().ReverseMap(); //buna gerek yok,view islemleri icin ayri siniflar olacak.
+           
         }
     }
 }

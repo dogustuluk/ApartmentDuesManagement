@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfApartmentFlatDal : EfEntityRepositoryBase<ApartmentFlat, ApartmentDuesManagementContext>, IApartmentFlat
+    public class EfApartmentFlatDal : EfEntityRepositoryBase<ApartmentFlat, ApartmentDuesManagementContext>, IApartmentFlatDal
     {
         public EfApartmentFlatDal(ApartmentDuesManagementContext dbContext) : base(dbContext)
         {

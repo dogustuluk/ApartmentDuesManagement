@@ -28,8 +28,8 @@ namespace Apartment_Web.DependencyResolvers
             builder.RegisterType<ApartmentViewManager>().As<IApartmentViewService>().InstancePerLifetimeScope();
 
 
-            builder.RegisterType<EfApartmentFlatDal>().As<IApartmentFlat>().InstancePerLifetimeScope();
-            builder.RegisterType<EfVwApartmentFlatDal>().As<IVwApartmentFlat>().InstancePerLifetimeScope();
+            builder.RegisterType<EfApartmentFlatDal>().As<IApartmentFlatDal>().InstancePerLifetimeScope();
+            builder.RegisterType<EfVwApartmentFlatDal>().As<IVwApartmentFlatDal>().InstancePerLifetimeScope();
             builder.RegisterType<ApartmentFlatManager>().As<IApartmentFlatService>().InstancePerLifetimeScope();
             builder.RegisterType<ApartmentFlatViewManager>().As<IApartmentFlatViewService>().InstancePerLifetimeScope();
 
@@ -42,6 +42,9 @@ namespace Apartment_Web.DependencyResolvers
 
             builder.RegisterType<EfCityDal>().As<ICityDal>().InstancePerLifetimeScope();
             builder.RegisterType<CityManager>().As<ICityService>().InstancePerLifetimeScope();
+
+            builder.RegisterType<EfCountyDal>().As<ICountyDal>().InstancePerLifetimeScope();
+            
         }
     }
 }

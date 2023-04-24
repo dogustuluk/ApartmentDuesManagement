@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Abstract
 {
-    public interface IApartmentFlat : IEntityRepository<ApartmentFlat>
+    public interface IVwApartmentFlatDal : IEntityRepository<VwApartmentFlat>
     {
     }
 }

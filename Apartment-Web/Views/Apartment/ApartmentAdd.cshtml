@@ -1,0 +1,45 @@
+﻿@model ApartmentAddDto
+
+<form method="post">
+    <div>
+        <label>Apartment Name:</label>
+        <input type="text" asp-for="ApartmentName" />
+    </div>
+    <div>
+        <label>Block Number:</label>
+        <input type="text" asp-for="BlockNo" />
+    </div>
+    <div>
+        <label>Door Number:</label>
+        <input type="text" asp-for="DoorNumber" />
+    </div>
+    <div>
+        <label>Responsible Member:</label>
+        <input type="text" asp-for="ResponsibleMemberInfo" />
+    </div>
+    <div>
+        <label>Number of Flats:</label>
+        <input type="text" asp-for="NumberOfFlats" />
+    </div>
+    <div>
+        <label>Il:</label>
+        <select asp-for="CityId" asp-items="@Model.CityIdDDL.Select(x => new SelectListItem { Text = x.SelectedText, Value = x.SelectedValue })">
+            <option value="">Il</option>
+        </select>
+    </div>
+    <div>
+        <label>Ilce:</label>
+        <select asp-for="CountyId" asp-items="@Model.CountyIdDDL.Select(x => new SelectListItem { Text = x.SelectedText, Value = x.SelectedValue })">
+            <option value="">Ilce</option>
+        </select>
+    </div>
+    <div>
+        <label>Open Address:</label>
+        <input type="text" asp-for="OpenAdress" />
+    </div>
+    <div>
+        <label>Is Active:</label>
+        <input type="checkbox" asp-for="IsActive" />
+    </div>
+    <button type="submit">Save</button>
+</form>
