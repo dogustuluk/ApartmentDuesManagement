@@ -7,85 +7,101 @@
                 <tbody>
                     <tr>
                         <td>
-                            <label>Apartment Name:</label>
+                            <label>Apartman Adı:</label>
                         </td>
                         <td>
-                            <input type="text" asp-for="ApartmentName" />
+                            <input type="text" id="inputApartmentName" asp-for="ApartmentName" />
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <label>Block Number:</label>
+                            <label>Blok numarası:</label>
                         </td>
                         <td>
-                            <input type="text" asp-for="BlockNo" />
+                            <input type="text" id="inputBlockNo" asp-for="BlockNo" />
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <label>Door Number:</label>
+                            <label>Kapı Numarası:</label>
                         </td>
                         <td>
-                            <input type="text" asp-for="DoorNumber" />
+                            <input type="text" id="inputDoorNumber" asp-for="DoorNumber" />
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <label>Responsible Member:</label>
+                            <label>Yönetıcı Ad-Soyad:</label>
                         </td>
                         <td>
-                            <input type="text" asp-for="ResponsibleMemberInfo" />
+                            <input type="text" id="inputResponsibleMemberName" asp-for="ResponsibleMemberInfo.NameSurname" />
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <label>Number of Flats:</label>
+                            <label>Yönetici Mail:</label>
                         </td>
                         <td>
-                            <input type="text" asp-for="NumberOfFlats" />
+                            <input type="text" id="inputResponsibleMemberEmail" asp-for="ResponsibleMemberInfo.Email" />
                         </td>
                     </tr>
                     <tr>
-                        <td>
-                            <label>Il:</label>
-                        </td>
-                        <td>
-                            <select class="ajaxCityId" asp-for="@Model.CityId">
-                                <option value="">Il seciniz</option>
-                            </select>
-                            
-                        </td>
-                    </tr>
                     <tr>
                         <td>
-                            <label>Ilce:</label>
+                            <label>Yönetici Telefon Numarası:</label>
                         </td>
                         <td>
-                            <select class="ajaxCountyId" asp-for="@Model.CountyId">
-                                <option value="0">Ilce seciniz</option>
-                            </select>
-                           
+                            <input type="text" id="inputResponsibleMemberPhoneNumber" asp-for="ResponsibleMemberInfo.PhoneNumber" />
                         </td>
                     </tr>
-                    <tr>
-                        <td>
-                            <label>Open Address:</label>
-                        </td>
-                        <td>
-                            <input type="text" asp-for="OpenAdress" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>Is Active:</label>
-                        </td>
-                        <td>
-                            <input type="checkbox" asp-for="IsActive" />
-                        </td>
-                    </tr>
+                <td>
+                    <label>Daire Sayısı:</label>
+                </td>
+                <td>
+                    <input type="text" id="inputNumberOfFlats" asp-for="NumberOfFlats" />
+                </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>İl:</label>
+                    </td>
+                    <td>
+                        <select class="ajaxCityId" id="inputCity" asp-for="@Model.CityId">
+                            <option value="">İl seçiniz</option>
+                        </select>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>İlçe:</label>
+                    </td>
+                    <td>
+                        <select class="ajaxCountyId" id="inputCounty" asp-for="@Model.CountyId">
+                            <option value="0">İlçe seçiniz</option>
+                        </select>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>Açık Adres:</label>
+                    </td>
+                    <td>
+                        <input type="text" id="inputOpenAddress" asp-for="OpenAdress" />
+                    </td>
+                </tr>
+                    @* <tr>
+                <td>
+                <label>Aktiflik Durumu:</label>
+                </td>
+                <td>
+                <input type="checkbox" id="inputIsActive" asp-for="IsActive" />
+                </td>
+                </tr>*@
                 </tbody>
             </table>
-            <button type="submit">Kaydet</button>
+            <button type="submit" id="btnSave">Kaydet</button>
         </div>
     </div>
 </form>
@@ -100,36 +116,77 @@
         });
 
 
+
+        LoadCities("ajaxCityId");
+
+        function LoadCities(selectorclass) {
+            var url = "/_Base/GetAjaxCity_DDL";
+            var ddl = $("select[class*='" + selectorclass + "']");
+
+            $.getJSON(url, {}, function (data) {
+                var items = '';
+                ddl.empty();
+                $.each(data, function (i, data) {
+                    items += "<option value='" + data.DefaultValue + "'>" + data.DefaultText + "</option>";
+                });
+                ddl.html(items);
+
+            });
+        }
+        function LoadCounties(selectorclass, Id) {
+            var url = "/_Base/GetAjaxCounty_DDL";
+            var ddl = $("select[class*='" + selectorclass + "']");
+
+            $.getJSON(url, { Id: Id }, function (data) {
+                var items = '';
+                ddl.empty();
+                $.each(data, function (i, data) {
+                    items += "<option value='" + data.DefaultValue + "'>" + data.DefaultText + "</option>";
+                });
+                ddl.html(items);
+
+            });
+        }
     });
-    LoadCities("ajaxCityId");
 
-    function LoadCities(selectorclass) {
-        var url = "/_Base/GetAjaxCity_DDL";
-        var ddl = $("select[class*='" + selectorclass + "']");
 
-        $.getJSON(url, {}, function (data) {
-            var items = '';
-            ddl.empty();
-            $.each(data, function (i, data) {
-                items += "<option value='" + data.DefaultValue + "'>" + data.DefaultText + "</option>";
+    $().ready(function () {
+        $("#btnSave").click(function () {
+            var apartment =
+            {
+                ApartmentName: $("#inputApartmentName").val(),
+                BlockNo: $("#inputBlockNo").val(),
+                DoorNumber: $("#inputDoorNumber").val(),
+                ResponsibleMemberInfo:
+                {
+                    NameSurname: $("#inputResponsibleMemberName").val(),
+                    Email: $("#inputResponsibleMemberEmail").val(),
+                    PhoneNumber: $("#inputResponsibleMemberPhoneNumber").val(),
+                },
+                NumberOfFlats: $("#inputNumberOfFlats").val(),
+                CityId: $("#inputCityId").val(),
+                CountyId: $("#inputCountyId").val(),
+                OpenAddress: $("#inputOpenAddress").val(),
+            };
+            $.ajax({
+                type: "POST",
+                url: "/Apartment/Add",
+                data: apartment,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    alert("Kayit basarili");
+                    window.location.href = "/apartment/index";
+                    //toastr.success('Kayıt başarıyla eklendi.', 'Başarılı!', { timeOut: 3000 });
+                    
+                },
+                error: function () {
+                    alert("Veri eklenirken bir hata oluştu.");
+                    window.location.href = "/apartment/index";
+
+                }
             });
-            ddl.html(items);
-
         });
-    }
-    function LoadCounties(selectorclass, Id) {
-        var url = "/_Base/GetAjaxCounty_DDL";
-        var ddl = $("select[class*='" + selectorclass + "']");
+    });
 
-        $.getJSON(url, { Id: Id }, function (data) {
-            var items = '';
-            ddl.empty();
-            $.each(data, function (i, data) {
-                items += "<option value='" + data.DefaultValue + "'>" + data.DefaultText + "</option>";
-            });
-            ddl.html(items);
-
-        });
-    }
-   
 </script>

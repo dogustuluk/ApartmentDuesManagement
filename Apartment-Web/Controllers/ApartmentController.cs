@@ -1,5 +1,6 @@
 ﻿using Apartment_Web.Models;
 using Business.Abstract;
+using Business.Constants;
 using Core.DataAccess;
 using Core.Entities;
 using Core.Utilities.Extensions;
@@ -17,6 +18,7 @@ using System;
 using System.Drawing.Printing;
 using System.Linq.Expressions;
 using System.Text.Json;
+using System.Transactions;
 
 namespace Apartment_Web.Controllers
 {
@@ -124,6 +126,50 @@ namespace Apartment_Web.Controllers
         public IActionResult Add()
         {
             return View();
+
+        }
+        [HttpPost]
+        public JsonResult Add(ApartmentAddDto apartmentAddDto)
+        {
+            if (ModelState.IsValid)
+            {
+                var newApartment = new Apartment
+                {
+
+                    ApartmentName = apartmentAddDto.ApartmentName,
+                    BlockNo = apartmentAddDto.BlockNo,
+                    DoorNumber = apartmentAddDto.DoorNumber,
+                    NumberOfFlats = apartmentAddDto.NumberOfFlats,
+                    CityId = apartmentAddDto.CityId,
+                    CountyId = apartmentAddDto.CountyId,
+                    OpenAdress = apartmentAddDto.OpenAdress,
+                    IsActive = 1,
+                };
+
+                _unitOfWork.apartmentDal.Add(newApartment);
+                _unitOfWork.Commit();
+
+                if (apartmentAddDto.ResponsibleMemberInfo.NameSurname !=null)
+                {
+                    var responsibleMember = new Member
+                    {
+                        NameSurname = apartmentAddDto.ResponsibleMemberInfo.NameSurname,
+                        Email = apartmentAddDto.ResponsibleMemberInfo.Email,
+                        PhoneNumber = apartmentAddDto.ResponsibleMemberInfo.PhoneNumber,
+                    };
+                    _unitOfWork.memberDal.Add(responsibleMember);
+                    _unitOfWork.Commit();
+                    var apartment = _unitOfWork.apartmentDal.GetById(newApartment.ApartmentId);
+                    apartment.ResponsibleMemberId = responsibleMember.MemberId;
+                    _unitOfWork.apartmentDal.Update(apartment);
+                }
+                return Json(Messages.ApartmentMessages.AddedApartment);
+            }
+            else
+            {
+                var errors = ModelState.Values.SelectMany(p => p.Errors).Select(e => e.ErrorMessage);
+                return Json(new { success = false, errors = errors });
+            }
 
         }
         public class Index_VM

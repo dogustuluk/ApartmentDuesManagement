@@ -45,7 +45,7 @@ namespace Business.SeedDatas
                     CreatedDate = faker.Date.Past(),
                     UpdatedBy = faker.Random.Number(1, 100),
                     UpdatedDate = faker.Date.Recent(),
-                    IsActive = faker.Random.Number(0, 1),
+                   // IsActive = faker.Random.Number(0, 1),
                 };
 
                 apartments.Add(apartment);

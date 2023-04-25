@@ -12,7 +12,7 @@ namespace Business.Abstract
 {
     public interface ICityService
     {
-        IResult AddCity(City city);
+      //  IResult AddCity(City city);
         Task<List<City>> GetAll();
         IQueryable<DDL> GetCityDDL(Expression<Func<City, bool>> predicate, string DDLText, string DDLValue, bool isGUID,
             string DefaultText, string DefaultValue, string SelectedValue, int Take, string OrderBy, string? Params);

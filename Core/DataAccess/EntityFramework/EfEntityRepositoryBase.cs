@@ -29,11 +29,10 @@ namespace Core.DataAccess.EntityFramework
             this.context = context;
         }
 
-        public int Add(TEntity entity)
+        public void Add(TEntity entity)
         {
             var addedEntity = context.Entry(entity);
             addedEntity.State = EntityState.Added;
-            return context.SaveChanges();
         }
 
         public async Task<TEntity> AddAsync(TEntity entity)

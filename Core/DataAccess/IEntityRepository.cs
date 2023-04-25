@@ -15,7 +15,7 @@ namespace Core.DataAccess
         where T : class, IEntity, new()
         //IList donersem degisiklik yapamam, sadece okuma islemi yapmami saglar.
     {
-        int Add(T entity);
+        void Add(T entity);
         Task<T> AddAsync(T entity);
 
 

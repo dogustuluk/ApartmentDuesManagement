@@ -25,17 +25,17 @@ namespace Business.Concrete
             _unitOfWork = unitOfWork;
         }
 
-        public IResult AddCity(City city)
-        {
-            var newCity = _unitOfWork.cityDal.Add(city);
-            if (newCity != null)
-            {
-                return new SuccessResult(Messages.CityMessages.AddedCity);
+        //public IResult AddCity(City city)
+        //{
+        //    var newCity = _unitOfWork.cityDal.Add(city);
+        //    if (newCity != null)
+        //    {
+        //        return new SuccessResult(Messages.CityMessages.AddedCity);
                 
-            }
+        //    }
 
-            return new ErrorResult(Messages.GeneralMessages.GeneralError);
-        }
+        //    return new ErrorResult(Messages.GeneralMessages.GeneralError);
+        //}
 
         public Task<List<City>> GetAll()
         {
