@@ -149,7 +149,7 @@ namespace Apartment_Web.Controllers
                 _unitOfWork.apartmentDal.Add(newApartment);
                 _unitOfWork.Commit();
 
-                if (apartmentAddDto.ResponsibleMemberInfo.NameSurname !=null)
+                if (apartmentAddDto.ResponsibleMemberInfo.NameSurname != null)
                 {
                     var responsibleMember = new Member
                     {
@@ -171,6 +171,27 @@ namespace Apartment_Web.Controllers
                 return Json(new { success = false, errors = errors });
             }
 
+        }
+        [HttpGet]
+        public IActionResult Update(int id)
+        {
+            var result = _unitOfWork.apartmentDal.GetById(id);
+            var apartment = new ApartmentUpdateDto
+            {
+                ApartmentId = result.ApartmentId,
+                Guid = result.Guid,
+                ApartmentName = result.ApartmentName,
+                BlockNo = result.BlockNo,
+                CityId = result.CityId,
+                Code = result.Code,
+                CountyId = result.CountyId,
+                DoorNumber = result.DoorNumber,
+                IsActive = result.IsActive,
+                NumberOfFlats = result.NumberOfFlats,
+                OpenAdress = result.OpenAdress,
+            };
+
+            return View(apartment);
         }
         public class Index_VM
         {

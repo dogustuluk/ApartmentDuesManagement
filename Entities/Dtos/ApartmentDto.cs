@@ -43,4 +43,25 @@ namespace Entities.Dtos
         public string? OpenAdress { get; set; }
         public int IsActive { get; set; }
     }
+    public class ApartmentUpdateDto : IDto
+    {
+        public int ApartmentId { get; set; }
+        public Guid Guid { get; set; }
+
+        public string? Code { get; set; }
+
+        public string? ApartmentName { get; set; }
+
+        public string? BlockNo { get; set; }
+
+        public string? DoorNumber { get; set; }
+        public int NumberOfFlats { get; set; }
+        public string? OpenAdress { get; set; }
+        public int IsActive { get; set; }
+        public MemberShortDto? ResponsibleMemberInfo { get; set; }
+        public int CityId { get; set; }
+        public List<DDL>? CityIdDDL { get; set; }
+        public int CountyId { get; set; }
+        public List<DDL>? CountyIdDDL { get; set; }
+    }
 }

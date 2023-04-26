@@ -424,6 +424,9 @@ namespace Core.DataAccess.EntityFramework
 
             return await MyReturnList.ToListAsync();
         }
-
+        public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await context.Set<TEntity>().AnyAsync(predicate);
+        }
     }
 }

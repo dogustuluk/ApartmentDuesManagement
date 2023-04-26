@@ -71,7 +71,8 @@ namespace Core.DataAccess
 
         Task<List<DDL>> GetDDLAsync(Expression<Func<T, bool>> predicate, string DDLText, string DDLValue, bool isGUID,
             string DefaultText, string DefaultValue, string SelectedValue, int Take, string OrderBy, string? Params);
-
+        
+        Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
 
     }
 }

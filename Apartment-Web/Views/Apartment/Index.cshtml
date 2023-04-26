@@ -43,7 +43,7 @@
 
             </div>
 
-           
+
         </div>
         <div class="row ml-2 col-md-3">
 
@@ -71,6 +71,7 @@
             <table class="table table-bordered text-center" id="apartmentsTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
+                        <th>Islemler</th>
                         <th>Kod</th>
                         <th>Apartman Adı</th>
                         <th>Şehir</th>
@@ -87,6 +88,7 @@
                 </thead>
                 <tfoot>
                     <tr>
+                        <th>Islemler</th>
                         <th>Kod</th>
                         <th>Apartman Adı</th>
                         <th>Şehir</th>
@@ -105,6 +107,9 @@
                     @foreach (var item in Model.PagedList)
                     {
                         <tr>
+                            <td>
+                                <a class="btn btn-primary btn-sm btn-update" asp-controller="Apartment" asp-action="Update" asp-route-id="@item.ApartmentId"><span class="fas fa-edit"></span></a>
+                            </td>
                             <td>@item.Code</td>
                             <td>@item.ApartmentName</td>
                             <td>@item.CityName</td>
@@ -122,9 +127,6 @@
                 </tbody>
             </table>
         </div>
-
-        @*partial view ile çalışınca sayfalamada sıralama yaparken url'den haberleşmen gerekir. bunun için helper yazman lazım. Barış Bey'in gönderdiği kodları incele ve sorunu çöz*@
-
 
         <div class="pagination-container">
             @await Html.PartialAsync("Pagination", @Model.MyPagination)

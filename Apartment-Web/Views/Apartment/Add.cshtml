@@ -1,6 +1,6 @@
 ﻿@model ApartmentAddDto
 
-<form asp-action="Add" method="post">
+<form asp-controller="Apartment" asp-action="Add" method="post">
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-borderless">
@@ -107,6 +107,7 @@
 </form>
 
 <script>
+    //apartment add city and county ddl start
     $().ready(function () {
         $("select[class*='ajaxCityId']").change(function () {
             var ddl = $("select[class*='ajaxCityId']");
@@ -148,8 +149,9 @@
             });
         }
     });
+    //apartment add city and county ddl end
 
-
+    //apartment add start
     $().ready(function () {
         $("#btnSave").click(function () {
             var apartment =
@@ -188,5 +190,6 @@
             });
         });
     });
+    //apartment add end
 
 </script>

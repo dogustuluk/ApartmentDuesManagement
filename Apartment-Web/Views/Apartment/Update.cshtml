@@ -1,0 +1,187 @@
+﻿@model ApartmentUpdateDto
+<form class="form-card" asp-controller="Apartment" asp-action="Update" method="post">
+    <div class="row mt-2">
+        <div class="col-md-12">
+            <input type="hidden" asp-for="@Model.ApartmentId" value="@Model.ApartmentId" />
+            <input type="hidden" id="cityId" value="@Model.CityId" />
+            <input type="hidden" id="countyId" value="@Model.CountyId" />
+            <div class="container-fluid px-1 py-50 mx-auto">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-xl-7 mt-2 col-lg-8 col-md-9 col-11 text-center">
+                        <div class="card">
+                            <h5 class="text-center mb-4"><span>@Model.ApartmentName</span> Apartmanini guncelliyorsunuz</h5>
+                            <div class="row justify-content-between text-left">
+                                <div class="form-group col-sm-6 flex-column d-flex">
+                                    <label class="form-control-label px-3">Apartman Adi<span class="text-danger"></span></label>
+                                    <input type="text" id="inputApartmentName" asp-for="ApartmentName" />
+                                </div>
+
+                                <div class="form-group col-sm-6 flex-column d-flex">
+                                    <label class="form-control-label px-3">Blok Numarasi<span class="text-danger"></span></label> <input type="text" id="inputBlockNo" asp-for="BlockNo" />
+                                </div>
+                            </div>
+
+
+                            <div class="row justify-content-between text-left">
+                                <div class="form-group col-sm-6 flex-column d-flex">
+                                    <label class="form-control-label px-3">Kapi Numarasi<span class="text-danger"></span></label>
+                                    <input type="text" id="inputDoorNumber" asp-for="DoorNumber" />
+                                </div>
+
+                                <div class="form-group col-sm-6 flex-column d-flex">
+                                    <label class="form-control-label px-3">Daire Sayisi<span class="text-danger"></span></label>
+                                    <input type="text" id="inputNumberOfFlats" asp-for="NumberOfFlats" />
+                                </div>
+                            </div>
+
+                            <div class="row justify-content-between text-left">
+                                <div class="form-group col-sm-6 flex-column d-flex">
+                                    <label class="form-control-label px-3">Il<span class="text-danger"></span></label>
+                                    <select class="ajaxCityId" id="inputCity" asp-for="@Model.CityId">
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-sm-6 flex-column d-flex">
+                                    <label class="form-control-label px-3">Ilce<span class="text-danger"></span></label>
+                                    <select class="ajaxCountyId" id="inputCounty" asp-for="@Model.CountyId">
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row justify-content-between text-left">
+                                <div class="form-group col-sm-6 flex-column d-flex">
+                                    <label class="form-control-label px-3">Aktiflik Durumu<span class="text-danger"> </span></label>
+                                    <input type="text" id="inputIsActive" asp-for="IsActive" />
+                                </div>
+                            </div>
+
+                            <div class="row justify-content-between text-left">
+                                <div class="form-group col-12 flex-column d-flex">
+                                    <label class="form-control-label px-3">Acik Adres<span class="text-danger"> </span></label>
+                                    <input type="text" id="inputOpenAddress" asp-for="OpenAdress" />
+                                </div>
+
+                            </div>
+
+                            <div class="row justify-content-between text-left">
+                                <div class="form-group col-sm-4 flex-column d-flex">
+                                    <label class="form-control-label px-3">Yonetici Adi<span class="text-danger"></span></label>
+                                    <input type="text" id="inputResponsibleMemberName" asp-for="ResponsibleMemberInfo.NameSurname" />
+                                </div>
+
+                                <div class="form-group col-sm-4 flex-column d-flex">
+                                    <label class="form-control-label px-3">Yonetici Telefon<span class="text-danger"></span></label>
+                                    <input type="text" id="inputResponsibleMemberPhoneNumber" asp-for="ResponsibleMemberInfo.PhoneNumber" />
+                                </div>
+                                <div class="form-group col-sm-4 flex-column d-flex">
+                                    <label class="form-control-label px-3">Yonetici Mail<span class="text-danger"></span></label>
+                                    <input type="text" id="inputResponsibleMemberPhoneNumber" asp-for="ResponsibleMemberInfo.Email" />
+                                </div>
+                            </div>
+
+                            <div class="row justify-content-end">
+                                <div class="form-group col-sm-6">
+                                    <button type="submit" class="btn-block btn-primary">Guncelle</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<script>
+    $().ready(function () {
+        var cityId = @Html.Raw(Json.Serialize(Model.CityId));
+        var countyId = @Html.Raw(Json.Serialize(Model.CountyId));
+
+        LoadCities("ajaxCityId", cityId);
+        LoadCounties("ajaxCountyId", cityId, countyId);
+
+        $("select[class*='ajaxCityId']").change(function () {
+            var ddl = $("select[class*='ajaxCityId']");
+            LoadCounties("ajaxCountyId", ddl.val());
+        });
+
+        function LoadCities(selectorclass, selectedValue) {
+            var url = "/_Base/GetAjaxCity_DDL";
+            var ddl = $("select[class*='" + selectorclass + "']");
+
+            $.getJSON(url, {}, function (data) {
+                var items = '';
+                ddl.empty();
+                $.each(data, function (i, data) {
+                    var selected = (data.DefaultValue == selectedValue) ? "selected" : "";
+                    items += "<option value='" + data.DefaultValue + "' " + selected + ">" + data.DefaultText + "</option>";
+                });
+                ddl.html(items);
+            });
+        }
+
+        function LoadCounties(selectorclass, cityId, selectedValue) {
+            var url = "/_Base/GetAjaxCounty_DDL";
+            var ddl = $("select[class*='" + selectorclass + "']");
+
+            $.getJSON(url, { Id: cityId }, function (data) {
+                var items = '';
+                ddl.empty();
+                $.each(data, function (i, data) {
+                    var selected = (data.DefaultValue == selectedValue) ? "selected" : "";
+                    items += "<option value='" + data.DefaultValue + "' " + selected + ">" + data.DefaultText + "</option>";
+                });
+                ddl.html(items);
+                ddl.val(countyId);
+            });
+        }
+    });
+</script>
+
+
+
+
+@*<script>
+    $().ready(function () {
+        $("select[class*='ajaxCityId']").change(function () {
+            var ddl = $("select[class*='ajaxCityId']");
+
+
+            LoadCounties("ajaxCountyId", ddl.val());
+        });
+
+
+
+        LoadCities("ajaxCityId");
+
+        function LoadCities(selectorclass) {
+            var url = "/_Base/GetAjaxCity_DDL";
+            var ddl = $("select[class*='" + selectorclass + "']");
+
+            $.getJSON(url, {}, function (data) {
+                var items = '';
+                ddl.empty();
+                $.each(data, function (i, data) {
+                    items += "<option value='" + data.DefaultValue + "'>" + data.DefaultText + "</option>";
+                });
+                ddl.html(items);
+
+            });
+        }
+        function LoadCounties(selectorclass, Id) {
+            var url = "/_Base/GetAjaxCounty_DDL";
+            var ddl = $("select[class*='" + selectorclass + "']");
+
+            $.getJSON(url, { Id: Id }, function (data) {
+                var items = '';
+                ddl.empty();
+                $.each(data, function (i, data) {
+                    items += "<option value='" + data.DefaultValue + "'>" + data.DefaultText + "</option>";
+                });
+                ddl.html(items);
+
+            });
+        }
+    });
+</script>*@
