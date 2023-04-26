@@ -176,6 +176,8 @@ namespace Apartment_Web.Controllers
         public IActionResult Update(int id)
         {
             var result = _unitOfWork.apartmentDal.GetById(id);
+            var responsibleMember = _unitOfWork.memberDal.GetById(result.ResponsibleMemberId);
+
             var apartment = new ApartmentUpdateDto
             {
                 ApartmentId = result.ApartmentId,
@@ -189,8 +191,15 @@ namespace Apartment_Web.Controllers
                 IsActive = result.IsActive,
                 NumberOfFlats = result.NumberOfFlats,
                 OpenAdress = result.OpenAdress,
-            };
 
+                ResponsibleMemberInfo = responsibleMember?.NameSurname !=null ? new MemberShortDto
+                {
+                    NameSurname = responsibleMember.NameSurname,
+                    Email = responsibleMember.Email,
+                    PhoneNumber = responsibleMember.PhoneNumber
+                } : null
+
+            };
             return View(apartment);
         }
         public class Index_VM

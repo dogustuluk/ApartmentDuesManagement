@@ -59,6 +59,7 @@ namespace Entities.Dtos
         public string? OpenAdress { get; set; }
         public int IsActive { get; set; }
         public MemberShortDto? ResponsibleMemberInfo { get; set; }
+        public int MemberId { get; set; }
         public int CityId { get; set; }
         public List<DDL>? CityIdDDL { get; set; }
         public int CountyId { get; set; }

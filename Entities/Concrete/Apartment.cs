@@ -41,4 +41,5 @@ public partial class Apartment : IEntity
     //public City Cities { get; set; }
 
     public virtual ICollection<ApartmentFlat> ApartmentFlats { get;} = new List<ApartmentFlat>();
+    //public virtual ICollection<Member> Members { get;} = new List<Member>();
 }
