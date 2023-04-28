@@ -42,6 +42,6 @@ public partial class Member : IEntity
     public virtual ICollection<ApartmentFlat> ApartmentFlats { get; } = new List<ApartmentFlat>();
 
     public virtual Role? Role { get; set; }
-  //  public int? ApartmentId { get; set; }
-   // public virtual Apartment? Apartment { get; set; }
+    public int? ApartmentId { get; set; }
+    public virtual Apartment? Apartment { get; set; }
 }

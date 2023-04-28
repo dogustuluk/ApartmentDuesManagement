@@ -144,8 +144,10 @@ namespace Apartment_Web.Controllers
                     CountyId = apartmentAddDto.CountyId,
                     OpenAdress = apartmentAddDto.OpenAdress,
                     IsActive = 1,
+                    Code = apartmentAddDto.GenerateApartmentCode()
                 };
-
+                
+                
                 _unitOfWork.apartmentDal.Add(newApartment);
                 _unitOfWork.Commit();
 
@@ -157,8 +159,10 @@ namespace Apartment_Web.Controllers
                         Email = apartmentAddDto.ResponsibleMemberInfo.Email,
                         PhoneNumber = apartmentAddDto.ResponsibleMemberInfo.PhoneNumber,
                     };
+                   
                     _unitOfWork.memberDal.Add(responsibleMember);
                     _unitOfWork.Commit();
+                   
                     var apartment = _unitOfWork.apartmentDal.GetById(newApartment.ApartmentId);
                     apartment.ResponsibleMemberId = responsibleMember.MemberId;
                     _unitOfWork.apartmentDal.Update(apartment);
@@ -191,8 +195,8 @@ namespace Apartment_Web.Controllers
                 IsActive = result.IsActive,
                 NumberOfFlats = result.NumberOfFlats,
                 OpenAdress = result.OpenAdress,
-
-                ResponsibleMemberInfo = responsibleMember?.NameSurname !=null ? new MemberShortDto
+                MemberId = result.ResponsibleMemberId,
+                ResponsibleMemberInfo = responsibleMember?.NameSurname != null ? new MemberShortDto
                 {
                     NameSurname = responsibleMember.NameSurname,
                     Email = responsibleMember.Email,
@@ -202,6 +206,52 @@ namespace Apartment_Web.Controllers
             };
             return View(apartment);
         }
+
+        [HttpPost]
+        public IActionResult Update(int id, ApartmentUpdateDto updatedApartment)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(updatedApartment);
+            }
+
+            var apartment = _unitOfWork.apartmentDal.GetById(id);
+            if (apartment == null)
+            {
+                return NotFound();
+            }
+            apartment.ApartmentName = updatedApartment.ApartmentName;
+            apartment.BlockNo = updatedApartment.BlockNo;
+            apartment.CityId = updatedApartment.CityId;
+            apartment.CountyId = updatedApartment.CountyId;
+            apartment.DoorNumber = updatedApartment.DoorNumber;
+            apartment.IsActive = updatedApartment.IsActive;
+            apartment.NumberOfFlats= updatedApartment.NumberOfFlats;
+            apartment.OpenAdress = updatedApartment.OpenAdress;
+            apartment.ResponsibleMemberId = updatedApartment.MemberId;
+
+            var alreadyMember = _unitOfWork.memberDal.GetById(apartment.ResponsibleMemberId);
+            if (updatedApartment.ResponsibleMemberInfo.NameSurname != alreadyMember.NameSurname)
+            {
+                alreadyMember.NameSurname = updatedApartment.ResponsibleMemberInfo.NameSurname;
+                _unitOfWork.memberDal.Update(alreadyMember);
+            }
+
+            if (updatedApartment.ResponsibleMemberInfo.Email != alreadyMember.Email)
+            {
+                alreadyMember.Email = updatedApartment.ResponsibleMemberInfo.Email;
+                _unitOfWork.memberDal.Update(alreadyMember);
+            }
+            if (updatedApartment.ResponsibleMemberInfo.PhoneNumber != alreadyMember.PhoneNumber)
+            {
+                alreadyMember.PhoneNumber = updatedApartment.ResponsibleMemberInfo.PhoneNumber;
+                _unitOfWork.memberDal.Update(alreadyMember);
+            }
+            _unitOfWork.apartmentDal.Update(apartment);
+            return RedirectToAction("Update", "Apartment", new {ApartmentId = id});
+
+        }
+
         public class Index_VM
         {
             public string PageTitle { get; set; }

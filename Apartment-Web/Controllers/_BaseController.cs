@@ -18,16 +18,40 @@ namespace Apartment_Web.Controllers
 
         public JsonResult GetAjaxCity_DDL()
         {
-            List<DDL> MyReturnList =_unitOfWork.cityDal.GetDDL(a => a.CityId > 0, "CityName", "CityId", false, "Seciniz", "0", "0", 100, "CityName ASC", "").ToList();
+            List<DDL> MyReturnList = _unitOfWork.cityDal.GetDDL(a => a.CityId > 0, "CityName", "CityId", false, "Seciniz", "0", "0", 100, "CityName ASC", "").ToList();
 
             return Json(MyReturnList);
         }
 
         public JsonResult GetAjaxCounty_DDL(int Id)
         {
-            List<DDL> MyReturnList = _unitOfWork.countyDal.GetDDL(a => a.CityId ==Id, "CountyName", "CountyId", false, "Seciniz", "0", "0", 100, "CountyName ASC", "").ToList();
+            List<DDL> MyReturnList = _unitOfWork.countyDal.GetDDL(a => a.CityId == Id, "CountyName", "CountyId", false, "Seciniz", "0", "0", 100, "CountyName ASC", "").ToList();
 
             return Json(MyReturnList);
+        }
+        public JsonResult GetAjaxApartmentMember_DDL(int Id)
+        {
+            List<DDL> MyReturnList = _unitOfWork.memberDal.GetDDL(m => m.ApartmentId == Id, "NameSurname", "MemberId", false, "Seciniz", "0", "0", 100, "NameSurname ASC", "").ToList();
+
+            return Json(MyReturnList);
+        }
+        public JsonResult GetApartmentMemberInfo(int Id)
+        {
+            var member = _unitOfWork.memberDal.GetById(Id);
+            if (member != null)
+            {
+                var memberInfo = new
+                {
+                    NameSurname = member.NameSurname,
+                    Email = member.Email,
+                    PhoneNumber = member.PhoneNumber
+                };
+                return Json(memberInfo);
+            }
+            else
+            {
+                return Json(null);
+            }
         }
 
 

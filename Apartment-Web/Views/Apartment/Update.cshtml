@@ -1,10 +1,12 @@
 ﻿@model ApartmentUpdateDto
-<form class="form-card" asp-controller="Apartment" asp-action="Update" method="post">
+<form class="form-card" asp-controller="Apartment" asp-action="Update" asp-route-id="@Model.ApartmentId" method="post">
     <div class="row mt-2">
         <div class="col-md-12">
-            <input type="hidden" asp-for="@Model.ApartmentId" value="@Model.ApartmentId" />
+            <input type="hidden" id="apartmentId" asp-for="@Model.ApartmentId" value="@Model.ApartmentId" />
             <input type="hidden" id="cityId" value="@Model.CityId" />
             <input type="hidden" id="countyId" value="@Model.CountyId" />
+            <input type="hidden" id="countyId" value="@Model.MemberId" />
+            
             <div class="container-fluid px-1 py-50 mx-auto">
                 <div class="row d-flex justify-content-center">
                     <div class="col-xl-7 mt-2 col-lg-8 col-md-9 col-11 text-center">
@@ -75,7 +77,15 @@
                                 </div>
                                 <div class="form-group col-sm-4 flex-column d-flex">
                                     <label class="form-control-label px-3">Yonetici Mail<span class="text-danger"></span></label>
-                                    <input type="text" id="inputResponsibleMemberPhoneNumber" asp-for="ResponsibleMemberInfo.Email" />
+                                    <input type="text" id="inputResponsibleMemberEmail" asp-for="ResponsibleMemberInfo.Email" />
+                                </div>
+                            </div>
+
+                            <div class="row justify-content-between text-left">
+                                <div class="form-group col-sm-4 flex-column d-flex">
+                                    <label class="form-control-label px-3">Yonetici Degistir<span class="text-danger"></span></label>
+                                    <select class="ajaxMemberId" id="inputMember" asp-for="@Model.MemberId">
+                                    </select>
                                 </div>
                             </div>
 
@@ -97,9 +107,13 @@
     $().ready(function () {
         var cityId = @Html.Raw(Json.Serialize(Model.CityId));
         var countyId = @Html.Raw(Json.Serialize(Model.CountyId));
+        var apartmentId = @Html.Raw(Json.Serialize(Model.ApartmentId));
+        var memberId = @Html.Raw(Json.Serialize(Model.MemberId));
 
         LoadCities("ajaxCityId", cityId);
         LoadCounties("ajaxCountyId", cityId, countyId);
+        LoadApartmentMembers("ajaxMemberId", apartmentId, memberId);
+
 
         $("select[class*='ajaxCityId']").change(function () {
             var ddl = $("select[class*='ajaxCityId']");
@@ -136,52 +150,38 @@
                 ddl.val(countyId);
             });
         }
-    });
-</script>
 
-
-
-
-@*<script>
-    $().ready(function () {
-        $("select[class*='ajaxCityId']").change(function () {
-            var ddl = $("select[class*='ajaxCityId']");
-
-
-            LoadCounties("ajaxCountyId", ddl.val());
+        $("select[class*='ajaxMemberId']").change(function () {
+            var memberId = $(this).val();
+            var url = "/_Base/GetApartmentMemberInfo";
+            $.getJSON(url, { Id: memberId }, function (data) {
+                $("#inputResponsibleMemberName").val(data.NameSurname);
+                $("#inputResponsibleMemberPhoneNumber").val(data.PhoneNumber);
+                $("#inputResponsibleMemberEmail").val(data.Email);
+                
+            });
         });
 
-
-
-        LoadCities("ajaxCityId");
-
-        function LoadCities(selectorclass) {
-            var url = "/_Base/GetAjaxCity_DDL";
+        function LoadApartmentMembers(selectorclass, apartmentId,selectedValue) {
+            var url = "/_Base/GetAjaxApartmentMember_DDL";
             var ddl = $("select[class*='" + selectorclass + "']");
 
-            $.getJSON(url, {}, function (data) {
+            $.getJSON(url, { Id: apartmentId}, function (data) {
                 var items = '';
                 ddl.empty();
                 $.each(data, function (i, data) {
-                    items += "<option value='" + data.DefaultValue + "'>" + data.DefaultText + "</option>";
+                    var selected = (data.DefaultValue == selectedValue) ? "selected" : "";
+                    items += "<option value='" + data.DefaultValue + "' " + selected + ">" + data.DefaultText + "</option>";
                 });
-                ddl.html(items);
 
+                if (data.DefaultValue == 0) {
+                    memberId = $('#inputResponsibleMemberName').val();
+                }
+
+                ddl.html(items);
+                //ddl.val(memberId);
             });
         }
-        function LoadCounties(selectorclass, Id) {
-            var url = "/_Base/GetAjaxCounty_DDL";
-            var ddl = $("select[class*='" + selectorclass + "']");
 
-            $.getJSON(url, { Id: Id }, function (data) {
-                var items = '';
-                ddl.empty();
-                $.each(data, function (i, data) {
-                    items += "<option value='" + data.DefaultValue + "'>" + data.DefaultText + "</option>";
-                });
-                ddl.html(items);
-
-            });
-        }
     });
-</script>*@
+</script>

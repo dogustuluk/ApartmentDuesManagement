@@ -37,9 +37,8 @@ public partial class Apartment : IEntity
 
     public DateTime UpdatedDate { get; set; }
 
-    public int IsActive { get; set; } //int'i bool olarak degistirdim
-    //public City Cities { get; set; }
+    public int IsActive { get; set; } 
 
     public virtual ICollection<ApartmentFlat> ApartmentFlats { get;} = new List<ApartmentFlat>();
-    //public virtual ICollection<Member> Members { get;} = new List<Member>();
+    public virtual ICollection<Member> Members { get;} = new List<Member>();
 }
