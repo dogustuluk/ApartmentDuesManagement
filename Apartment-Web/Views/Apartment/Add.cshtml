@@ -1,6 +1,7 @@
 ﻿@model ApartmentAddDto
 
 <form asp-controller="Apartment" asp-action="Add" method="post">
+    @Html.ValidationSummary(true)
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-borderless">
@@ -11,6 +12,8 @@
                         </td>
                         <td>
                             <input type="text" id="inputApartmentName" asp-for="ApartmentName" />
+                            @Html.ValidationMessageFor(x=>x.ApartmentName)
+                            <span asp-asp-validation-for="ApartmentName" class="text-danger"></span>
                         </td>
                     </tr>
                     <tr>
@@ -177,8 +180,15 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
-                    alert("Kayit basarili");
-                    window.location.href = "/apartment/index";                    
+                    if(data.success){
+
+                        alert("Kayit basarili");
+                        window.location.href = "/apartment/index";
+                    }
+                    else{
+                        alert("Hata" + data.error.join(", "));
+                        windows.location.href = "/apartment/add";
+                    }
                 },
                 error: function () {
                     alert("Veri eklenirken bir hata oluştu.");

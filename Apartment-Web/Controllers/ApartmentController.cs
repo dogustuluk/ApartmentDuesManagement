@@ -1,6 +1,7 @@
 ﻿using Apartment_Web.Models;
 using Business.Abstract;
 using Business.Constants;
+using Business.Validations;
 using Core.DataAccess;
 using Core.Entities;
 using Core.Utilities.Extensions;
@@ -19,6 +20,8 @@ using System.Drawing.Printing;
 using System.Linq.Expressions;
 using System.Text.Json;
 using System.Transactions;
+using static Business.Validations.Validations;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Apartment_Web.Controllers
 {
@@ -129,9 +132,11 @@ namespace Apartment_Web.Controllers
 
         }
         [HttpPost]
-        public JsonResult Add(ApartmentAddDto apartmentAddDto)
+        public IActionResult Add(ApartmentAddDto apartmentAddDto)
         {
-            if (ModelState.IsValid)
+            var validator = new ApartmentAddValidation();
+            var result = validator.Validate(apartmentAddDto);
+            if (result.IsValid)
             {
                 var newApartment = new Apartment
                 {
@@ -146,8 +151,8 @@ namespace Apartment_Web.Controllers
                     IsActive = 1,
                     Code = apartmentAddDto.GenerateApartmentCode()
                 };
-                
-                
+
+
                 _unitOfWork.apartmentDal.Add(newApartment);
                 _unitOfWork.Commit();
 
@@ -159,10 +164,10 @@ namespace Apartment_Web.Controllers
                         Email = apartmentAddDto.ResponsibleMemberInfo.Email,
                         PhoneNumber = apartmentAddDto.ResponsibleMemberInfo.PhoneNumber,
                     };
-                   
+
                     _unitOfWork.memberDal.Add(responsibleMember);
                     _unitOfWork.Commit();
-                   
+
                     var apartment = _unitOfWork.apartmentDal.GetById(newApartment.ApartmentId);
                     apartment.ResponsibleMemberId = responsibleMember.MemberId;
                     _unitOfWork.apartmentDal.Update(apartment);
@@ -171,10 +176,15 @@ namespace Apartment_Web.Controllers
             }
             else
             {
-                var errors = ModelState.Values.SelectMany(p => p.Errors).Select(e => e.ErrorMessage);
-                return Json(new { success = false, errors = errors });
-            }
+                var errors = result.Errors.Select(x => x.ErrorMessage).ToList();
+                foreach (var error in errors)
+                {
+                    ModelState.AddModelError("", error);
+                }
+                return View(errors);
 
+
+            }
         }
         [HttpGet]
         public IActionResult Update(int id)
@@ -189,7 +199,6 @@ namespace Apartment_Web.Controllers
                 ApartmentName = result.ApartmentName,
                 BlockNo = result.BlockNo,
                 CityId = result.CityId,
-                Code = result.Code,
                 CountyId = result.CountyId,
                 DoorNumber = result.DoorNumber,
                 IsActive = result.IsActive,
@@ -210,45 +219,57 @@ namespace Apartment_Web.Controllers
         [HttpPost]
         public IActionResult Update(int id, ApartmentUpdateDto updatedApartment)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(updatedApartment);
-            }
-
             var apartment = _unitOfWork.apartmentDal.GetById(id);
             if (apartment == null)
             {
                 return NotFound();
             }
-            apartment.ApartmentName = updatedApartment.ApartmentName;
-            apartment.BlockNo = updatedApartment.BlockNo;
-            apartment.CityId = updatedApartment.CityId;
-            apartment.CountyId = updatedApartment.CountyId;
-            apartment.DoorNumber = updatedApartment.DoorNumber;
-            apartment.IsActive = updatedApartment.IsActive;
-            apartment.NumberOfFlats= updatedApartment.NumberOfFlats;
-            apartment.OpenAdress = updatedApartment.OpenAdress;
-            apartment.ResponsibleMemberId = updatedApartment.MemberId;
+            var validator = new ApartmentUpdateValidation();
+            var result = validator.Validate(updatedApartment);
+            if (result.IsValid)
+            {
+                apartment.ApartmentName = updatedApartment.ApartmentName;
+                apartment.BlockNo = updatedApartment.BlockNo;
+                apartment.CityId = updatedApartment.CityId;
+                apartment.CountyId = updatedApartment.CountyId;
+                apartment.DoorNumber = updatedApartment.DoorNumber;
+                apartment.IsActive = updatedApartment.IsActive;
+                apartment.NumberOfFlats = updatedApartment.NumberOfFlats;
+                apartment.OpenAdress = updatedApartment.OpenAdress;
+                apartment.ResponsibleMemberId = updatedApartment.MemberId;
+                apartment.Code = updatedApartment.GenerateApartmentCode();
+                var alreadyMember = _unitOfWork.memberDal.GetById(apartment.ResponsibleMemberId);
+                if (updatedApartment.ResponsibleMemberInfo.NameSurname != alreadyMember.NameSurname)
+                {
+                    alreadyMember.NameSurname = updatedApartment.ResponsibleMemberInfo.NameSurname;
+                    _unitOfWork.memberDal.Update(alreadyMember);
+                }
 
-            var alreadyMember = _unitOfWork.memberDal.GetById(apartment.ResponsibleMemberId);
-            if (updatedApartment.ResponsibleMemberInfo.NameSurname != alreadyMember.NameSurname)
-            {
-                alreadyMember.NameSurname = updatedApartment.ResponsibleMemberInfo.NameSurname;
-                _unitOfWork.memberDal.Update(alreadyMember);
-            }
+                if (updatedApartment.ResponsibleMemberInfo.Email != alreadyMember.Email)
+                {
+                    alreadyMember.Email = updatedApartment.ResponsibleMemberInfo.Email;
+                    _unitOfWork.memberDal.Update(alreadyMember);
+                }
+                if (updatedApartment.ResponsibleMemberInfo.PhoneNumber != alreadyMember.PhoneNumber)
+                {
+                    alreadyMember.PhoneNumber = updatedApartment.ResponsibleMemberInfo.PhoneNumber;
+                    _unitOfWork.memberDal.Update(alreadyMember);
+                }
+                _unitOfWork.apartmentDal.Update(apartment);
+                updatedApartment.UpdateSuccessfull = true;
+                return RedirectToAction("Update", "Apartment", new { ApartmentId = id });
 
-            if (updatedApartment.ResponsibleMemberInfo.Email != alreadyMember.Email)
-            {
-                alreadyMember.Email = updatedApartment.ResponsibleMemberInfo.Email;
-                _unitOfWork.memberDal.Update(alreadyMember);
             }
-            if (updatedApartment.ResponsibleMemberInfo.PhoneNumber != alreadyMember.PhoneNumber)
+            else
             {
-                alreadyMember.PhoneNumber = updatedApartment.ResponsibleMemberInfo.PhoneNumber;
-                _unitOfWork.memberDal.Update(alreadyMember);
+                updatedApartment.UpdateSuccessfull = false;
+                var errors = result.Errors.Select(x => x.ErrorMessage).ToList();
+                foreach (var error in errors)
+                {
+                    ModelState.AddModelError("", error);
+                }
+                return View(updatedApartment);
             }
-            _unitOfWork.apartmentDal.Update(apartment);
-            return RedirectToAction("Update", "Apartment", new {ApartmentId = id});
 
         }
 
