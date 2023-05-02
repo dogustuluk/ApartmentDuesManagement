@@ -88,7 +88,6 @@ namespace Entities.Dtos
         public List<DDL>? CityIdDDL { get; set; }
         public int CountyId { get; set; }
         public List<DDL>? CountyIdDDL { get; set; }
-        public bool UpdateSuccessfull = true;
         public string GenerateApartmentCode()
         {
 

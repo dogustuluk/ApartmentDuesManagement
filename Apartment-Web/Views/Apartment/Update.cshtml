@@ -1,4 +1,5 @@
 ﻿@model ApartmentUpdateDto
+
 <form class="form-card" asp-controller="Apartment" asp-action="Update" asp-route-id="@Model.ApartmentId" method="post" id="myForm" onsubmit="sendForm(event)">
     <div class="row mt-2">
         <div class="col-md-12">
@@ -11,10 +12,9 @@
                 <div class="row d-flex justify-content-center">
                     <div class="col-xl-7 mt-2 col-lg-8 col-md-9 col-11 text-center">
                         <div class="card">
-                            @if (Model.UpdateSuccessfull)
-                            {
+                            
                                 <h5 class="text-center mb-4"><span>@Model.ApartmentName</span> Apartmanini guncelliyorsunuz</h5>
-                            }
+                            
 
                             <div class="row justify-content-between text-left">
                                 <div class="form-group col-sm-6 flex-column d-flex">
@@ -69,9 +69,8 @@
                             <div class="row justify-content-between text-left">
                                 <div class="form-group col-12 flex-column d-flex">
                                     <label class="form-control-label px-3">Acik Adres<span class="text-danger"> </span></label>
-                                    <input type="text" id="inputOpenAddress" asp-for="OpenAdress" />
+                                    <textarea id="inputOpenAddress" asp-for="OpenAdress"></textarea>
                                     <span asp-validation-for="OpenAdress" class="text-danger"></span>
-
                                 </div>
 
                             </div>
@@ -216,6 +215,22 @@
             });
         });
       
+        $(document).ready(function () 
+        {
+            if ('@TempData["updateSuccess"]' === 'True') 
+            {        
+                Swal.fire({
+                    title: 'Güncelleme Başarılı',
+                    toast: true,
+                    text: "@Model.ApartmentName Güncellendi",
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timerProgressBar: true,
+                    position: 'top-right',
+                    timer: 2000
+                });
+            }
+        });
 
 
 
@@ -224,19 +239,3 @@
 
 
 </script>
-
-@*@if (Model.UpdateSuccessfull)
-{
-    <script>
-        $(document).ready(function () {
-            $("#btnUpdate").click(function () {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Güncelleme başarılı',
-                    text: '@Model.ApartmentName Apartmanı güncellendi',
-                    confirmButtonText: 'Tamam'
-                });
-            });
-        });
-    </script>
-}*@

@@ -104,6 +104,7 @@
                     </tr>
                 </tfoot>
                 <tbody>
+
                     @foreach (var item in Model.PagedList)
                     {
                         <tr>
@@ -118,7 +119,11 @@
                             <td>@item.PhoneNumber</td>
                             <td>@item.DoorNumber</td>
                             <td>@item.NumberOfFlats</td>
-                            <td>@item.OpenAdress</td>
+                           <td class="hoverable">
+                              <span>@(item.OpenAdress.Length > 50 ? item.OpenAdress.Substring(0, 50) + "..." : item.OpenAdress)</span>
+                              <div style="display:none;">@item.OpenAdress</div>
+                           </td>
+
                             <td>@item.UpdatedBy</td>
                             <td>@item.UpdatedDate</td>
                             <td>@item.IsActive</td>
@@ -134,3 +139,19 @@
 
 
     </div>
+
+<script>
+    $(document).ready(function() 
+    {
+        $('td.hoverable').hover(function() 
+        {
+        $('div', this).show();
+        $('span', this).hide();
+     }, 
+      function() 
+      {
+        $('div', this).hide();
+        $('span', this).show();
+      });
+});
+</script>

@@ -256,13 +256,13 @@ namespace Apartment_Web.Controllers
                     _unitOfWork.memberDal.Update(alreadyMember);
                 }
                 _unitOfWork.apartmentDal.Update(apartment);
-                updatedApartment.UpdateSuccessfull = true;
+                TempData["updateSuccess"] = true;
+               // TempData["updatedApartment"] = " ";
                 return RedirectToAction("Update", "Apartment", new { ApartmentId = id });
 
             }
             else
             {
-                updatedApartment.UpdateSuccessfull = false;
                 var errors = result.Errors.Select(x => x.ErrorMessage).ToList();
                 foreach (var error in errors)
                 {
