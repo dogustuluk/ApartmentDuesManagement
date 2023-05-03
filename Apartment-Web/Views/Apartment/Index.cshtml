@@ -1,32 +1,22 @@
-﻿@using DataAccess.Concrete.EntityFramework.Context;
-
-@model ApartmentController.Index_VM
+﻿@model ApartmentController.Index_VM
 @{
     var cities = ViewBag.cities as List<City>;
 
 }
 <div id="modalPlaceHolder" aria-hidden="true"></div>
-<div class="card mb-4 mt-2">
+<div class="card mb-4 border-0">
     <div class="card-header">
         <i class="fas fa-table mr-1"></i>
         @Model.PageTitle
     </div>
-    @using (Html.BeginForm("Index", "Apartment", FormMethod.Get)) //bazi durumlarda POST ile de calisabilirsin, daha temiz bir url yapisi gormek icin. Bu konuyu ve kullanim senaryolarini arastir.
+
+    @using (Html.BeginForm("Index", "Apartment", FormMethod.Get))
     {
         <div class="row ml-2">
 
-            <div class="col-md-3">
+            <div class="col-md-3 mt-2">
 
-                <label>Siralama Yap: </label>
-
-                <select class="form-control" asp-for="OrderBy" asp-items="@Model.SortOptions"></select>
-
-            </div>
-
-
-            <div class="col-md-3">
-
-                <label>Sehir Sec </label>
+                <label>Şehir Seç </label>
 
                 @if (cities != null)
                 {
@@ -37,96 +27,77 @@
                             <option value="@city.CityId">@city.CityName</option>
                         }
                     </select>
-                    //@Html.DropDownList("cityId", new SelectList(cities, "SelectedValue", "SelectedText"), "Sehir Sec")
-
                 }
-
             </div>
-
-
         </div>
         <div class="row ml-2 col-md-3">
 
             <button type="submit" class="btn btn-primary mt-2 mr-1">Listele</button>
-            <input type="button" class="btn btn-primary mt-2" value="Sıfırla" onclick="location.href='@Url.Action("Index")'" />
-
+            <input type="button" class="btn btn-primary mt-2 mr-1" value="Sıfırla" onclick="location.href='@Url.Action("Index")'" />
+           
         </div>
 
-        <div class="col-md-3 mt-3">
-            <div class="col-md-3">
-                <a asp-controller="Apartment" asp-action="Add" class="btn btn-primary">Apartman Ekle</a>
-
-            </div>
-        </div>
     }
 
     <div class="card-body">
-        <div class="col-sm-12 text-center">
-            <div class="dataTables_info F11" id="bootstrap-data-table-export_info" role="status" aria-live="polite">
-                <b>@Model.MyPagination.TotalRecords</b> kayıttan <b>@(Model.MyPagination.pageSize * (Model.MyPagination.PageIndex - 1)) - @(Model.MyPagination.pageSize * Model.MyPagination.PageIndex)</b> arası görüntüleniyor
+        <div class="row ml-1 mb-auto">
+            <div class=" mt-2">
+                <a asp-controller="Apartment" asp-action="Add" class="btn btn-success">
+                    <i class="material-icons">&#xE147;</i>
+                    <span>Apartman Ekle</span>
+                </a>
+
             </div>
+            <div class="col-md-2 ml-auto">
+                <select id="orderList" class="form-control" asp-for="OrderBy" asp-items="@Model.SortOptions"></select>
+            </div>
+        </div>
+        <div class="col-sm-12 text-right">
+            <div class="dataTables_info F11" id="bootstrap-data-table-export_info" role="status" aria-live="polite">
+                <b>@Model.MyPagination.TotalRecords</b> kayit bulunmaktadir.
+            </div>
+
             <input type="hidden" name="pageIndex" id="pageIndex" value="1" />
         </div>
         <div class="table-responsive">
-            <table class="table table-bordered text-center" id="apartmentsTable" width="100%" cellspacing="0">
+            <table class="table  table-striped table-hover text-center" id="apartmentTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th>Islemler</th>
-                        <th>Kod</th>
                         <th>Apartman Adı</th>
-                        <th>Şehir</th>
-                        <th>İlçe</th>
-                        <th>Yonetici Ad Soyad</th>
-                        <th>Telefon Numarası</th>
-                        <th>Kapı Numarası</th>
+                        <th>Adres</th>
+                        <th>Yönetici Bilgisi</th>
                         <th>Daire Sayısı</th>
-                        <th>Açık Adres</th>
                         <th>Güncelleyen</th>
                         <th>Güncelleme Tarihi</th>
                         <th>Aktiflik Durumu</th>
+                        <th>İşlemler</th>
                     </tr>
                 </thead>
-                <tfoot>
-                    <tr>
-                        <th>Islemler</th>
-                        <th>Kod</th>
-                        <th>Apartman Adı</th>
-                        <th>Şehir</th>
-                        <th>İlçe</th>
-                        <th>Yonetici Ad Soyad</th>
-                        <th>Telefon Numarası</th>
-                        <th>Kapı Numarası</th>
-                        <th>Daire Sayısı</th>
-                        <th>Açık Adres</th>
-                        <th>Güncelleyen</th>
-                        <th>Güncelleme Tarihi</th>
-                        <th>Aktiflik Durumu</th>
-                    </tr>
-                </tfoot>
+
                 <tbody>
 
                     @foreach (var item in Model.PagedList)
                     {
                         <tr>
+                            <td>@item.ApartmentName</td>
+                            <td>@item.OpenAdress, Kapı No:@item.DoorNumber, @item.CityName, @item.CountyName</td>
+                            <td>@item.NameSurname,@item.PhoneNumber</td>
+                            <td>@item.NumberOfFlats</td>
+                            <td>@item.UpdatedBy</td>
+                            <td>@item.UpdatedDate</td>
+                            <td>
+                                @if (item.IsActive == 1)
+                                {
+                                    <i class="fas fa-check-circle fa-lg text-success"></i>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-times-circle fa-lg text-danger"></i>
+                                }
+                            </td>
                             <td>
                                 <a class="btn btn-primary btn-sm btn-update" asp-controller="Apartment" asp-action="Update" asp-route-id="@item.ApartmentId"><span class="fas fa-edit"></span></a>
                             </td>
-                            <td>@item.Code</td>
-                            <td>@item.ApartmentName</td>
-                            <td>@item.CityName</td>
-                            <td>@item.CountyName</td>
-                            <td>@item.NameSurname</td>
-                            <td>@item.PhoneNumber</td>
-                            <td>@item.DoorNumber</td>
-                            <td>@item.NumberOfFlats</td>
-                           <td class="hoverable">
-                              <span>@(item.OpenAdress.Length > 50 ? item.OpenAdress.Substring(0, 50) + "..." : item.OpenAdress)</span>
-                              <div style="display:none;">@item.OpenAdress</div>
-                           </td>
-
-                            <td>@item.UpdatedBy</td>
-                            <td>@item.UpdatedDate</td>
-                            <td>@item.IsActive</td>
                         </tr>
                     }
                 </tbody>
@@ -135,23 +106,25 @@
 
         <div class="pagination-container">
             @await Html.PartialAsync("Pagination", @Model.MyPagination)
-        </div>
 
+        </div>
 
     </div>
 
-<script>
-    $(document).ready(function() 
-    {
-        $('td.hoverable').hover(function() 
-        {
-        $('div', this).show();
-        $('span', this).hide();
-     }, 
-      function() 
-      {
-        $('div', this).hide();
-        $('span', this).show();
-      });
-});
-</script>
+    <script>
+        $(document).ready(function () {
+            $('#orderList').change(function () {
+                var orderBy = $(this).val();
+                var cityId = $('#CityId').val();
+
+                var url = '@Url.Action("Index", "Apartment")';
+
+                // parametreleri URL'ye ekleme
+                url += '?orderBy=' + orderBy + '&cityId=' + cityId;
+
+                // yeni URL'yi sayfaya yükle
+                window.location.href = url;
+            });
+        });
+
+    </script>

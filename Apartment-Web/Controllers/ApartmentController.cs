@@ -53,35 +53,14 @@ namespace Apartment_Web.Controllers
 
             var cityList = _unitOfWork.cityDal.GetAll();
 
-            #region MyRegion
-            //var ddl = _apartmentViewService.GetDDL(predicate, false, "seciniz", "1", "", 0, null);
-            //var ddlList = _apartmentViewService.GetDDL
-            //   (
-            //   predicate: c => true,
-            //   isGuid: false,
-            //   defaultText: "Sehir Sec",
-            //   defaultValue: "-1",
-            //   selectedValue: "",
-            //   take: 0,
-            //   Params: string.Join(",", cityList.Select(c => c.CityName))
-            //   )
-            //   .Select(c => new DDL
-            //   {
-            //       SelectedText = c.SelectedText,
-            //       SelectedValue = c.SelectedValue
-            //   })
-            //   .ToList();
-            #endregion
-
-
             ViewBag.cities = cityList;
 
             var sortOptions = new List<SelectListItem>
             {
                 new SelectListItem { Value = "ApartmentId ASC", Text = "Apartman id artan" },
                 new SelectListItem { Value = "ApartmentId DESC", Text = "Apartman id azalan" },
-                new SelectListItem { Value = "CityId ASC", Text = "Sehre gore artan" },
-                new SelectListItem { Value = "CityId DESC", Text = "Sehre gore azalan" },
+                new SelectListItem { Value = "CityName ASC", Text = "Sehre gore artan" },
+                new SelectListItem { Value = "CityName DESC", Text = "Sehre gore azalan" },
                 new SelectListItem { Value = "CountyName ASC", Text = "Ilceye gore artan" },
                 new SelectListItem { Value = "CountyName DESC", Text = "Ilceye gore azalan" },
                 new SelectListItem { Value = "DoorNumber ASC", Text = "Kapi numarasina gore artan" },
@@ -172,7 +151,7 @@ namespace Apartment_Web.Controllers
                     apartment.ResponsibleMemberId = responsibleMember.MemberId;
                     _unitOfWork.apartmentDal.Update(apartment);
                 }
-                return Json(Messages.ApartmentMessages.AddedApartment);
+                return RedirectToAction("Update", new { id= newApartment.ApartmentId });
             }
             else
             {
@@ -181,7 +160,7 @@ namespace Apartment_Web.Controllers
                 {
                     ModelState.AddModelError("", error);
                 }
-                return View(errors);
+                return View(apartmentAddDto);
 
 
             }
@@ -272,6 +251,7 @@ namespace Apartment_Web.Controllers
             }
 
         }
+
 
         public class Index_VM
         {

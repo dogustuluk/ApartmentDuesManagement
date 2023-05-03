@@ -1,110 +1,109 @@
 ﻿@model ApartmentAddDto
+<div class="card-header">
+    <i class="fas fa-table mr-1"></i>
+    Apartman Ekleme
+</div>
+<form class="form-card" asp-controller="Apartment" asp-action="Add" method="post">
+    <div class="row mt-2">
+        <div class="col-md-12">
+            
+            <div class="container-fluid">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-xl-7 mt-2 col-lg-8 col-md-9 col-11 text-center">
+                        <div class="card">
 
-<form asp-controller="Apartment" asp-action="Add" method="post">
-    @Html.ValidationSummary(true)
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-borderless">
-                <tbody>
-                    <tr>
-                        <td>
-                            <label>Apartman Adı:</label>
-                        </td>
-                        <td>
-                            <input type="text" id="inputApartmentName" asp-for="ApartmentName" />
-                            @Html.ValidationMessageFor(x=>x.ApartmentName)
-                            <span asp-validation-for="ApartmentName" class="text-danger"></span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>Blok numarası:</label>
-                        </td>
-                        <td>
-                            <input type="text" id="inputBlockNo" asp-for="BlockNo" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>Kapı Numarası:</label>
-                        </td>
-                        <td>
-                            <input type="text" id="inputDoorNumber" asp-for="DoorNumber" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>Yönetıcı Ad-Soyad:</label>
-                        </td>
-                        <td>
-                            <input type="text" id="inputResponsibleMemberName" asp-for="ResponsibleMemberInfo.NameSurname" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>Yönetici Mail:</label>
-                        </td>
-                        <td>
-                            <input type="text" id="inputResponsibleMemberEmail" asp-for="ResponsibleMemberInfo.Email" />
-                        </td>
-                    </tr>
-                    <tr>
-                    <tr>
-                        <td>
-                            <label>Yönetici Telefon Numarası:</label>
-                        </td>
-                        <td>
-                            <input type="text" id="inputResponsibleMemberPhoneNumber" asp-for="ResponsibleMemberInfo.PhoneNumber" />
-                        </td>
-                    </tr>
-                <td>
-                    <label>Daire Sayısı:</label>
-                </td>
-                <td>
-                    <input type="text" id="inputNumberOfFlats" asp-for="NumberOfFlats" />
-                </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label>İl:</label>
-                    </td>
-                    <td>
-                        <select class="ajaxCityId" id="inputCity" asp-for="@Model.CityId">
-                            <option value="">İl seçiniz</option>
-                        </select>
+                            <div class="row justify-content-between text-left">
+                                <div class="form-group col-sm-12 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Apartman Adi<span class="text-danger"></span></label>
+                                    <input type="text" id="inputApartmentName" asp-for="ApartmentName" />
+                                    <span asp-validation-for="ApartmentName" class="text-danger"></span>
+                                </div>
 
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label>İlçe:</label>
-                    </td>
-                    <td>
-                        <select class="ajaxCountyId" id="inputCounty" asp-for="@Model.CountyId">
-                            <option value="0">İlçe seçiniz</option>
-                        </select>
 
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label>Açık Adres:</label>
-                    </td>
-                    <td>
-                        <input type="text" id="inputOpenAddress" asp-for="OpenAdress" />
-                    </td>
-                </tr>
-                    @* <tr>
-                <td>
-                <label>Aktiflik Durumu:</label>
-                </td>
-                <td>
-                <input type="checkbox" id="inputIsActive" asp-for="IsActive" />
-                </td>
-                </tr>*@
-                </tbody>
-            </table>
-            <button type="submit" id="btnSave">Kaydet</button>
+                            </div>
+
+
+                            <div class="row justify-content-between text-left">
+                                <div class="form-group col-sm-6 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Kapi Numarasi<span class="text-danger"></span></label>
+                                    <input type="text" id="inputDoorNumber" asp-for="DoorNumber" />
+                                    <span asp-validation-for="DoorNumber" class="text-danger"></span>
+
+                                </div>
+
+                                <div class="form-group col-sm-6 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Blok Numarasi<span class="text-danger"></span></label> <input type="text" id="inputBlockNo" asp-for="BlockNo" />
+                                    <span asp-validation-for="BlockNo" class="text-danger"></span>
+
+                                </div>
+
+                            </div>
+
+                            <div class="row justify-content-between text-left">
+                                <div class="form-group col-sm-6 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Il<span class="text-danger"></span></label>
+                                    <select class="ajaxCityId" id="inputCity" asp-for="@Model.CityId">
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-sm-6 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Ilce<span class="text-danger"></span></label>
+                                    <select class="ajaxCountyId" id="inputCounty" asp-for="@Model.CountyId">
+                                    </select>
+                                </div>
+                            </div>
+
+                          @*  <div class="row justify-content-between text-left">
+                                <div class="form-group col-sm-6 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Aktiflik Durumu<span class="text-danger"> </span></label>
+                                    <input type="text" id="inputIsActive" asp-for="IsActive" />
+                                </div>
+                            </div>
+*@
+                            <div class="row justify-content-between text-left">
+                                <div class="form-group col-12 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Acik Adres<span class="text-danger"> </span></label>
+                                    <textarea id="inputOpenAddress" asp-for="OpenAdress"></textarea>
+                                    <span asp-validation-for="OpenAdress" class="text-danger"></span>
+                                </div>
+
+                            </div>
+
+
+                            <div class="row justify-content-between text-left">
+                                <div class="form-group col-sm-4 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Yonetici Adi<span class="text-danger"></span></label>
+                                    <input type="text" id="inputResponsibleMemberName" asp-for="ResponsibleMemberInfo.NameSurname" />
+                                    <span asp-validation-for="ResponsibleMemberInfo.NameSurname" class="text-danger"></span>
+
+                                </div>
+
+                                <div class="form-group col-sm-4 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Yonetici Telefon<span class="text-danger"></span></label>
+                                    <input type="text" id="inputResponsibleMemberPhoneNumber" asp-for="ResponsibleMemberInfo.PhoneNumber" />
+                                    <span asp-validation-for="ResponsibleMemberInfo.PhoneNumber" class="text-danger"></span>
+
+                                </div>
+                                <div class="form-group col-sm-4 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Yonetici Mail<span class="text-danger"></span></label>
+                                    <input type="text" id="inputResponsibleMemberEmail" asp-for="ResponsibleMemberInfo.Email" />
+                                    <span asp-validation-for="ResponsibleMemberInfo.Email" class="text-danger"></span>
+
+                                </div>
+                            </div>
+
+                            <div class="row justify-content-end">
+                                <div class="form-group col-sm-6">
+                                    <button type="submit" id="btnSave" class="btn-block btn-primary h6">Ekle</button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    
+                </div>
+            </div>
         </div>
     </div>
 </form>
@@ -152,52 +151,6 @@
             });
         }
     });
-    //apartment add city and county ddl end
-
-    //apartment add start
-    $().ready(function () {
-        $("#btnSave").click(function () {
-            var apartment =
-            {
-                ApartmentName: $("#inputApartmentName").val(),
-                BlockNo: $("#inputBlockNo").val(),
-                DoorNumber: $("#inputDoorNumber").val(),
-                ResponsibleMemberInfo:
-                {
-                    NameSurname: $("#inputResponsibleMemberName").val(),
-                    Email: $("#inputResponsibleMemberEmail").val(),
-                    PhoneNumber: $("#inputResponsibleMemberPhoneNumber").val(),
-                },
-                NumberOfFlats: $("#inputNumberOfFlats").val(),
-                CityId: $("#inputCityId").val(),
-                CountyId: $("#inputCountyId").val(),
-                OpenAddress: $("#inputOpenAddress").val(),
-            };
-            $.ajax({
-                type: "POST",
-                url: "/Apartment/Add",
-                data: apartment,
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (data) {
-                    if(data.success){
-
-                        alert("Kayit basarili");
-                        window.location.href = "/apartment/index";
-                    }
-                    else{
-                        alert("Hata" + data.error.join(", "));
-                        windows.location.href = "/apartment/add";
-                    }
-                },
-                error: function () {
-                    alert("Veri eklenirken bir hata oluştu.");
-                    window.location.href = "/apartment/index";
-
-                }
-            });
-        });
-    });
-    //apartment add end
+   
 
 </script>

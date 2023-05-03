@@ -1,5 +1,8 @@
 ﻿@model ApartmentUpdateDto
-
+<div class="card-header">
+    <i class="fas fa-table mr-1"></i>
+    Apartman Güncelleme
+</div>
 <form class="form-card" asp-controller="Apartment" asp-action="Update" asp-route-id="@Model.ApartmentId" method="post" id="myForm" onsubmit="sendForm(event)">
     <div class="row mt-2">
         <div class="col-md-12">
@@ -8,52 +11,42 @@
             <input type="hidden" id="countyId" value="@Model.CountyId" />
             <input type="hidden" id="countyId" value="@Model.MemberId" />
 
-            <div class="container-fluid px-1 py-50 mx-auto">
-                <div class="row d-flex justify-content-center">
+            <div class="container-fluid">
+                <h5 class="text-center mb-4"><span>@Model.ApartmentName</span> Apartmanini guncelliyorsunuz</h5>
+                <div class="row d-flex justify-content-left">
                     <div class="col-xl-7 mt-2 col-lg-8 col-md-9 col-11 text-center">
                         <div class="card">
-                            
-                                <h5 class="text-center mb-4"><span>@Model.ApartmentName</span> Apartmanini guncelliyorsunuz</h5>
-                            
 
                             <div class="row justify-content-between text-left">
-                                <div class="form-group col-sm-6 flex-column d-flex">
-                                    <label class="form-control-label px-3">Apartman Adi<span class="text-danger"></span></label>
+                                <div class="form-group col-sm-12 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Apartman Adi<span class="text-danger"></span></label>
                                     <input type="text" id="inputApartmentName" asp-for="ApartmentName" />
                                     <span asp-validation-for="ApartmentName" class="text-danger"></span>
                                 </div>
-
-                                <div class="form-group col-sm-6 flex-column d-flex">
-                                    <label class="form-control-label px-3">Blok Numarasi<span class="text-danger"></span></label> <input type="text" id="inputBlockNo" asp-for="BlockNo" />
-                                    <span asp-validation-for="BlockNo" class="text-danger"></span>
-
-                                </div>
                             </div>
-
 
                             <div class="row justify-content-between text-left">
                                 <div class="form-group col-sm-6 flex-column d-flex">
-                                    <label class="form-control-label px-3">Kapi Numarasi<span class="text-danger"></span></label>
+                                    <label class="form-control-label px-3 h6">Kapi Numarasi<span class="text-danger"></span></label>
                                     <input type="text" id="inputDoorNumber" asp-for="DoorNumber" />
                                     <span asp-validation-for="DoorNumber" class="text-danger"></span>
-
                                 </div>
 
                                 <div class="form-group col-sm-6 flex-column d-flex">
-                                    <label class="form-control-label px-3">Daire Sayisi<span class="text-danger"></span></label>
-                                    <input type="text" id="inputNumberOfFlats" asp-for="NumberOfFlats" />
+                                    <label class="form-control-label px-3 h6">Blok Numarasi<span class="text-danger"></span></label> <input type="text" id="inputBlockNo" asp-for="BlockNo" />
+                                    <span asp-validation-for="BlockNo" class="text-danger"></span>
                                 </div>
                             </div>
 
                             <div class="row justify-content-between text-left">
                                 <div class="form-group col-sm-6 flex-column d-flex">
-                                    <label class="form-control-label px-3">Il<span class="text-danger"></span></label>
+                                    <label class="form-control-label px-3 h6">Il<span class="text-danger"></span></label>
                                     <select class="ajaxCityId" id="inputCity" asp-for="@Model.CityId">
                                     </select>
                                 </div>
 
                                 <div class="form-group col-sm-6 flex-column d-flex">
-                                    <label class="form-control-label px-3">Ilce<span class="text-danger"></span></label>
+                                    <label class="form-control-label px-3 h6">Ilce<span class="text-danger"></span></label>
                                     <select class="ajaxCountyId" id="inputCounty" asp-for="@Model.CountyId">
                                     </select>
                                 </div>
@@ -61,62 +54,89 @@
 
                             <div class="row justify-content-between text-left">
                                 <div class="form-group col-sm-6 flex-column d-flex">
-                                    <label class="form-control-label px-3">Aktiflik Durumu<span class="text-danger"> </span></label>
+                                    <label class="form-control-label px-3 h6">Aktiflik Durumu<span class="text-danger"> </span></label>
                                     <input type="text" id="inputIsActive" asp-for="IsActive" />
                                 </div>
                             </div>
 
                             <div class="row justify-content-between text-left">
                                 <div class="form-group col-12 flex-column d-flex">
-                                    <label class="form-control-label px-3">Acik Adres<span class="text-danger"> </span></label>
+                                    <label class="form-control-label px-3 h6">Acik Adres<span class="text-danger"> </span></label>
                                     <textarea id="inputOpenAddress" asp-for="OpenAdress"></textarea>
                                     <span asp-validation-for="OpenAdress" class="text-danger"></span>
                                 </div>
-
                             </div>
 
                             <div class="row justify-content-between text-left">
                                 <div class="form-group col-sm-4 flex-column d-flex">
-                                    <label class="form-control-label px-3">Yonetici Adi<span class="text-danger"></span></label>
+                                    <label class="form-control-label px-3 h6">Yonetici Degistir<span class="text-danger"></span></label>
+                                    <select class="ajaxMemberId" id="inputMember" asp-for="@Model.MemberId">
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row justify-content-between text-left">
+                                <div class="form-group col-sm-4 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Yonetici Adi<span class="text-danger"></span></label>
                                     <input type="text" id="inputResponsibleMemberName" asp-for="ResponsibleMemberInfo.NameSurname" />
                                     <span asp-validation-for="ResponsibleMemberInfo.NameSurname" class="text-danger"></span>
-
                                 </div>
 
                                 <div class="form-group col-sm-4 flex-column d-flex">
-                                    <label class="form-control-label px-3">Yonetici Telefon<span class="text-danger"></span></label>
+                                    <label class="form-control-label px-3 h6">Yonetici Telefon<span class="text-danger"></span></label>
                                     <input type="text" id="inputResponsibleMemberPhoneNumber" asp-for="ResponsibleMemberInfo.PhoneNumber" />
                                     <span asp-validation-for="ResponsibleMemberInfo.PhoneNumber" class="text-danger"></span>
 
                                 </div>
                                 <div class="form-group col-sm-4 flex-column d-flex">
-                                    <label class="form-control-label px-3">Yonetici Mail<span class="text-danger"></span></label>
+                                    <label class="form-control-label px-3 h6">Yonetici Mail<span class="text-danger"></span></label>
                                     <input type="text" id="inputResponsibleMemberEmail" asp-for="ResponsibleMemberInfo.Email" />
                                     <span asp-validation-for="ResponsibleMemberInfo.Email" class="text-danger"></span>
 
                                 </div>
                             </div>
 
-                            <div class="row justify-content-between text-left">
-                                <div class="form-group col-sm-4 flex-column d-flex">
-                                    <label class="form-control-label px-3">Yonetici Degistir<span class="text-danger"></span></label>
-                                    <select class="ajaxMemberId" id="inputMember" asp-for="@Model.MemberId">
-                                    </select>
-                                </div>
-                            </div>
-
                             <div class="row justify-content-end">
                                 <div class="form-group col-sm-6">
-                                    <button type="submit" id="btnUpdate" class="btn-block btn-primary">Guncelle</button>
+                                    <button type="submit" id="btnUpdate" class="btn-block btn-primary h6">Guncelle</button>
                                 </div>
                             </div>
                         </div>
                     </div>
+</form>
+<div class="col-md-5 mt-2">
+    <div class="card">
+        <div class="login">
+            <h4 class="text-center h5">Yeni Yönetici Ekle</h4>
+            <form method="post" asp-controller="Member" asp-action="AddNewResponsibleMember" asp-route-id="@Model.ApartmentId">
+                <input type="hidden" asp-for="@Model.ApartmentId" value="@Model.ApartmentId" />
+
+                <div class="form-group">
+                    <label class="h6">Yönetici Adı</label>
+                    <input type="text" name="ResponsibleMemberInfo.NameSurname" class="form-control" />
+
+                </div>
+                <div class="form-group">
+                    <label class="form-label h6">Telefon Numarası</label>
+                    <input type="text" name="ResponsibleMemberInfo.PhoneNumber" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="form-label h6">E-Posta Adresi</label>
+                    <input type="text" name="ResponsibleMemberInfo.Email" class="form-control">
+                </div>
+
+                <input class="btn-block btn-primary h6" type="submit" value="Kaydet">
+            </form>
+
+        </div>
+
+    </div>
+</div>
                 </div>
             </div>
         </div>
     </div>
-</form>
+
 
 
 <script>
@@ -214,11 +234,9 @@
                 });
             });
         });
-      
-        $(document).ready(function () 
-        {
-            if ('@TempData["updateSuccess"]' === 'True') 
-            {        
+
+        $(document).ready(function () {
+            if ('@TempData["updateSuccess"]' === 'True') {
                 Swal.fire({
                     title: 'Güncelleme Başarılı',
                     toast: true,
