@@ -254,9 +254,7 @@ namespace Core.DataAccess.EntityFramework
         }
         public TEntity? GetByGuid(Guid guid)
         {
-
             return context.Set<TEntity>().Find(guid);
-
         }
 
         public async Task<PaginatedList<TEntity>> GetDataPagedAsync(Expression<Func<TEntity, bool>> predicate, int PageIndex, int take, string orderBy)

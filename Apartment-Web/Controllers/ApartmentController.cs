@@ -166,9 +166,10 @@ namespace Apartment_Web.Controllers
             }
         }
         [HttpGet]
-        public IActionResult Update(int id)
+        public IActionResult Update(Guid guid)
         {
-            var result = _unitOfWork.apartmentDal.GetById(id);
+            //var result = _unitOfWork.apartmentDal.GetByGuid(guid);
+            var result = _unitOfWork.apartmentDal.Get(x => x.Guid == guid);
             var responsibleMember = _unitOfWork.memberDal.GetById(result.ResponsibleMemberId);
 
             var apartment = new ApartmentUpdateDto
@@ -196,9 +197,10 @@ namespace Apartment_Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(int id, ApartmentUpdateDto updatedApartment)
+        public IActionResult Update(Guid guid, ApartmentUpdateDto updatedApartment)
         {
-            var apartment = _unitOfWork.apartmentDal.GetById(id);
+           // var apartment = _unitOfWork.apartmentDal.GetByGuid(guid);
+            var apartment = _unitOfWork.apartmentDal.Get(x => x.Guid == guid);
             if (apartment == null)
             {
                 return NotFound();
@@ -236,8 +238,7 @@ namespace Apartment_Web.Controllers
                 }
                 _unitOfWork.apartmentDal.Update(apartment);
                 TempData["updateSuccess"] = true;
-               // TempData["updatedApartment"] = " ";
-                return RedirectToAction("Update", "Apartment", new { ApartmentId = id });
+                return RedirectToAction("Update", "Apartment", new { guid = guid });
 
             }
             else
