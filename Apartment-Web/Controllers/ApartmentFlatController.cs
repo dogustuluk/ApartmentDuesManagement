@@ -88,21 +88,23 @@ namespace Apartment_Web.Controllers
                     return View(apartmentFlatAddDto);
                 }
             }
-           
-            var newTenant = new Member
+
+            Member newTenant = null;
+            if (apartmentFlatAddDto.ResponsibleMemberInfo.NameSurname != null 
+                && apartmentFlatAddDto.ResponsibleMemberInfo.PhoneNumber != null
+                && apartmentFlatAddDto.ResponsibleMemberInfo.Email       != null)
             {
-                NameSurname = apartmentFlatAddDto.ResponsibleMemberInfo.NameSurname,
-                Email = apartmentFlatAddDto.ResponsibleMemberInfo.Email,
-                PhoneNumber = apartmentFlatAddDto.ResponsibleMemberInfo.PhoneNumber,
-                ApartmentId = apartmentId
-            };
-            if (newTenant.PhoneNumber != null && newTenant.NameSurname != null && newTenant.Email != null )
-            {
-                _unitOfWork.memberDal.Add(newTenant);
-                _unitOfWork.Commit();
+                 newTenant = new Member
+                {
+                    NameSurname = apartmentFlatAddDto.ResponsibleMemberInfo.NameSurname,
+                    Email = apartmentFlatAddDto.ResponsibleMemberInfo.Email,
+                    PhoneNumber = apartmentFlatAddDto.ResponsibleMemberInfo.PhoneNumber,
+                    ApartmentId = apartmentId
+                };
+                    _unitOfWork.memberDal.Add(newTenant);
+                    _unitOfWork.Commit();
             }
-
-
+            
             var newFlatOwner = new Member
             {
                 NameSurname = apartmentFlatAddDto.FlatOwner.NameSurname,
@@ -123,6 +125,7 @@ namespace Apartment_Web.Controllers
                 FlatOwnerId = newFlatOwner.MemberId,
                 TenantId = newTenant.MemberId != null ? newTenant.MemberId : 0
             };
+            
 
             if (apartmentFlatAddDto.IsFlatOwnerAndResident)
             {
