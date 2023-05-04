@@ -8,13 +8,18 @@ using DataAccess.Concrete.UnitOfWork;
 using FluentValidation.AspNetCore;
 using System.Reflection;
 using Business.Validations;
+using Apartment_Web.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacBusinessModule()));
-builder.Services.AddControllersWithViews().AddFluentValidation(options =>
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add<ExceptionFilter>();
+
+}).AddFluentValidation(options =>
 {
     options.RegisterValidatorsFromAssemblyContaining<Validations>();
 }).AddRazorRuntimeCompilation().AddJsonOptions(opt =>
@@ -22,11 +27,10 @@ builder.Services.AddControllersWithViews().AddFluentValidation(options =>
     opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     opt.JsonSerializerOptions.PropertyNamingPolicy = null;
-}); //frontend icin derleme yapmamiza gerek kalmaz, degisiklikleri goruruz.
+});
 builder.Services.AddAutoMapper(typeof(MapProfile));
 
 var app = builder.Build();
-//app.UseMiddleware<AutofacMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -35,6 +39,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+//app.UseStatusCodePages();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -47,16 +52,5 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-//var apartments = FakeDataGenerator.GenerateApartments(50);
-//var seed = FakeDataGenerator.GenerateSubscriptionItems(50);
-//using (var scope = app.Services.CreateScope())
-//{
-//    var services = scope.ServiceProvider;
-//    var unitOfWork = services.GetRequiredService<IUnitOfWork>();
-//    foreach (var items in apartments)
-//    {
-//        unitOfWork.apartmentDal.Add(items);
-//    }
-//    unitOfWork.Commit();
-//}
+
 app.Run();

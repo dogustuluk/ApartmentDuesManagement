@@ -247,10 +247,7 @@ namespace Core.DataAccess.EntityFramework
 
         public async Task<TEntity> GetByGuidAsync(Guid guid)
         {
-            using (var context = new TContext())
-            {
                 return await context.Set<TEntity>().FindAsync(guid);
-            }
         }
         public TEntity? GetByGuid(Guid guid)
         {

@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Data.SqlTypes;
 using System.Drawing.Printing;
 using System.Linq.Expressions;
 using System.Text.Json;
