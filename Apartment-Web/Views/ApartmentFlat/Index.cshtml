@@ -19,18 +19,18 @@
 
             <button type="submit" class="btn btn-primary mt-2 mr-1">Listele</button>
             <input type="button" class="btn btn-primary mt-2" value="Sıfırla" onclick="location.href='@Url.Action("Index")'" />
-            <div class="ml-1 mt-2">
+            
+        </div>
+    }
+
+    <div class="card-body">
+        <div class="ml-1 mt-2">
                 <a asp-controller="ApartmentFlat" asp-action="Add" class="btn btn-success">
                     <i class="material-icons">&#xE147;</i>
                     <span>Daire Ekle</span>
                 </a>
 
             </div>
-        </div>
-    }
-
-    <div class="card-body">
-
         <div class="col-sm-12 text-right">
             <div class="dataTables_info F11" id="bootstrap-data-table-export_info" role="status" aria-live="polite">
                 <b>@Model.MyPagination.TotalRecords</b> kayit bulunmaktadir.
@@ -56,7 +56,16 @@
                         <tr>
                             <td>@item.FlatNumber</td>
                             <td>@item.ApartmentName</td>
-                            <td>@item.NameSurname, Telefon: @item.PhoneNumber</td>
+                            @if (item.NameSurname == null && item.PhoneNumber == null)
+                            {
+                                <td style="color:red; font-size:18px;">Kiracı Yok</td>
+
+                            }
+                            else
+                            {
+                                <td>@item.NameSurname, Telefon: @item.PhoneNumber</td>
+
+                            }
                             <td>@item.FlatOwnerNameSurname, Telefon: @item.FlatOwnerPhoneNumber</td>
                             <td>@item.CarPlate</td>
                             <td>@item.UpdatedDate</td>

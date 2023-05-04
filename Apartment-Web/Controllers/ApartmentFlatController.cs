@@ -85,23 +85,27 @@ namespace Apartment_Web.Controllers
                 Email = apartmentFlatAddDto.ResponsibleMemberInfo.Email,
                 PhoneNumber = apartmentFlatAddDto.ResponsibleMemberInfo.PhoneNumber,
                 ApartmentId = apartmentId
-                
             };
-            
-            _unitOfWork.memberDal.Add(newTenant);
-            _unitOfWork.Commit();
+
+            if (newTenant.PhoneNumber != null && newTenant.NameSurname != null && newTenant.Email != null )
+            {
+                _unitOfWork.memberDal.Add(newTenant);
+                _unitOfWork.Commit();
+            }
+
 
             var newFlatOwner = new Member
             {
                 NameSurname = apartmentFlatAddDto.FlatOwner.NameSurname,
                 Email = apartmentFlatAddDto.FlatOwner.Email,
-                PhoneNumber = apartmentFlatAddDto.FlatOwner.PhoneNumber
+                PhoneNumber = apartmentFlatAddDto.FlatOwner.PhoneNumber,  
             };
             if (newTenant.PhoneNumber == newFlatOwner.PhoneNumber)
             {
                 newFlatOwner.ApartmentId = apartmentId;
             }
-            newFlatOwner.ApartmentId = 0 ;
+            newFlatOwner.ApartmentId = 0;
+
             _unitOfWork.memberDal.Add(newFlatOwner);
             _unitOfWork.Commit();
 
@@ -113,13 +117,16 @@ namespace Apartment_Web.Controllers
                 FlatNumber = apartmentFlatAddDto.FlatNumber,
                 Floor = apartmentFlatAddDto.Floor,
                 FlatOwnerId = newFlatOwner.MemberId,
-                TenantId = newTenant.MemberId
+                TenantId = newTenant.MemberId != null ? newTenant.MemberId : 0
             };
             _unitOfWork.apartmentFlatDal.Add(newApartmentFlat);
             _unitOfWork.Commit();
 
-            var apartmentFlat = _unitOfWork.apartmentFlatDal.GetById(newApartmentFlat.ApartmentFlatId);
-            _unitOfWork.apartmentFlatDal.Update(apartmentFlat);
+            var apartment = _unitOfWork.apartmentDal.GetById(apartmentId);
+            apartment.NumberOfFlats += 1;
+            _unitOfWork.apartmentDal.Update(apartment);
+            //var apartmentFlat = _unitOfWork.apartmentFlatDal.GetById(newApartmentFlat.ApartmentFlatId);
+            //_unitOfWork.apartmentFlatDal.Update(apartmentFlat);
 
             return View(apartmentFlatAddDto);
         }

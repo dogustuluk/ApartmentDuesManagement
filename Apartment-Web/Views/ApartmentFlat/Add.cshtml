@@ -28,7 +28,7 @@
                                     <input type="text" id="inputDoorNumber" asp-for="Floor" />
                                 </div>
 
-                                 <div class="form-group col-sm-4 flex-column d-flex">
+                                <div class="form-group col-sm-4 flex-column d-flex">
                                     <label class="form-control-label px-3 h6">Daire Numarasi<span class="text-danger"></span></label>
                                     <input type="text" id="inputDoorNumber" asp-for="FlatNumber" />
                                 </div>
@@ -42,6 +42,35 @@
 
 
                             <div class="row justify-content-between text-left">
+                                <div class="form-group col-sm-4 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Ev Sahibi Adi<span class="text-danger"></span></label>
+                                    <input type="text" id="inputFlatOwnerName" asp-for="FlatOwner.NameSurname" />
+                                    <span asp-validation-for="FlatOwner.NameSurname" class="text-danger"></span>
+
+                                    <label>
+                                        <input class="mt-3" type="checkbox" id="isFlatOwnerCheckbox" checked />  Ev Sahibi mi?
+                                    </label>
+                                </div>
+
+                                <div class="form-group col-sm-4 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Ev Sahibi Telefon<span class="text-danger"></span></label>
+                                    <input type="text" id="inputFlatOwnerPhoneNumber" asp-for="FlatOwner.PhoneNumber" />
+                                    <span asp-validation-for="FlatOwner.PhoneNumber" class="text-danger"></span>
+
+                                </div>
+                                <div class="form-group col-sm-4 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Ev Sahibi Mail<span class="text-danger"></span></label>
+                                    <input type="text" id="inputFlatOwnerEmail" asp-for="FlatOwner.Email" />
+                                    <span asp-validation-for="FlatOwner.Email" class="text-danger"></span>
+
+                                </div>
+
+
+                            </div>
+
+
+
+                            <div class="row justify-content-between text-left" id="flatOwnerInfo" style="display: none;">
                                 <div class="form-group col-sm-4 flex-column d-flex">
                                     <label class="form-control-label px-3 h6">Kiraci Adi<span class="text-danger"></span></label>
                                     <input type="text" id="inputResponsibleMemberName" asp-for="ResponsibleMemberInfo.NameSurname" />
@@ -59,29 +88,6 @@
                                     <label class="form-control-label px-3 h6">Kiraci Mail<span class="text-danger"></span></label>
                                     <input type="text" id="inputResponsibleMemberEmail" asp-for="ResponsibleMemberInfo.Email" />
                                     <span asp-validation-for="ResponsibleMemberInfo.Email" class="text-danger"></span>
-
-                                </div>
-                            </div>
-
-
-                            <div class="row justify-content-between text-left">
-                                <div class="form-group col-sm-4 flex-column d-flex">
-                                    <label class="form-control-label px-3 h6">Ev Sahibi Adi<span class="text-danger"></span></label>
-                                    <input type="text" id="inputResponsibleMemberName" asp-for="FlatOwner.NameSurname" />
-                                    <span asp-validation-for="FlatOwner.NameSurname" class="text-danger"></span>
-
-                                </div>
-
-                                <div class="form-group col-sm-4 flex-column d-flex">
-                                    <label class="form-control-label px-3 h6">Ev Sahibi Telefon<span class="text-danger"></span></label>
-                                    <input type="text" id="inputResponsibleMemberPhoneNumber" asp-for="FlatOwner.PhoneNumber" />
-                                    <span asp-validation-for="FlatOwner.PhoneNumber" class="text-danger"></span>
-
-                                </div>
-                                <div class="form-group col-sm-4 flex-column d-flex">
-                                    <label class="form-control-label px-3 h6">Ev Sahibi Mail<span class="text-danger"></span></label>
-                                    <input type="text" id="inputResponsibleMemberEmail" asp-for="FlatOwner.Email" />
-                                    <span asp-validation-for="FlatOwner.Email" class="text-danger"></span>
 
                                 </div>
                             </div>
@@ -105,31 +111,9 @@
 </form>
 
 <script>
-      //$().ready(function () {
-      //  $("select[class*='ajaxApartmentId']").change(function () {
-      //      var ddl = $("select[class*='ajaxApartmentId']");
-
-      //  });
-
-      //  LoadApartments("ajaxApartmentId");
-
-      //  function LoadApartments(selectorclass) {
-      //      var url = "/_Base/GetAjaxApartment_DDL";
-      //      var ddl = $("select[class*='" + selectorclass + "']");
-
-      //      $.getJSON(url, {}, function (data) {
-      //          var items = '';
-      //          ddl.empty();
-      //          $.each(data, function (i, data) {
-      //              items += "<option value='" + data.DefaultValue + "'>" + data.DefaultText + "</option>";
-      //          });
-      //          ddl.html(items);
-
-      //      });
-      //  }
-        $(document).ready(function () {
-            LoadApartments("ajaxApartmentId");
-        });
+    $(document).ready(function () {
+        LoadApartments("ajaxApartmentId");
+    });
 
     function LoadApartments(selectorclass) {
         var url = "/_Base/GetAjaxApartment_DDL";
@@ -145,5 +129,24 @@
                 ddl.html(items);
             });
     }
+
+
+    $(document).ready(function () {
+        $('#isFlatOwnerCheckbox').change(function () {
+            var isChecked = $(this).is(':checked');
+            if (!isChecked) {
+                $('#flatOwnerInfo').show();
+            } else {
+                $('#flatOwnerInfo').hide();
+            }
+
+            //if (this.checked) {
+            //    // Checkbox işaretliyse, FlatOwner ve ResponsibleMemberInfo özelliklerini eşitle
+            //    $('#inputFlatOwnerName').val($('#inputResponsibleMemberName').val());
+            //    $('#inputFlatOwnerEmail').val($('#inputResponsibleMemberEmail').val());
+            //    $('#inputFlatOwnerPhoneNumber').val($('#inputResponsibleMemberPhoneNumber').val());
+            //}
+        });
+    });
 
 </script>
