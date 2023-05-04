@@ -47,6 +47,7 @@ namespace Entities.Dtos
         public virtual Apartment? Apartment { get; set; }
 
         public virtual Member? FlatOwner { get; set; }
+        public bool IsFlatOwnerAndResident { get; set; }
         public MemberShortDto? ResponsibleMemberInfo { get; set; }
 
 
