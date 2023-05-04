@@ -3,6 +3,7 @@ using Core.DataAccess;
 using DataAccess.Concrete.EntityFramework.Context;
 using DataAccess.Concrete.UnitOfWork;
 using Entities.Concrete.EntityFramework.Context;
+using Entities.Dtos;
 using LinqKit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -40,7 +41,7 @@ namespace Apartment_Web.Controllers
             };
 
             var PagedList = await _unitOfWork.vwApartmentFlatDal.GetDataPagedAsync(null, (int)PageIndex, 25, orderBy ?? defaultSortOrder);
-            
+
 
             Dictionary<string, object> Parameters = new()
             {
@@ -70,6 +71,58 @@ namespace Apartment_Web.Controllers
             return View(MYRESULT);
         }
 
+        [HttpGet]
+        public IActionResult Add()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Add(int apartmentId, ApartmentFlatAddDto apartmentFlatAddDto)
+        {
+            var newTenant = new Member
+            {
+                NameSurname = apartmentFlatAddDto.ResponsibleMemberInfo.NameSurname,
+                Email = apartmentFlatAddDto.ResponsibleMemberInfo.Email,
+                PhoneNumber = apartmentFlatAddDto.ResponsibleMemberInfo.PhoneNumber,
+                ApartmentId = apartmentId
+                
+            };
+            
+            _unitOfWork.memberDal.Add(newTenant);
+            _unitOfWork.Commit();
+
+            var newFlatOwner = new Member
+            {
+                NameSurname = apartmentFlatAddDto.FlatOwner.NameSurname,
+                Email = apartmentFlatAddDto.FlatOwner.Email,
+                PhoneNumber = apartmentFlatAddDto.FlatOwner.PhoneNumber
+            };
+            if (newTenant.PhoneNumber == newFlatOwner.PhoneNumber)
+            {
+                newFlatOwner.ApartmentId = apartmentId;
+            }
+            newFlatOwner.ApartmentId = 0 ;
+            _unitOfWork.memberDal.Add(newFlatOwner);
+            _unitOfWork.Commit();
+
+            var newApartmentFlat = new ApartmentFlat
+            {
+                ApartmentId = apartmentFlatAddDto.ApartmentId,
+                CarPlate = apartmentFlatAddDto.CarPlate,
+                Code = apartmentFlatAddDto.Code,
+                FlatNumber = apartmentFlatAddDto.FlatNumber,
+                Floor = apartmentFlatAddDto.Floor,
+                FlatOwnerId = newFlatOwner.MemberId,
+                TenantId = newTenant.MemberId
+            };
+            _unitOfWork.apartmentFlatDal.Add(newApartmentFlat);
+            _unitOfWork.Commit();
+
+            var apartmentFlat = _unitOfWork.apartmentFlatDal.GetById(newApartmentFlat.ApartmentFlatId);
+            _unitOfWork.apartmentFlatDal.Update(apartmentFlat);
+
+            return View(apartmentFlatAddDto);
+        }
 
         public class Index_VM
         {

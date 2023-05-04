@@ -1,0 +1,149 @@
+﻿@model ApartmentFlatAddDto
+<div class="card-header">
+    <i class="fas fa-table mr-1"></i>
+    Daire Ekleme
+</div>
+<form class="form-card" asp-controller="ApartmentFlat" asp-action="Add" method="post">
+    <div class="row mt-2">
+        <div class="col-md-12">
+
+            <div class="container-fluid">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-xl-7 mt-2 col-lg-8 col-md-9 col-11 text-center">
+                        <div class="card">
+
+                            <div class="row justify-content-between text-left">
+                                <div class="form-group col-sm-12 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Apartman Seciniz<span class="text-danger"></span></label>
+                                    <select class="ajaxApartmentId" id="inputApartment" asp-for="@Model.ApartmentId">
+                                    </select>
+                                </div>
+
+                            </div>
+
+
+                            <div class="row justify-content-between text-left">
+                                <div class="form-group col-sm-4 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Kat Numarasi<span class="text-danger"></span></label>
+                                    <input type="text" id="inputDoorNumber" asp-for="Floor" />
+                                </div>
+
+                                 <div class="form-group col-sm-4 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Daire Numarasi<span class="text-danger"></span></label>
+                                    <input type="text" id="inputDoorNumber" asp-for="FlatNumber" />
+                                </div>
+
+                                <div class="form-group col-sm-4 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Arac Plakasi<span class="text-danger"></span></label>
+                                    <input type="text" id="inputDoorNumber" asp-for="CarPlate" />
+                                </div>
+
+                            </div>
+
+
+                            <div class="row justify-content-between text-left">
+                                <div class="form-group col-sm-4 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Kiraci Adi<span class="text-danger"></span></label>
+                                    <input type="text" id="inputResponsibleMemberName" asp-for="ResponsibleMemberInfo.NameSurname" />
+                                    <span asp-validation-for="ResponsibleMemberInfo.NameSurname" class="text-danger"></span>
+
+                                </div>
+
+                                <div class="form-group col-sm-4 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Kiraci Telefon<span class="text-danger"></span></label>
+                                    <input type="text" id="inputResponsibleMemberPhoneNumber" asp-for="ResponsibleMemberInfo.PhoneNumber" />
+                                    <span asp-validation-for="ResponsibleMemberInfo.PhoneNumber" class="text-danger"></span>
+
+                                </div>
+                                <div class="form-group col-sm-4 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Kiraci Mail<span class="text-danger"></span></label>
+                                    <input type="text" id="inputResponsibleMemberEmail" asp-for="ResponsibleMemberInfo.Email" />
+                                    <span asp-validation-for="ResponsibleMemberInfo.Email" class="text-danger"></span>
+
+                                </div>
+                            </div>
+
+
+                            <div class="row justify-content-between text-left">
+                                <div class="form-group col-sm-4 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Ev Sahibi Adi<span class="text-danger"></span></label>
+                                    <input type="text" id="inputResponsibleMemberName" asp-for="FlatOwner.NameSurname" />
+                                    <span asp-validation-for="FlatOwner.NameSurname" class="text-danger"></span>
+
+                                </div>
+
+                                <div class="form-group col-sm-4 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Ev Sahibi Telefon<span class="text-danger"></span></label>
+                                    <input type="text" id="inputResponsibleMemberPhoneNumber" asp-for="FlatOwner.PhoneNumber" />
+                                    <span asp-validation-for="FlatOwner.PhoneNumber" class="text-danger"></span>
+
+                                </div>
+                                <div class="form-group col-sm-4 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Ev Sahibi Mail<span class="text-danger"></span></label>
+                                    <input type="text" id="inputResponsibleMemberEmail" asp-for="FlatOwner.Email" />
+                                    <span asp-validation-for="FlatOwner.Email" class="text-danger"></span>
+
+                                </div>
+                            </div>
+
+
+
+                            <div class="row justify-content-end">
+                                <div class="form-group col-sm-6">
+                                    <button type="submit" id="btnSave" class="btn-block btn-primary h6">Ekle</button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+      //$().ready(function () {
+      //  $("select[class*='ajaxApartmentId']").change(function () {
+      //      var ddl = $("select[class*='ajaxApartmentId']");
+
+      //  });
+
+      //  LoadApartments("ajaxApartmentId");
+
+      //  function LoadApartments(selectorclass) {
+      //      var url = "/_Base/GetAjaxApartment_DDL";
+      //      var ddl = $("select[class*='" + selectorclass + "']");
+
+      //      $.getJSON(url, {}, function (data) {
+      //          var items = '';
+      //          ddl.empty();
+      //          $.each(data, function (i, data) {
+      //              items += "<option value='" + data.DefaultValue + "'>" + data.DefaultText + "</option>";
+      //          });
+      //          ddl.html(items);
+
+      //      });
+      //  }
+        $(document).ready(function () {
+            LoadApartments("ajaxApartmentId");
+        });
+
+    function LoadApartments(selectorclass) {
+        var url = "/_Base/GetAjaxApartment_DDL";
+        var ddl = $("select[class*='" + selectorclass + "']");
+
+        $.getJSON(url, {})
+            .done(function (data) {
+                var items = '';
+                ddl.empty();
+                $.each(data, function (i, data) {
+                    items += "<option value='" + data.DefaultValue + "'>" + data.DefaultText + "</option>";
+                });
+                ddl.html(items);
+            });
+    }
+
+</script>

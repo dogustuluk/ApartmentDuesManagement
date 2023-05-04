@@ -16,6 +16,12 @@ namespace Apartment_Web.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        public JsonResult GetAjaxApartment_DDL()
+        {
+            List<DDL> MyReturnList = _unitOfWork.apartmentDal.GetDDL(a=>a.ApartmentId > 0, "ApartmentName","ApartmentId",false,"Seciniz","0","0",100,"ApartmentName ASC","").ToList();
+
+            return Json(MyReturnList);
+        }
         public JsonResult GetAjaxCity_DDL()
         {
             List<DDL> MyReturnList = _unitOfWork.cityDal.GetDDL(a => a.CityId > 0, "CityName", "CityId", false, "Seciniz", "0", "0", 100, "CityName ASC", "").ToList();
