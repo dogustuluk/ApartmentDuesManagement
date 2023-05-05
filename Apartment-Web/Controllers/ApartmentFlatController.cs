@@ -79,7 +79,7 @@ namespace Apartment_Web.Controllers
         [HttpPost]
         public IActionResult Add(int apartmentId, ApartmentFlatAddDto apartmentFlatAddDto)
         {
-            List<ApartmentFlat> flats = (List<ApartmentFlat>)_unitOfWork.apartmentFlatDal.GetAll(x=>x.ApartmentId == apartmentId);
+            List<ApartmentFlat> flats = (List<ApartmentFlat>)_unitOfWork.apartmentFlatDal.GetAll(x => x.ApartmentId == apartmentId);
             foreach (var flat in flats)
             {
                 if (flat.FlatNumber == apartmentFlatAddDto.FlatNumber)
@@ -89,32 +89,6 @@ namespace Apartment_Web.Controllers
                 }
             }
 
-            Member newTenant = null;
-            if (apartmentFlatAddDto.ResponsibleMemberInfo.NameSurname != null 
-                && apartmentFlatAddDto.ResponsibleMemberInfo.PhoneNumber != null
-                && apartmentFlatAddDto.ResponsibleMemberInfo.Email       != null)
-            {
-                 newTenant = new Member
-                {
-                    NameSurname = apartmentFlatAddDto.ResponsibleMemberInfo.NameSurname,
-                    Email = apartmentFlatAddDto.ResponsibleMemberInfo.Email,
-                    PhoneNumber = apartmentFlatAddDto.ResponsibleMemberInfo.PhoneNumber,
-                    ApartmentId = apartmentId
-                };
-                    _unitOfWork.memberDal.Add(newTenant);
-                    _unitOfWork.Commit();
-            }
-            
-            var newFlatOwner = new Member
-            {
-                NameSurname = apartmentFlatAddDto.FlatOwner.NameSurname,
-                Email = apartmentFlatAddDto.FlatOwner.Email,
-                PhoneNumber = apartmentFlatAddDto.FlatOwner.PhoneNumber,  
-            };
-            _unitOfWork.memberDal.Add(newFlatOwner);
-            _unitOfWork.Commit();
-
-
             var newApartmentFlat = new ApartmentFlat
             {
                 ApartmentId = apartmentFlatAddDto.ApartmentId,
@@ -122,10 +96,16 @@ namespace Apartment_Web.Controllers
                 Code = apartmentFlatAddDto.Code,
                 FlatNumber = apartmentFlatAddDto.FlatNumber,
                 Floor = apartmentFlatAddDto.Floor,
-                FlatOwnerId = newFlatOwner.MemberId,
-                TenantId = newTenant.MemberId != null ? newTenant.MemberId : 0
             };
-            
+
+            var newFlatOwner = new Member
+            {
+                NameSurname = apartmentFlatAddDto.FlatOwner.NameSurname,
+                Email = apartmentFlatAddDto.FlatOwner.Email,
+                PhoneNumber = apartmentFlatAddDto.FlatOwner.PhoneNumber,
+            };
+            _unitOfWork.memberDal.Add(newFlatOwner);
+            _unitOfWork.Commit();
 
             if (apartmentFlatAddDto.IsFlatOwnerAndResident)
             {
@@ -133,6 +113,25 @@ namespace Apartment_Web.Controllers
                 newFlatOwner.ApartmentId = apartmentId;
             }
             else newFlatOwner.ApartmentId = 0;
+            newApartmentFlat.FlatOwnerId = newFlatOwner.MemberId;
+
+
+            Member newTenant = null;
+            if (apartmentFlatAddDto.ResponsibleMemberInfo.NameSurname != null
+                && apartmentFlatAddDto.ResponsibleMemberInfo.PhoneNumber != null
+                && apartmentFlatAddDto.ResponsibleMemberInfo.Email != null)
+            {
+                newTenant = new Member
+                {
+                    NameSurname = apartmentFlatAddDto.ResponsibleMemberInfo.NameSurname,
+                    Email = apartmentFlatAddDto.ResponsibleMemberInfo.Email,
+                    PhoneNumber = apartmentFlatAddDto.ResponsibleMemberInfo.PhoneNumber,
+                    ApartmentId = apartmentId
+                };
+                _unitOfWork.memberDal.Add(newTenant);
+                _unitOfWork.Commit();
+                newApartmentFlat.TenantId = newTenant.MemberId;
+            }
 
 
             _unitOfWork.apartmentFlatDal.Add(newApartmentFlat);
@@ -145,6 +144,7 @@ namespace Apartment_Web.Controllers
 
             TempData["updateSuccess"] = true;
             return View(apartmentFlatAddDto);
+
         }
         [HttpGet]
         public IActionResult Update(Guid guid)
