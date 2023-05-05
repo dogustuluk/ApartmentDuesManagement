@@ -146,7 +146,36 @@ namespace Apartment_Web.Controllers
             TempData["updateSuccess"] = true;
             return View(apartmentFlatAddDto);
         }
+        [HttpGet]
+        public IActionResult Update(Guid guid)
+        {
+            var result = _unitOfWork.apartmentFlatDal.Get(x => x.Guid == guid);
+            var tenant = _unitOfWork.memberDal.GetById(result.TenantId);
+            var flatOwner = _unitOfWork.memberDal.GetById(result.FlatOwnerId);
 
+            var apartmentFlat = new ApartmentFlatUpdateDto
+            {
+                ApartmentFlatId = result.ApartmentFlatId,
+                Guid = result.Guid,
+                CarPlate = result.CarPlate,
+                FlatNumber = result.FlatNumber,
+                Floor = result.Floor,
+                ResponsibleMemberInfo = tenant?.NameSurname != null ? new MemberShortDto
+                {
+                    NameSurname = tenant.NameSurname,
+                    Email = tenant.Email,
+                    PhoneNumber = tenant.PhoneNumber
+                } : null,
+                FlatOwner = new Member
+                {
+                    NameSurname = flatOwner.NameSurname,
+                    Email = flatOwner.Email,
+                    PhoneNumber = flatOwner.PhoneNumber
+                },
+            };
+
+            return View (apartmentFlat);
+        }
         public class Index_VM
         {
             public string PageTitle { get; set; }

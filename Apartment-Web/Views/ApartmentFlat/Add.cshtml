@@ -11,16 +11,13 @@
                 <div class="row d-flex justify-content-center">
                     <div class="col-xl-7 mt-2 col-lg-8 col-md-9 col-11 text-center">
                         <div class="card">
-
                             <div class="row justify-content-between text-left">
                                 <div class="form-group col-sm-12 flex-column d-flex">
                                     <label class="form-control-label px-3 h6">Apartman Seciniz<span class="text-danger"></span></label>
                                     <select class="ajaxApartmentId" id="inputApartment" asp-for="@Model.ApartmentId">
                                     </select>
                                 </div>
-
                             </div>
-
 
                             <div class="row justify-content-between text-left">
                                 <div class="form-group col-sm-4 flex-column d-flex">
@@ -41,7 +38,6 @@
                                 </div>
 
                             </div>
-
 
                             <div class="row justify-content-between text-left">
                                 <div class="form-group col-sm-4 flex-column d-flex">
@@ -69,37 +65,30 @@
                                     <label class="form-control-label px-3 h6">Ev Sahibi Mail<span class="text-danger"></span></label>
                                     <input type="text" id="inputFlatOwnerEmail" asp-for="FlatOwner.Email" />
                                     <span asp-validation-for="FlatOwner.Email" class="text-danger"></span>
-
                                 </div>
 
-
                             </div>
-
-
 
                             <div class="row justify-content-between text-left" id="flatOwnerInfo" style="display: none;">
                                 <div class="form-group col-sm-4 flex-column d-flex">
                                     <label class="form-control-label px-3 h6">Kiraci Adi<span class="text-danger"></span></label>
                                     <input type="text" id="inputResponsibleMemberName" asp-for="ResponsibleMemberInfo.NameSurname" />
                                     <span asp-validation-for="ResponsibleMemberInfo.NameSurname" class="text-danger"></span>
-
                                 </div>
 
                                 <div class="form-group col-sm-4 flex-column d-flex">
                                     <label class="form-control-label px-3 h6">Kiraci Telefon<span class="text-danger"></span></label>
                                     <input type="text" id="inputResponsibleMemberPhoneNumber" asp-for="ResponsibleMemberInfo.PhoneNumber" />
                                     <span asp-validation-for="ResponsibleMemberInfo.PhoneNumber" class="text-danger"></span>
-
                                 </div>
+
                                 <div class="form-group col-sm-4 flex-column d-flex">
                                     <label class="form-control-label px-3 h6">Kiraci Mail<span class="text-danger"></span></label>
                                     <input type="text" id="inputResponsibleMemberEmail" asp-for="ResponsibleMemberInfo.Email" />
                                     <span asp-validation-for="ResponsibleMemberInfo.Email" class="text-danger"></span>
-
                                 </div>
+
                             </div>
-
-
 
                             <div class="row justify-content-end">
                                 <div class="form-group col-sm-6">
@@ -108,9 +97,7 @@
                             </div>
 
                         </div>
-
                     </div>
-
                 </div>
             </div>
         </div>
@@ -152,17 +139,17 @@
 
     //success notification
     $(document).ready(function () {
-            if ('@TempData["updateSuccess"]' === 'True') {
-                Swal.fire({
-                    title: 'Ekleme Başarılı',
-                    toast: true,
-                    text: "Daire Basarili Bir Sekilde Eklendi",
-                    icon: 'success',
-                    showConfirmButton: false,
-                    timerProgressBar: true,
-                    position: 'top-right',
-                    timer: 2000
-                });
-            }
-        });
+        if ('@TempData["updateSuccess"]' === 'True') {
+            Swal.fire({
+                title: 'Ekleme Başarılı',
+                toast: true,
+                text: "Daire Basarili Bir Sekilde Eklendi",
+                icon: 'success',
+                showConfirmButton: false,
+                timerProgressBar: true,
+                position: 'top-right',
+                timer: 2000
+            });
+        }
+    });
 </script>

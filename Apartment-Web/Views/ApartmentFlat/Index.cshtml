@@ -19,18 +19,18 @@
 
             <button type="submit" class="btn btn-primary mt-2 mr-1">Listele</button>
             <input type="button" class="btn btn-primary mt-2" value="Sıfırla" onclick="location.href='@Url.Action("Index")'" />
-            
+
         </div>
     }
 
     <div class="card-body">
         <div class="ml-1 mt-2">
-                <a asp-controller="ApartmentFlat" asp-action="Add" class="btn btn-success">
-                    <i class="material-icons">&#xE147;</i>
-                    <span>Daire Ekle</span>
-                </a>
+            <a asp-controller="ApartmentFlat" asp-action="Add" class="btn btn-success">
+                <i class="material-icons">&#xE147;</i>
+                <span>Daire Ekle</span>
+            </a>
 
-            </div>
+        </div>
         <div class="col-sm-12 text-right">
             <div class="dataTables_info F11" id="bootstrap-data-table-export_info" role="status" aria-live="polite">
                 <b>@Model.MyPagination.TotalRecords</b> kayit bulunmaktadir.
@@ -48,6 +48,7 @@
                         <th>Ev Sahibi Bilgileri</th>
                         <th>Arac Plakasi</th>
                         <th>Guncelleme Zamani</th>
+                        <th>Islemler</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -69,6 +70,9 @@
                             <td>@item.FlatOwnerNameSurname, Telefon: @item.FlatOwnerPhoneNumber</td>
                             <td>@item.CarPlate</td>
                             <td>@item.UpdatedDate</td>
+                            <td>
+                                <a class="btn btn-primary btn-sm btn-update" asp-controller="ApartmentFlat" asp-action="Update" asp-route-guid="@item.Guid"><span class="fas fa-edit"></span></a>
+                            </td>
                         </tr>
                     }
                 </tbody>

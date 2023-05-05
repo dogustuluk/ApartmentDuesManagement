@@ -67,7 +67,27 @@ namespace Business.Validations
                     .EmailAddress().WithMessage("{PropertyName} alanina uygun bir e-posta adresi girin.").WithName("Yönetici E-Posta");
             }
         }
+        public class ApartmentFlatAddValidation : AbstractValidator<ApartmentFlatAddDto>
+        {
+            public ApartmentFlatAddValidation() 
+            { 
+                RuleFor(x => x.Code).NotEmpty().WithMessage(NotEmptyMessage)
+                    .MaximumLength(50).WithMessage("{PropertyName} alanı en fazla 50 karakterden oluşmalı.");
 
+                RuleFor(x => x.FlatNumber).NotEmpty().WithMessage(NotEmptyMessage)
+                    .MaximumLength(10).WithMessage("{PropertyName} alanı en fazla 10 karakterden oluşmalı.");
+               
+                RuleFor(x => x.FlatOwnerId).NotEmpty().WithMessage(NotEmptyMessage);
+                
+                RuleFor(x => x.Floor).NotEmpty().WithMessage(NotEmptyMessage)
+                    .MaximumLength(3).WithMessage("{PropertyName} alanı en fazla 3 karakterden oluşmalı.");
+               
+                RuleFor(x => x.CarPlate).NotEmpty().WithMessage(NotEmptyMessage)
+                    .MaximumLength(8).WithMessage("{PropertyName} alanı en fazla 3 karakterden oluşmalı.");
+
+            }
+        }
+        
 
     }
 }

@@ -1,0 +1,33 @@
+﻿@model ApartmentFlatUpdateDto
+<div class="card-header">
+    <i class="fas fa-table mr-1"></i>
+    Apartman Dairesi Güncelleme
+</div>
+<form class="form-card" asp-controller="ApartmentFlat" asp-action="Update" asp-route-guid="@Model.Guid" method="post" id="myForm" onsubmit="sendForm(event)">
+    <div class="row mt-2">
+        <div class="col-md-12">
+            <input type="hidden" id="apartmentId" asp-for="@Model.ApartmentId" value="@Model.ApartmentId" />
+            <input type="hidden" id="cityId" value="@Model.ApartmentFlatId" />
+
+            <div class="container-fluid">
+                <h5 class="text-center mb-4">Daireyi Duzenliyorsunuz</h5>
+                <div class="row d-flex justify-content-left">
+                    <div class="col-xl-7 mt-2 col-lg-8 col-md-9 col-11 text-center">
+                        <div class="card">
+
+                            <div class="row justify-content-between text-left">
+                                <div class="form-group col-sm-12 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Arac Plakasi<span class="text-danger"></span></label>
+                                    <input type="text" id="inputApartmentName" asp-for="FlatOwner.NameSurname" />
+                                    <span asp-validation-for="CarPlate" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row justify-content-end">
+                                <div class="form-group col-sm-6">
+                                    <button type="submit" id="btnUpdate" class="btn-block btn-primary h6">Guncelle</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+</form>
