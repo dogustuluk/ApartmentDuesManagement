@@ -46,7 +46,7 @@
                                     <span asp-validation-for="FlatOwner.NameSurname" class="text-danger"></span>
 
                                     <label>
-                                        <input class="mt-3" type="checkbox" id="isFlatOwnerCheckbox" checked />  Ev Sahibi mi?
+                                        <input class="mt-3" type="checkbox" id="isFlatOwnerCheckbox" checked />  Kiraci Yok
                                     </label>
                                 </div>
 
@@ -57,7 +57,7 @@
 
                                     <label>
                                         <input class="mt-3" type="checkbox" asp-for="IsFlatOwnerAndResident" />
-                                        Ev Sahibi ve Apartman Sakini
+                                        Ev Sahibi Ayni Zamanda Apartman Sakini
                                     </label>
 
                                 </div>
@@ -68,6 +68,7 @@
                                 </div>
 
                             </div>
+
 
                             <div class="row justify-content-between text-left" id="flatOwnerInfo" style="display: none;">
                                 <div class="form-group col-sm-4 flex-column d-flex">
@@ -89,6 +90,7 @@
                                 </div>
 
                             </div>
+
 
                             <div class="row justify-content-end">
                                 <div class="form-group col-sm-6">
@@ -136,6 +138,21 @@
             }
         });
     });
+
+    //checkbox disabled
+    $(function () {
+        // isFlatOwnerCheckbox elementini al
+        var isFlatOwnerCheckbox = $('#isFlatOwnerCheckbox');
+
+        // isFlatOwnerCheckbox checked değilken IsFlatOwnerAndResident checkbox'ını disable et
+        $('input[name="IsFlatOwnerAndResident"]').prop('disabled', !isFlatOwnerCheckbox.is(':checked'));
+
+        // isFlatOwnerCheckbox'un değeri değiştiğinde IsFlatOwnerAndResident checkbox'ının durumunu güncelle
+        isFlatOwnerCheckbox.change(function () {
+            $('input[name="IsFlatOwnerAndResident"]').prop('disabled', !this.checked);
+        });
+    });
+
 
     //success notification
     $(document).ready(function () {

@@ -7,19 +7,87 @@
     <div class="row mt-2">
         <div class="col-md-12">
             <input type="hidden" id="apartmentId" asp-for="@Model.ApartmentId" value="@Model.ApartmentId" />
-            <input type="hidden" id="cityId" value="@Model.ApartmentFlatId" />
+            <input type="hidden" id="apartmentFlatId" value="@Model.ApartmentFlatId" />
 
             <div class="container-fluid">
-                <h5 class="text-center mb-4">Daireyi Duzenliyorsunuz</h5>
+                <h5 class="text-center mb-4">@*@Model.Apartment.ApartmentName adli binanin @Model.Floor. katindaki @Model.FlatNumber numarali*@ daireyi duzenliyorsunuz</h5>
                 <div class="row d-flex justify-content-left">
                     <div class="col-xl-7 mt-2 col-lg-8 col-md-9 col-11 text-center">
                         <div class="card">
+                            <div class="row justify-content-between text-left">
+                                <div class="form-group col-sm-4 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Ev Sahibi Adi<span class="text-danger"></span></label>
+                                    <input type="text" id="inputFlatOwnerName" asp-for="FlatOwner.NameSurname" />
+                                    <span asp-validation-for="FlatOwner.NameSurname" class="text-danger"></span>
+
+
+                                </div>
+
+                                <div class="form-group col-sm-4 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Ev Sahibi Telefon<span class="text-danger"></span></label>
+                                    <input type="text" id="inputFlatOwnerPhoneNumber" asp-for="FlatOwner.PhoneNumber" />
+                                    <span asp-validation-for="FlatOwner.PhoneNumber" class="text-danger"></span>
+
+                                </div>
+                                <div class="form-group col-sm-4 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Ev Sahibi Mail<span class="text-danger"></span></label>
+                                    <input type="text" id="inputFlatOwnerEmail" asp-for="FlatOwner.Email" />
+                                    <span asp-validation-for="FlatOwner.Email" class="text-danger"></span>
+                                </div>
+
+                            </div>
 
                             <div class="row justify-content-between text-left">
-                                <div class="form-group col-sm-12 flex-column d-flex">
+                                <div class="form-group col-sm-4 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Kiraci Adi<span class="text-danger"></span></label>
+                                    <input type="text" id="inputFlatOwnerName" asp-for="ResponsibleMemberInfo.NameSurname" />
+                                    <span asp-validation-for="ResponsibleMemberInfo.NameSurname" class="text-danger"></span>
+
+
+                                </div>
+
+                                <div class="form-group col-sm-4 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Kiraci Telefon<span class="text-danger"></span></label>
+                                    <input type="text" id="inputFlatOwnerPhoneNumber" asp-for="ResponsibleMemberInfo.PhoneNumber" />
+                                    <span asp-validation-for="ResponsibleMemberInfo.PhoneNumber" class="text-danger"></span>
+
+                                </div>
+                                <div class="form-group col-sm-4 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Kiraci Mail<span class="text-danger"></span></label>
+                                    <input type="text" id="inputFlatOwnerEmail" asp-for="ResponsibleMemberInfo.Email" />
+                                    <span asp-validation-for="ResponsibleMemberInfo.Email" class="text-danger"></span>
+                                </div>
+
+                            </div>
+
+                            <div class="row justify-content-between text-left">
+                                <div class="form-group col-sm-4 flex-column d-flex">
                                     <label class="form-control-label px-3 h6">Arac Plakasi<span class="text-danger"></span></label>
-                                    <input type="text" id="inputApartmentName" asp-for="FlatOwner.NameSurname" />
+                                    <input type="text" id="inputApartmentName" asp-for="CarPlate" />
                                     <span asp-validation-for="CarPlate" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group col-sm-4 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Bulundugu Kat<span class="text-danger"></span></label>
+                                    <input type="text" id="inputApartmentName" asp-for="Floor" />
+                                    <span asp-validation-for="Floor" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group col-sm-4 flex-column d-flex">
+                                    <label class="form-control-label px-3 h6">Daire No<span class="text-danger"></span></label>
+                                    <input type="text" id="inputApartmentName" asp-for="FlatNumber" />
+                                    <span asp-validation-for="FlatNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row justify-content-between ml-0 text-left">
+
+                                <div class="row justify-content-between text-left">
+                                    <div class="form-group col-sm-12 flex-column d-flex">
+                                        <label class="form-control-label px-3 h6">Apartman Degistir<span class="text-danger"></span></label>
+                                        <select class="ajaxApartmentId" name="ApartmentId" asp-for="@Model.ApartmentId">
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
 
@@ -30,4 +98,37 @@
                             </div>
                         </div>
                     </div>
+                </div>
 </form>
+
+<script>
+    $().ready(function () {
+        var apartmentId = @Html.Raw(Json.Serialize(Model.ApartmentId));
+
+        LoadApartments("ajaxApartmentId", apartmentId);
+
+        $("select[class*='ajaxApartmentId']").change(function () {
+            var ddl = $("select[class*='ajaxApartmentId']");
+            var selectedValue = ddl.val();
+            $("input[name='ApartmentId']").val(selectedValue);
+
+        });
+
+        function LoadApartments(selectorclass, selectedValue) {
+            var url = "/_Base/GetAjaxApartment_DDL";
+            var ddl = $("select[class*='" + selectorclass + "']");
+
+            $.getJSON(url, {}, function (data) {
+                var items = '';
+                ddl.empty();
+                $.each(data, function (i, data) {
+                    var selected = (data.DefaultValue == selectedValue) ? "selected" : "";
+                    items += "<option value='" + data.DefaultValue + "' " + selected + ">" + data.DefaultText + "</option>";
+                });
+                ddl.html(items);
+            });
+        }
+    });
+
+
+</script>

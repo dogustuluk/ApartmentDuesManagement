@@ -79,14 +79,12 @@ namespace Apartment_Web.Controllers
         [HttpPost]
         public IActionResult Add(int apartmentId, ApartmentFlatAddDto apartmentFlatAddDto)
         {
-            List<ApartmentFlat> flats = (List<ApartmentFlat>)_unitOfWork.apartmentFlatDal.GetAll(x => x.ApartmentId == apartmentId);
-            foreach (var flat in flats)
+            bool flatWithSameFlatNumber = _unitOfWork.apartmentFlatDal.GetAll().Any(x => x.ApartmentId == apartmentId && x.FlatNumber == apartmentFlatAddDto.FlatNumber);
+
+            if (flatWithSameFlatNumber)
             {
-                if (flat.FlatNumber == apartmentFlatAddDto.FlatNumber)
-                {
-                    ModelState.AddModelError("FlatNumber", "Bu daire numarası zaten kayıtlı.");
-                    return View(apartmentFlatAddDto);
-                }
+                ModelState.AddModelError("FlatNumber", "Bu daire numarası zaten kayıtlı.");
+                return View(apartmentFlatAddDto);
             }
 
             var newApartmentFlat = new ApartmentFlat
@@ -152,9 +150,11 @@ namespace Apartment_Web.Controllers
             var result = _unitOfWork.apartmentFlatDal.Get(x => x.Guid == guid);
             var tenant = _unitOfWork.memberDal.GetById(result.TenantId);
             var flatOwner = _unitOfWork.memberDal.GetById(result.FlatOwnerId);
+            var apartment = _unitOfWork.apartmentDal.GetById(result.ApartmentId);
 
             var apartmentFlat = new ApartmentFlatUpdateDto
             {
+                ApartmentId= result.ApartmentId,
                 ApartmentFlatId = result.ApartmentFlatId,
                 Guid = result.Guid,
                 CarPlate = result.CarPlate,
@@ -172,9 +172,43 @@ namespace Apartment_Web.Controllers
                     Email = flatOwner.Email,
                     PhoneNumber = flatOwner.PhoneNumber
                 },
+                Apartment = new Apartment
+                {
+                    ApartmentName = apartment.ApartmentName,
+                }
             };
 
             return View (apartmentFlat);
+        }
+        [HttpPost]
+        public IActionResult Update(Guid guid,int apartmentId,ApartmentFlatUpdateDto apartmentFlatUpdateDto)
+        {
+            var apartmentFlat = _unitOfWork.apartmentFlatDal.Get(x=>x.Guid == guid);
+            if (apartmentFlat != null)
+            {
+                //kendi daire numarasi haricinde bulmasi lazim
+                //var flatWithSameFlatNumber = _unitOfWork.apartmentFlatDal.GetAll(x => x.ApartmentId == apartmentFlatUpdateDto.ApartmentId && x.FlatNumber == apartmentFlatUpdateDto.FlatNumber);
+                //if (flatWithSameFlatNumber.Any())
+                //{
+                //    ModelState.AddModelError("FlatNumber", "Bu daire numarası zaten kayıtlı.");
+                //    return View(apartmentFlatUpdateDto);
+                //}
+                //var previousFlatNumber = _unitOfWork.apartmentFlatDal.Get(x=>x.FlatNumber == apartmentFlat.FlatNumber);
+                //if (previousFlatNumber.FlatNumber == apartmentFlatUpdateDto.FlatNumber)
+                //{
+
+                //}
+
+
+                apartmentFlat.FlatNumber = apartmentFlatUpdateDto.FlatNumber;
+                apartmentFlat.CarPlate = apartmentFlatUpdateDto.CarPlate;
+                apartmentFlat.ApartmentId = apartmentFlatUpdateDto.ApartmentId;
+                
+                _unitOfWork.apartmentFlatDal.Update(apartmentFlat);
+
+            }
+            return View(apartmentFlatUpdateDto);
+
         }
         public class Index_VM
         {
