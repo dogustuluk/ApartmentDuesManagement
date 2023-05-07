@@ -10,8 +10,9 @@
         @Model.PageTitle
     </div>
 
-    @using (Html.BeginForm("Index", "Apartment", FormMethod.Get))
-    {
+    @*@using (Html.BeginForm("Index", "Apartment", FormMethod.Get))
+    {*@
+        <form asp-action="Index" asp-controller="Apartment" method="get" id="myForm" >
         <div class="row ml-2">
 
             <div class="col-md-3 mt-2">
@@ -36,8 +37,9 @@
             <input type="button" class="btn btn-primary mt-2 mr-1" value="Sıfırla" onclick="location.href='@Url.Action("Index")'" />
            
         </div>
+       
 
-    }
+    @*}*@
 
     <div class="card-body">
         <div class="row ml-1 mb-auto">
@@ -49,9 +51,10 @@
 
             </div>
             <div class="col-md-2 ml-auto">
-                <select id="orderList" class="form-control" asp-for="OrderBy" asp-items="@Model.SortOptions"></select>
+                <select id="orderList" class="form-control" name="OrderBy" asp-for="OrderBy" asp-items="@Model.SortOptions"></select>
             </div>
         </div>
+    </form>
         <div class="col-sm-12 text-right">
             <div class="dataTables_info F11" id="bootstrap-data-table-export_info" role="status" aria-live="polite">
                 <b>@Model.MyPagination.TotalRecords</b> kayit bulunmaktadir.
@@ -112,18 +115,12 @@
     </div>
 
     <script>
-        $(document).ready(function () {
-            $('#orderList').change(function () {
-                var orderBy = $(this).val();
-                var cityId = $('#CityId').val();
+         document.addEventListener("DOMContentLoaded", function() {
+            const orderList = document.querySelector('#orderList');
+            const myForm = document.querySelector('#myForm');
 
-                var url = '@Url.Action("Index", "Apartment")';
-
-                // parametreleri URL'ye ekleme
-                url += '?orderBy=' + orderBy + '&cityId=' + cityId;
-
-                // yeni URL'yi sayfaya yükle
-                window.location.href = url;
+            orderList.addEventListener('change', () => {
+                myForm.submit();
             });
         });
 
